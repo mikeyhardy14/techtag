@@ -1,0 +1,35 @@
+.hero {
+  text-align: center;
+  padding: 80px 16px;
+  background-color: #f9f9f9;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  margin-bottom: 24px;
+  color: #666;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #0070f3;
+  color: #ffffff;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.button:hover {
+  background-color: #005bb5;
+}
