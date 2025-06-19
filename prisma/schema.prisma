@@ -1,0 +1,24 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model CodeRule {
+  id         Int      @id @default(autoincrement())
+  position   Int      // 1-based index
+  characters String   // e.g. "HT", "H", "024"
+  meaning    String
+  group      String   // e.g. "Model Type", "Unit Size"
+  brand      String   // e.g. "HeatController"
+  manufactor String   // e.g. "Carrier"
+  
+  @@map("code_rules")
+}
+

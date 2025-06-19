@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
 import styles from './page.module.css';
-// import NomenclatureDecoder from '@/components/NomenclatureDecoder';
-// import ProjectDrawer from './components/ProjectDrawer';
-// import ProjectsTable from './components/ProjectsTable';
+import DecoderForm from '@/components/DecoderForm/DecoderForm';
+import ProjectDrawer from '../../../components/ProjectDrawer';
+import ProjectsTable from '../../../components/ProjectsTable';
 import useProjects from './hooks/useProjects';
 
 export default function DashboardClient() {
@@ -12,25 +12,30 @@ export default function DashboardClient() {
 
   return (
     <div className={styles.container}>
-      {/* <NomenclatureDecoder /> */}
+      <DecoderForm />
 
-      <button
-        className={styles.newBtn}
-        onClick={() => setDrawerOpen(true)}
-      >
-        + New Project
-      </button>
+      <div className={styles.projectsSection}>
+        <div className={styles.projectsHeader}>
+          <h2>Projects</h2>
+          <button
+            className={styles.newBtn}
+            onClick={() => setDrawerOpen(true)}
+          >
+            + New Project
+          </button>
+        </div>
 
-      {/* <ProjectsTable
-        projects={projects}
-        onUpdate={updateProject}
-      />
+        <ProjectsTable
+          projects={projects}
+          onUpdate={updateProject}
+        />
 
-      <ProjectDrawer
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        onCreate={addProject}
-      /> */}
+        <ProjectDrawer
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          onCreate={addProject}
+        />
+      </div>
     </div>
   );
 }
