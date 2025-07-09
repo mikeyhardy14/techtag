@@ -57,6 +57,7 @@
   .authButtons {
     display: flex;
     gap: 0.75rem;
+    align-items: center;
     white-space: nowrap;
   }
   
@@ -67,6 +68,8 @@
     font-size: 0.95rem;
     font-weight: 500;
     transition: background-color 0.2s ease, color 0.2s ease;
+    border: none;
+    cursor: pointer;
   }
   
   .login {
@@ -87,5 +90,22 @@
   
   .signup:hover {
     background-color: #0041a8;
+  }
+
+  .userEmail {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+    padding: 0.5rem;
+  }
+
+  .signOut {
+    color: #fff;
+    background-color: #dc2626;
+    border: none;
+  }
+
+  .signOut:hover {
+    background-color: #b91c1c;
   }
   

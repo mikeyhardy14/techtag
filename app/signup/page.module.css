@@ -1,4 +1,3 @@
-
 /* app/signup/page.module.css */
 .container {
   display: flex;
@@ -30,6 +29,12 @@
 
 .error {
   color: #dc2626;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.success {
+  color: #16a34a;
   font-size: 0.875rem;
   text-align: center;
 }

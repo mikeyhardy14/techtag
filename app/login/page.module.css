@@ -77,3 +77,8 @@
   color: #2563eb;
   text-decoration: underline;
 }
+
+.links {
+  text-align: center;
+  font-size: 0.875rem;
+}

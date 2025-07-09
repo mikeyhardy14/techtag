@@ -165,7 +165,7 @@ async function queryDatabase(segmentType: string, manufacture: string, character
     }
 
     // Query the techtag table for matching records  
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/techtag?id=eq.${characters}&manufacture=eq.${manufacture}&description=eq.${segmentType}`, {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/techtag?key=eq.${characters}&manufacture=eq.${manufacture}&description=eq.${segmentType}`, {
       method: 'GET',
       headers: {
         'apikey': SUPABASE_ANON_KEY,

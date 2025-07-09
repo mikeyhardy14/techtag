@@ -48,11 +48,11 @@ export default function HomePage() {
 
         {/* Our Services Section */}
         <section
-          style={{
+            style={{
             maxWidth: '1200px',
             margin: '0 auto',
             padding: '80px 16px',
-            backgroundColor: '#ffffff',
+              backgroundColor: '#ffffff',
           }}
         >
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
@@ -71,14 +71,14 @@ export default function HomePage() {
           >
             <div
               style={{
-                backgroundColor: '#ffffff',
+              backgroundColor: '#ffffff',
                 padding: '30px',
                 borderRadius: '12px',
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
                 border: '1px solid #e9ecef',
                 textAlign: 'center',
-              }}
-            >
+            }}
+          >
               <div style={{ fontSize: '3rem', marginBottom: '20px' }}>🔍</div>
               <h3 style={{ fontSize: '1.5rem', marginBottom: '16px', color: '#333' }}>Model Number Decoding</h3>
               <p style={{ color: '#666', lineHeight: '1.6' }}>
@@ -225,9 +225,9 @@ export default function HomePage() {
             </div>
 
             {/* Contact Form */}
-            <div
-              style={{
-                backgroundColor: '#ffffff',
+          <div
+            style={{
+              backgroundColor: '#ffffff',
                 padding: '40px',
                 borderRadius: '12px',
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
@@ -311,10 +311,10 @@ export default function HomePage() {
                       width: '100%',
                       padding: '12px 16px',
                       border: '1px solid #ddd',
-                      borderRadius: '8px',
+              borderRadius: '8px',
                       fontSize: '1rem',
                       boxSizing: 'border-box',
-                    }}
+            }}
                   />
                 </div>
                 
