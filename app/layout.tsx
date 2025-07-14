@@ -1,6 +1,7 @@
 // app/layout.tsx
 import "./globals.css";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import ConditionalNavbar from "@/components/ConditionalNavbar/ConditionalNavbar";
 import Providers from "./providers";
 
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <ConditionalNavbar />
           <main>{children}</main>
+          <Analytics />
         </Providers>
       </body>
     </html>
