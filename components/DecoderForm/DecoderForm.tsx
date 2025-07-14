@@ -10,13 +10,21 @@ interface DecodedSegment {
   group: string;
 }
 
+interface UnmatchedSegment {
+  position: string;
+  characters: string;
+  group: string;
+  id: string;
+  attempted: string;
+}
+
 interface DecodedResult {
   modelNumber: string;
   brand: string;
   manufacturer: string;
   segments: DecodedSegment[];
   confidence: 'high' | 'medium' | 'low';
-  unmatchedSegments: string[];
+  unmatchedSegments: UnmatchedSegment[];
 }
 
 export default function DecoderForm() {
@@ -297,9 +305,11 @@ export default function DecoderForm() {
               <h4 className={styles.sectionTitle}>Unmatched Segments</h4>
               <div className={styles.unmatchedList}>
                 {result.unmatchedSegments.map((segment, index) => (
-                  <span key={index} className={styles.unmatchedSegment}>
-                    {segment}
-                  </span>
+                  <div key={index} className={styles.unmatchedSegment}>
+                    <div className={styles.segmentCode}>{segment.characters}</div>
+                    <div className={styles.segmentAttempted}>Attempted: {segment.attempted}</div>
+                    <div className={styles.segmentPosition}>Position {segment.position}</div>
+                  </div>
                 ))}
               </div>
               <p className={styles.unmatchedNote}>
