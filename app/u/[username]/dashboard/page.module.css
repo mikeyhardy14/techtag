@@ -14,3 +14,28 @@
 .projectsSection {
   margin-top: 2rem;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .content {
+    padding: 16px;
+  }
+
+  .projectsSection {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 12px;
+  }
+
+  .projectsSection {
+    margin-top: 1rem;
+  }
+
+  .loading {
+    font-size: 1rem;
+  }
+}

@@ -284,12 +284,75 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    overflow-x: auto;
+  }
+
   .filters {
     flex-direction: column;
     gap: 8px;
+    padding: 0.75rem;
   }
   
-  .select {
+  .select,
+  .statusSelect,
+  .outcomeSelect {
     min-width: 100%;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .table {
+    min-width: 800px; /* Ensures table content doesn't squish */
+  }
+
+  .table th,
+  .table td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .projectNameButton {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .viewLogsButton,
+  .addCommButton {
+    font-size: 10px;
+    padding: 4px 6px;
+    min-width: auto;
+  }
+
+  .uploadButton {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .filters {
+    padding: 0.5rem;
+  }
+
+  .container {
+    margin: 0 -0.5rem; /* Allow table to use full screen width */
+    border-radius: 0;
+  }
+
+  .table th,
+  .table td {
+    padding: 6px;
+    font-size: 11px;
+  }
+
+  .statusInProgress,
+  .statusSubmitted,
+  .statusApproved,
+  .statusCompleted,
+  .outcomeWon,
+  .outcomeLost {
+    font-size: 10px;
+    padding: 4px 8px;
+    min-width: 60px;
   }
 } 

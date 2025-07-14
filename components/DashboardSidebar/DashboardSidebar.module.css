@@ -246,19 +246,160 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
   .sidebar {
-    width: 70px;
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    padding: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
   
-  .sidebar:not(.collapsed) {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-    width: 280px;
+  .sidebar.collapsed {
+    width: 100%;
   }
-  
+
+  .brand {
+    flex: 1;
+    padding: 8px 12px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: none;
+  }
+
+  .logo {
+    justify-content: flex-start;
+  }
+
+  .logoText {
+    font-size: 18px;
+  }
+
+  .collapseBtn {
+    display: none; /* Hide collapse button on mobile */
+  }
+
+  .nav {
+    flex: 2;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 12px;
+  }
+
+  .navItem {
+    flex-direction: column;
+    padding: 8px;
+    min-width: auto;
+    font-size: 10px;
+  }
+
+  .navIcon {
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+
+  .navLabel {
+    display: block;
+    font-size: 10px;
+  }
+
+  .filterSection {
+    display: none; /* Hide filter section on mobile */
+  }
+
+  .userSection {
+    flex: 1;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    margin-top: 0;
+  }
+
+  .userInfo {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .userAvatar {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .userName {
+    font-size: 12px;
+  }
+
+  .signOutBtn {
+    padding: 4px 8px;
+    font-size: 10px;
+    margin-top: 4px;
+  }
+
+  .helpSection {
+    display: none; /* Hide help section on mobile */
+  }
+
   .main {
-    margin-left: 70px;
+    margin-left: 0;
+    padding: 16px;
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    padding: 8px;
+  }
+
+  .brand {
+    padding: 4px 8px;
+  }
+
+  .logoText {
+    font-size: 16px;
+  }
+
+  .nav {
+    gap: 4px;
+    padding: 0 8px;
+  }
+
+  .navItem {
+    padding: 6px 4px;
+  }
+
+  .navIcon {
+    font-size: 14px;
+  }
+
+  .navLabel {
+    font-size: 9px;
+  }
+
+  .userSection {
+    padding: 4px 8px;
+  }
+
+  .userAvatar {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .userName {
+    font-size: 11px;
+  }
+
+  .signOutBtn {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+
+  .main {
+    padding: 12px;
   }
 } 
