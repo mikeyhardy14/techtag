@@ -4,17 +4,18 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay-background);
   display: flex;
   justify-content: flex-end;
+  z-index: 1000;
 }
 
 .drawer {
   width: 400px;
-  background-color: white;
+  background-color: var(--white);
   height: 100%;
   padding: 2rem;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-strong);
 }
 
 .header {
@@ -26,6 +27,7 @@
 
 .header h2 {
   margin: 0;
+  color: var(--darker-gray);
 }
 
 .closeButton {
@@ -35,6 +37,14 @@
   cursor: pointer;
   padding: 0.5rem;
   line-height: 1;
+  color: var(--text-gray);
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+
+.closeButton:hover {
+  background-color: var(--light-gray);
+  color: var(--darker-gray);
 }
 
 .form {
@@ -51,13 +61,21 @@
 
 .formGroup label {
   font-weight: 500;
+  color: var(--dark-gray);
 }
 
 .input {
-  padding: 0.5rem;
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
+  padding: 0.75rem;
+  border: 2px solid var(--input-border);
+  border-radius: 8px;
   font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(63, 111, 224, 0.1);
 }
 
 .actions {
@@ -68,28 +86,34 @@
 
 .cancelButton,
 .submitButton {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
   flex: 1;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-light);
 }
 
 .cancelButton {
-  background-color: white;
-  border: 1px solid #dee2e6;
+  background-color: var(--white);
+  border: 2px solid var(--medium-gray);
+  color: var(--dark-gray);
 }
 
 .submitButton {
-  background-color: #0d6efd;
-  color: white;
+  background: var(--primary-blue-gradient);
+  color: var(--white);
   border: none;
 }
 
 .submitButton:hover {
-  background-color: #0b5ed7;
+  background: linear-gradient(135deg, var(--primary-blue-hover) 0%, var(--primary-blue) 100%);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
 }
 
 .cancelButton:hover {
-  background-color: #f8f9fa;
+  background-color: var(--light-gray);
+  transform: translateY(-1px);
 } 

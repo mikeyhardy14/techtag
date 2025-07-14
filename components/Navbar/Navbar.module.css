@@ -9,9 +9,10 @@
     align-items: center;
     justify-content: space-between;
   
-    background-color: #ffffff;
+    background-color: var(--white);
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid var(--medium-gray);
+    box-shadow: var(--shadow-light);
   }
   
   .logo {
@@ -20,7 +21,7 @@
     text-decoration: none;
   
     /* color + weight */
-    color: #0056d2;
+    color: var(--primary-blue);
     font-weight: 600;
   }
   
@@ -28,7 +29,7 @@
     margin-left: 0.5rem;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #0056d2;
+    color: var(--primary-blue);
   }
   
   .navLinks {
@@ -42,16 +43,17 @@
   
   .navLinks a {
     text-decoration: none;
-    color: #333;
+    color: var(--dark-gray);
     font-size: 1.125rem;
     padding: 0.5rem 0.75rem;
-    border-radius: 4px;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
   }
   
   .navLinks a:hover {
-    background-color: rgba(0, 86, 210, 0.1);
-    color: #0056d2;
+    background-color: rgba(63, 111, 224, 0.1);
+    color: var(--primary-blue);
   }
   
   .authButtons {
@@ -64,48 +66,55 @@
   .btn {
     text-decoration: none;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 0.95rem;
     font-weight: 500;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: all 0.2s ease;
     border: none;
     cursor: pointer;
   }
   
   .login {
-    color: #0056d2;
+    color: var(--primary-blue);
     background: transparent;
-    border: 1px solid #0056d2;
+    border: 2px solid var(--primary-blue);
   }
   
   .login:hover {
-    background-color: rgba(0, 86, 210, 0.1);
+    background-color: rgba(63, 111, 224, 0.1);
+    transform: translateY(-1px);
   }
   
   .signup {
-    color: #fff;
-    background-color: #0056d2;
+    color: var(--white);
+    background: var(--primary-blue-gradient);
     border: none;
+    box-shadow: var(--shadow-light);
   }
   
   .signup:hover {
-    background-color: #0041a8;
+    background: linear-gradient(135deg, var(--primary-blue-hover) 0%, var(--primary-blue) 100%);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-medium);
   }
 
   .userEmail {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--text-gray);
     font-weight: 500;
     padding: 0.5rem;
   }
 
   .signOut {
-    color: #fff;
-    background-color: #dc2626;
+    color: var(--white);
+    background: var(--error-red);
     border: none;
+    box-shadow: var(--shadow-light);
   }
 
   .signOut:hover {
-    background-color: #b91c1c;
+    background: var(--error-red-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-medium);
   }
   

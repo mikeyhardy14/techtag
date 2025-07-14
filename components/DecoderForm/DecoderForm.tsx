@@ -132,10 +132,10 @@ export default function DecoderForm() {
 
   const getConfidenceColor = (confidence: string) => {
     switch (confidence) {
-      case 'high': return '#28a745';
-      case 'medium': return '#ffc107';
-      case 'low': return '#dc3545';
-      default: return '#6c757d';
+      case 'high': return 'var(--success-green)';
+      case 'medium': return 'var(--warning-orange)';
+      case 'low': return 'var(--error-red)';
+      default: return 'var(--text-gray)';
     }
   };
 

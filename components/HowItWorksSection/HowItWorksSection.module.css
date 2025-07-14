@@ -1,5 +1,5 @@
 .section {
-  background-color: #f8f9fa;
+  background-color: var(--light-gray);
   padding: 80px 16px;
 }
 
@@ -16,19 +16,19 @@
 
 .titleBubble {
   display: inline-block;
-  background-color: #e3f2fd;
-  color: #0070f3;
+  background-color: rgba(63, 111, 224, 0.1);
+  color: var(--primary-blue);
   padding: 8px 20px;
   border-radius: 25px;
   font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 24px;
-  border: 2px solid #bbdefb;
+  border: 2px solid rgba(63, 111, 224, 0.2);
 }
 
 .subtitle {
   font-size: 2.2rem;
-  color: #333;
+  color: var(--darker-gray);
   margin: 0;
   font-weight: 700;
   line-height: 1.3;
@@ -61,7 +61,7 @@
   top: 30px;
   bottom: 0;
   width: 2px;
-  background-color: #e9ecef;
+  background-color: var(--medium-gray);
   z-index: 1;
 }
 
@@ -84,8 +84,8 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #e9ecef;
-  color: #666;
+  background-color: var(--medium-gray);
+  color: var(--text-gray);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,7 +94,8 @@
   cursor: pointer;
   transition: all 0.3s ease;
   flex-shrink: 0;
-  border: 3px solid #e9ecef;
+  border: 3px solid var(--medium-gray);
+  box-shadow: var(--shadow-light);
 }
 
 .stepCircle:hover {
@@ -102,10 +103,10 @@
 }
 
 .stepCircleActive {
-  background-color: #0070f3;
-  color: white;
-  border-color: #0070f3;
-  box-shadow: 0 4px 12px rgba(0, 112, 243, 0.3);
+  background: var(--primary-blue-gradient);
+  color: var(--white);
+  border-color: var(--primary-blue);
+  box-shadow: 0 4px 20px rgba(63, 111, 224, 0.3);
 }
 
 /* Step Content */

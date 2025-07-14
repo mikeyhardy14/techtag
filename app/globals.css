@@ -3,4 +3,47 @@
 @tailwind components;
 @tailwind utilities;
 
-body { min-height: 100vh; }
+:root {
+  /* Primary Colors */
+  --primary-blue: #3F6FE0;
+  --primary-blue-hover: #2D5BD1;
+  --primary-blue-light: #5A82E8;
+  --primary-blue-gradient: linear-gradient(135deg, #3F6FE0 0%, #2D5BD1 100%);
+
+  /* Success & Status Colors */
+  --success-green: #34C759;
+  --success-green-hover: #2BAD4A;
+  --warning-orange: #FF9F0A;
+  --warning-orange-hover: #E68A00;
+  --error-red: #FF3B30;
+  --error-red-hover: #E62E24;
+
+  /* Neutral Colors */
+  --white: #FFFFFF;
+  --light-gray: #F8F9FA;
+  --medium-gray: #E9ECEF;
+  --text-gray: #6C757D;
+  --dark-gray: #495057;
+  --darker-gray: #343A40;
+  --darkest-gray: #212529;
+
+  /* Neumorphic Shadows */
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --shadow-strong: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-neumorphic: 0 4px 20px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.08);
+
+  /* Component Specific Colors */
+  --input-border: #DEE2E6;
+  --input-border-focus: var(--primary-blue);
+  --card-background: var(--white);
+  --section-background: var(--light-gray);
+  --overlay-background: rgba(0, 0, 0, 0.5);
+}
+
+body { 
+  min-height: 100vh;
+  color: var(--darker-gray);
+  background-color: var(--white);
+}

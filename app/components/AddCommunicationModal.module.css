@@ -1,0 +1,341 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal {
+  background: linear-gradient(135deg, var(--white) 0%, rgba(248, 249, 250, 0.95) 100%);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(63, 111, 224, 0.08);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2rem 1.5rem 2rem;
+  border-bottom: 1px solid rgba(233, 236, 239, 0.6);
+  background: linear-gradient(135deg, var(--white) 0%, var(--light-gray) 100%);
+  border-radius: 24px 24px 0 0;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 2rem;
+  right: 2rem;
+  height: 2px;
+  background: var(--primary-blue-gradient);
+  border-radius: 2px;
+}
+
+.header h2 {
+  margin: 0;
+  color: var(--darker-gray);
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.closeButton {
+  background: linear-gradient(135deg, var(--light-gray) 0%, var(--medium-gray) 100%);
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.75rem;
+  line-height: 1;
+  color: var(--text-gray);
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  background: linear-gradient(135deg, var(--error-red) 0%, #e53e3e 100%);
+  color: var(--white);
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(255, 59, 48, 0.25);
+}
+
+.projectInfo {
+  padding: 2rem;
+  border-bottom: 1px solid rgba(233, 236, 239, 0.6);
+  background: linear-gradient(135deg, rgba(63, 111, 224, 0.03) 0%, rgba(63, 111, 224, 0.08) 100%);
+  position: relative;
+}
+
+.projectInfo::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--primary-blue-gradient);
+}
+
+.projectInfo h3 {
+  margin: 0 0 0.75rem 0;
+  color: var(--primary-blue);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.25px;
+}
+
+.projectInfo p {
+  margin: 0;
+  color: var(--dark-gray);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.form {
+  padding: 2rem;
+}
+
+.formGroup {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.formGroup:last-of-type {
+  margin-bottom: 2.5rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  color: var(--dark-gray);
+  font-size: 0.95rem;
+  letter-spacing: 0.25px;
+}
+
+.required {
+  color: var(--error-red);
+  font-weight: 800;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--input-border);
+  border-radius: 16px;
+  font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, var(--white) 0%, rgba(248, 249, 250, 0.8) 100%);
+  color: var(--darker-gray);
+  box-sizing: border-box;
+  font-weight: 500;
+  box-shadow: var(--shadow-light);
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 4px rgba(63, 111, 224, 0.12);
+  transform: translateY(-2px);
+  background: var(--white);
+}
+
+.inputError {
+  border-color: var(--error-red);
+  background: linear-gradient(135deg, rgba(255, 59, 48, 0.02) 0%, rgba(255, 59, 48, 0.06) 100%);
+}
+
+.inputError:focus {
+  border-color: var(--error-red);
+  box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.12);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+.errorText {
+  display: block;
+  margin-top: 0.75rem;
+  color: var(--error-red);
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: rgba(255, 59, 48, 0.08);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--error-red);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(233, 236, 239, 0.6);
+}
+
+.cancelButton,
+.submitButton {
+  padding: 1rem 2rem;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1rem;
+  letter-spacing: 0.25px;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+.cancelButton {
+  background: linear-gradient(135deg, var(--white) 0%, var(--light-gray) 100%);
+  border: 2px solid var(--medium-gray);
+  color: var(--dark-gray);
+  box-shadow: var(--shadow-light);
+}
+
+.cancelButton:hover {
+  background: linear-gradient(135deg, var(--light-gray) 0%, var(--medium-gray) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+  border-color: var(--text-gray);
+}
+
+.submitButton {
+  background: var(--primary-blue-gradient);
+  color: var(--white);
+  border: none;
+  min-width: 180px;
+  box-shadow: 0 4px 20px rgba(63, 111, 224, 0.25);
+}
+
+.submitButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.submitButton:hover {
+  background: linear-gradient(135deg, var(--primary-blue-hover) 0%, var(--primary-blue-light) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 32px rgba(63, 111, 224, 0.35);
+}
+
+.submitButton:hover::before {
+  left: 100%;
+}
+
+/* Enhanced Scrollbar */
+.modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal::-webkit-scrollbar-track {
+  background: rgba(233, 236, 239, 0.3);
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-hover) 100%);
+  border-radius: 3px;
+}
+
+.modal::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, var(--primary-blue-hover) 0%, var(--primary-blue) 100%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .overlay {
+    padding: 0.5rem;
+  }
+  
+  .modal {
+    max-height: 95vh;
+    border-radius: 20px;
+  }
+  
+  .header {
+    padding: 1.5rem 1rem 1rem 1rem;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .projectInfo {
+    padding: 1.5rem 1rem;
+  }
+  
+  .form {
+    padding: 1.5rem 1rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .cancelButton,
+  .submitButton {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .input,
+  .select,
+  .textarea {
+    padding: 0.875rem 1rem;
+  }
+} 
