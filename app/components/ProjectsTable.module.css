@@ -1,358 +1,810 @@
+/* Container */
 .container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E5E7EB;
   overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
+/* Header */
+.header {
+  padding: 24px 32px;
+  background: linear-gradient(135deg, #F8FAFC 0%, #EBF4FF 100%);
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.titleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+/* Filters */
 .filters {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: #f8fafc;
-  border-radius: 8px;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 32px;
+  background: #F8FAFC;
+  border-bottom: 1px solid #E5E7EB;
 }
 
-.select,
-.statusSelect,
-.outcomeSelect {
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filterSelect {
   padding: 8px 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  background-color: white;
+  border: 1px solid #D1D5DB;
+  border-radius: 10px;
+  background: #FFFFFF;
   color: #374151;
   font-weight: 500;
   font-size: 14px;
-  transition: border-color 0.2s ease;
-  min-width: 160px;
+  transition: all 0.2s ease;
+  min-width: 140px;
+  font-family: inherit;
 }
 
-.select:focus,
-.statusSelect:focus,
-.outcomeSelect:focus {
+.filterSelect:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #3B82F6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Status Styles */
-.statusInProgress {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  background: #dbeafe;
-  color: #1d4ed8;
-  font-weight: 500;
-  font-size: 12px;
-  text-align: center;
-  min-width: 80px;
+.filterSummary {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
 }
 
-.statusSubmitted {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  background: #fef3c7;
-  color: #d97706;
-  font-weight: 500;
-  font-size: 12px;
-  text-align: center;
-  min-width: 80px;
+.projectCount {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6B7280;
+  padding: 8px 16px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  border: 1px solid #E5E7EB;
 }
 
-.statusApproved {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  background: #d1fae5;
-  color: #065f46;
-  font-weight: 500;
-  font-size: 12px;
-  text-align: center;
-  min-width: 80px;
+/* Table Wrapper */
+.tableWrapper {
+  overflow-x: auto;
+  background: #FFFFFF;
 }
 
-.statusCompleted {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  background: #f3f4f6;
-  color: #374151;
-  font-weight: 500;
-  font-size: 12px;
-  text-align: center;
-  min-width: 80px;
-}
-
-/* Outcome Styles */
-.outcomeWon {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  background: #dcfce7;
-  color: #166534;
-  font-weight: 500;
-  font-size: 12px;
-  text-align: center;
-  min-width: 60px;
-}
-
-.outcomeLost {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  background: #fee2e2;
-  color: #dc2626;
-  font-weight: 500;
-  font-size: 12px;
-  text-align: center;
-  min-width: 60px;
-}
-
+/* Table */
 .table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: white;
-}
-
-.table th,
-.table td {
-  padding: 16px 20px;
-  text-align: left;
-  border-bottom: 1px solid #f1f5f9;
-  vertical-align: middle;
-  font-size: 14px;
+  background: #FFFFFF;
 }
 
 .table th {
-  background: #f8fafc;
+  padding: 16px 20px;
+  text-align: left;
+  background: #F8FAFC;
   font-weight: 600;
-  color: #64748b;
-  font-size: 12px;
+  color: #374151;
+  font-size: 0.875rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 1px solid #e2e8f0;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #E5E7EB;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
-.table tbody tr {
-  transition: background-color 0.2s ease;
+.table th:first-child {
+  border-radius: 0;
 }
 
-.table tbody tr:hover {
-  background: #f8fafc;
+.table th:last-child {
+  border-radius: 0;
 }
 
-.table tbody tr:nth-child(even) {
-  background: #fafbfc;
+.tableRow {
+  animation: fadeInUp 0.3s ease-out;
+  animation-fill-mode: both;
+  transition: all 0.2s ease;
 }
 
-.table tbody tr:nth-child(even):hover {
-  background: #f1f5f9;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.table tr:last-child td {
+.tableRow:nth-child(even) {
+  background: #F9FAFB;
+}
+
+.tableRow:hover {
+  background: #EBF4FF;
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #F3F4F6;
+  vertical-align: middle;
+  font-size: 14px;
+  color: #374151;
+}
+
+.tableRow:last-child td {
   border-bottom: none;
 }
 
-.uploadButton {
-  padding: 8px 16px;
-  background: #6b7280;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 12px;
-  transition: background-color 0.2s ease;
+/* Project Cell */
+.projectCell {
+  width: 280px;
 }
 
-.uploadButton:hover {
-  background: #4b5563;
-}
-
-.table a {
-  color: #3b82f6;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.table a:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-/* Communication Actions */
-.communicationActions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.viewLogsButton {
-  padding: 6px 12px;
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+.projectButton {
   display: flex;
   align-items: center;
-  gap: 4px;
-}
-
-.viewLogsButton:hover {
-  background: #2563eb;
-}
-
-.addCommButton {
-  padding: 6px;
-  background: #10b981;
-  color: white;
+  gap: 12px;
+  background: none;
   border: none;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+}
+
+.projectButton:hover {
+  background: #EBF4FF;
+  transform: translateX(4px);
+}
+
+.projectIcon {
   width: 32px;
   height: 32px;
+  background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
+  flex-shrink: 0;
 }
 
-.addCommButton:hover {
-  background: #059669;
+.projectInfo {
+  flex: 1;
+  min-width: 0;
 }
 
-/* Project Name Button */
-.projectNameButton {
-  background: none;
-  border: none;
-  color: #3b82f6;
-  cursor: pointer;
-  font-size: 14px;
+.projectName {
+  font-size: 0.875rem;
   font-weight: 600;
-  text-align: left;
-  padding: 0;
-  text-decoration: none;
-  transition: color 0.2s ease;
+  color: #1F2937;
+  line-height: 1.4;
+  display: block;
 }
 
-.projectNameButton:hover {
-  color: #2563eb;
-  text-decoration: underline;
+/* Client Cell */
+.clientCell {
+  width: 200px;
 }
 
-/* Typography */
-.table td {
-  font-size: 14px;
+.clientInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.clientAvatar {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.clientName {
   font-weight: 500;
   color: #374151;
+  font-size: 0.875rem;
+}
+
+/* Model Cell */
+.modelCell {
+  width: 140px;
+}
+
+.modelNumber {
+  font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1F2937;
+  background: #F3F4F6;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #E5E7EB;
+}
+
+/* Status Cell */
+.statusCell {
+  width: 160px;
+  position: relative;
+}
+
+.statusSelect {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.statusChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.statusIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.statusText {
+  white-space: nowrap;
+}
+
+/* Status Chip Variants */
+.tableRow .statusChip {
+  background: #E5E7EB;
+  color: #6B7280;
+}
+
+.tableRow:has(.statusSelect[value="In Progress"]) .statusChip {
+  background: #DBEAFE;
+  color: #1D4ED8;
+}
+
+.tableRow:has(.statusSelect[value="Submitted"]) .statusChip {
+  background: #FEF3C7;
+  color: #D97706;
+}
+
+.tableRow:has(.statusSelect[value="Approved"]) .statusChip {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.tableRow:has(.statusSelect[value="Completed"]) .statusChip {
+  background: #F3F4F6;
+  color: #374151;
+}
+
+/* Outcome Cell */
+.outcomeCell {
+  width: 120px;
+  position: relative;
+}
+
+.outcomeSelect {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.outcomeChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.outcomeIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.outcomeWon {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.outcomeLost {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+/* Submittal Cell */
+.submittalCell {
+  width: 140px;
+}
+
+.submittalLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #3B82F6;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.submittalLink:hover {
+  background: #EBF4FF;
+  color: #1D4ED8;
+}
+
+.uploadButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #F8FAFC;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  color: #6B7280;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.uploadButton:hover {
+  background: #3B82F6;
+  border-color: #3B82F6;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+/* Communication Cell */
+.communicationCell {
+  width: 200px;
+}
+
+.communicationInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lastCommunication {
+  font-size: 0.875rem;
+  color: #6B7280;
   line-height: 1.4;
 }
 
-/* Responsive */
+/* Actions Cell */
+.actionsCell {
+  width: 120px;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.viewButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #3B82F6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.viewButton:hover {
+  background: #2563EB;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+}
+
+.communicationCount {
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #10B981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.addButton:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+/* Empty State */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 32px;
+  text-align: center;
+  background: #FAFBFC;
+}
+
+.emptyIcon {
+  width: 64px;
+  height: 64px;
+  background: #F3F4F6;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9CA3AF;
+  margin-bottom: 16px;
+}
+
+.emptyTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 8px 0;
+}
+
+.emptyMessage {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+/* Legacy Status Styles (for fallback) */
+.statusInProgress {
+  display: none;
+}
+
+.statusSubmitted {
+  display: none;
+}
+
+.statusApproved {
+  display: none;
+}
+
+.statusCompleted {
+  display: none;
+}
+
+.statusSelect {
+  display: none;
+}
+
+.outcomeWon {
+  display: none;
+}
+
+.outcomeLost {
+  display: none;
+}
+
+.outcomeSelect {
+  display: none;
+}
+
+/* Mobile Responsive */
 @media (max-width: 1200px) {
+  .filters {
+    padding: 16px 24px;
+    gap: 16px;
+  }
+  
+  .header {
+    padding: 20px 24px;
+  }
+  
   .table th,
   .table td {
     padding: 12px 16px;
     font-size: 13px;
   }
   
-  .communicationActions {
+  .projectCell {
+    width: 240px;
+  }
+  
+  .clientCell {
+    width: 160px;
+  }
+  
+  .modelCell {
+    width: 120px;
+  }
+  
+  .statusCell {
+    width: 140px;
+  }
+  
+  .actionButtons {
     flex-direction: column;
     gap: 4px;
   }
   
-  .viewLogsButton {
-    padding: 4px 8px;
+  .viewButton {
+    padding: 6px 10px;
     font-size: 11px;
   }
   
-  .addCommButton {
+  .addButton {
     width: 28px;
     height: 28px;
-    font-size: 11px;
   }
 }
 
 @media (max-width: 768px) {
   .container {
-    overflow-x: auto;
+    margin: 0 -4px;
+    border-radius: 12px;
+  }
+
+  .header {
+    padding: 16px 20px;
+  }
+  
+  .title {
+    font-size: 1.125rem;
+  }
+  
+  .subtitle {
+    font-size: 0.8125rem;
   }
 
   .filters {
     flex-direction: column;
-    gap: 8px;
-    padding: 0.75rem;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px 20px;
   }
   
-  .select,
-  .statusSelect,
-  .outcomeSelect {
+  .filterGroup {
+    flex: 1;
+  }
+  
+  .filterSelect {
     min-width: 100%;
     font-size: 16px; /* Prevents zoom on iOS */
   }
 
+  .tableWrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .table {
-    min-width: 800px; /* Ensures table content doesn't squish */
+    min-width: 800px;
   }
 
   .table th,
   .table td {
-    padding: 8px;
+    padding: 10px 12px;
     font-size: 12px;
   }
 
-  .projectNameButton {
-    font-size: 12px;
-    padding: 4px 8px;
+  .projectButton {
+    padding: 6px 8px;
+    gap: 8px;
+  }
+  
+  .projectIcon,
+  .clientAvatar {
+    width: 28px;
+    height: 28px;
   }
 
-  .viewLogsButton,
-  .addCommButton {
-    font-size: 10px;
-    padding: 4px 6px;
-    min-width: auto;
+  .projectName,
+  .clientName {
+    font-size: 0.8125rem;
   }
 
+  .viewButton,
   .uploadButton {
-    font-size: 12px;
-    padding: 8px 12px;
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .addButton {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .emptyState {
+    padding: 48px 20px;
+  }
+  
+  .emptyIcon {
+    width: 56px;
+    height: 56px;
   }
 }
 
 @media (max-width: 480px) {
-  .filters {
-    padding: 0.5rem;
+  .container {
+    margin: 0 -8px;
+    border-radius: 8px;
   }
 
-  .container {
-    margin: 0 -0.5rem; /* Allow table to use full screen width */
-    border-radius: 0;
+  .header {
+    padding: 12px 16px;
+  }
+
+  .filters {
+    padding: 12px 16px;
   }
 
   .table th,
   .table td {
-    padding: 6px;
+    padding: 8px 10px;
     font-size: 11px;
   }
 
-  .statusInProgress,
-  .statusSubmitted,
-  .statusApproved,
-  .statusCompleted,
-  .outcomeWon,
-  .outcomeLost {
+  .statusChip,
+  .outcomeChip {
     font-size: 10px;
     padding: 4px 8px;
-    min-width: 60px;
+  }
+
+  .projectCell {
+    width: 200px;
+  }
+  
+  .clientCell {
+    width: 140px;
+  }
+  
+  .modelCell {
+    width: 100px;
+  }
+  
+  .statusCell {
+    width: 120px;
+  }
+  
+  .actionsCell {
+    width: 100px;
+  }
+  
+  .emptyState {
+    padding: 32px 16px;
+  }
+}
+
+/* Focus States for Accessibility */
+.projectButton:focus-visible,
+.submittalLink:focus-visible,
+.uploadButton:focus-visible,
+.viewButton:focus-visible,
+.addButton:focus-visible,
+.filterSelect:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .container {
+    border-color: #000000;
+  }
+  
+  .statusChip,
+  .outcomeChip {
+    border: 1px solid #000000;
+  }
+  
+  .viewButton,
+  .addButton,
+  .uploadButton {
+    border: 1px solid #000000;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .tableRow,
+  .projectButton,
+  .viewButton,
+  .addButton,
+  .uploadButton,
+  .submittalLink {
+    animation: none;
+    transition: none;
+  }
+  
+  .tableRow:hover {
+    transform: none;
+  }
+  
+  .projectButton:hover {
+    transform: none;
+  }
+  
+  .viewButton:hover,
+  .addButton:hover,
+  .uploadButton:hover {
+    transform: none;
   }
 } 

@@ -32,38 +32,40 @@ export default function DecoderForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DecodedResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [hasValidationError, setHasValidationError] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({});
+  const [showHorizontalView, setShowHorizontalView] = useState(true);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
-  const handleDecode = async (e: React.FormEvent) => {
+  // Color palette for different segment groups
+  const getGroupColor = (group: string): string => {
+    const colorMap: { [key: string]: string } = {
+      'Product Type': '#3B82F6', // Blue
+      'Model Series': '#10B981', // Green
+      'Configuration': '#F59E0B', // Amber
+      'Capacity': '#EF4444', // Red
+      'Efficiency': '#8B5CF6', // Purple
+      'Features': '#06B6D4', // Cyan
+      'Options': '#F97316', // Orange
+      'Version': '#84CC16', // Lime
+      'Voltage': '#EC4899', // Pink
+      'Default': '#6B7280', // Gray
+    };
+    return colorMap[group] || colorMap['Default'];
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Input validation
     if (!modelNumber.trim()) {
-      setError('Please enter a model number to decode');
-      return;
-    }
-
-    if (modelNumber.trim().length < 2) {
-      setError('Model number must be at least 2 characters long');
-      return;
-    }
-
-    if (modelNumber.trim().length > 50) {
-      setError('Model number is too long (maximum 50 characters)');
-      return;
-    }
-
-    // Check for invalid characters
-    if (!/^[A-Za-z0-9\-_]+$/.test(modelNumber.trim())) {
-      setError('Model number can only contain letters, numbers, hyphens, and underscores');
+      setHasValidationError(true);
+      setError('Please enter a model number');
       return;
     }
 
     setIsLoading(true);
     setError(null);
-    setResult(null);
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    setHasValidationError(false);
 
     try {
       const response = await fetch('/api/decode', {
@@ -72,287 +74,268 @@ export default function DecoderForm() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ modelNumber: modelNumber.trim() }),
-        signal: controller.signal,
       });
 
-      clearTimeout(timeoutId);
-
       if (!response.ok) {
-        let errorMessage = 'Failed to decode model number';
-        
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.error || errorMessage;
-        } catch {
-          // If we can't parse the error response, use status-based messages
-          switch (response.status) {
-            case 400:
-              errorMessage = 'Invalid model number format';
-              break;
-            case 404:
-              errorMessage = 'Decoder service not found';
-              break;
-            case 500:
-              errorMessage = 'Server error - please try again in a moment';
-              break;
-            case 503:
-              errorMessage = 'Service temporarily unavailable';
-              break;
-            default:
-              errorMessage = `Server error (${response.status}) - please try again`;
-          }
-        }
-        
-        throw new Error(errorMessage);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const decodedResult: DecodedResult = await response.json();
+      const data = await response.json();
+      setResult(data);
       
-      // Validate the response structure
-      if (!decodedResult || typeof decodedResult !== 'object') {
-        throw new Error('Invalid response from decoder service');
-      }
-
-      if (!decodedResult.modelNumber) {
-        throw new Error('Incomplete response from decoder service');
-      }
-
-      setResult(decodedResult);
+      // Auto-expand all sections for better UX
+      const sections: { [key: string]: boolean } = {};
+      data.segments.forEach((segment: DecodedSegment) => {
+        sections[segment.group] = true;
+      });
+      setExpandedSections(sections);
       
-    } catch (err) {
-      clearTimeout(timeoutId);
-      
-      if (err instanceof Error) {
-        if (err.name === 'AbortError') {
-          setError('Request timed out - please check your connection and try again');
-        } else if (err.message.includes('fetch')) {
-          setError('Unable to connect to the decoder service. Please check your internet connection and try again.');
-        } else {
-          setError(err.message);
-        }
-      } else {
-        setError('An unexpected error occurred. Please try again.');
-      }
+    } catch (error) {
+      console.error('Error decoding model number:', error);
+      setError('Failed to decode model number. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getConfidenceColor = (confidence: string) => {
-    switch (confidence) {
-      case 'high': return 'var(--success-green)';
-      case 'medium': return 'var(--warning-orange)';
-      case 'low': return 'var(--error-red)';
-      default: return 'var(--text-gray)';
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setModelNumber(value);
+    
+    if (hasValidationError && value.trim()) {
+      setHasValidationError(false);
+      setError(null);
     }
   };
 
-  const getConfidenceText = (confidence: string) => {
-    switch (confidence) {
-      case 'high': return 'High Confidence';
-      case 'medium': return 'Medium Confidence';
-      case 'low': return 'Low Confidence';
-      default: return 'Unknown';
-    }
+  const handleClear = () => {
+    setModelNumber('');
+    setResult(null);
+    setError(null);
+    setHasValidationError(false);
   };
 
-  // Group segments by their group for better display
+  const toggleSection = (group: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [group]: !prev[group]
+    }));
+  };
+
+  // Group segments by their group
   const groupedSegments = result?.segments.reduce((acc, segment) => {
-    if (!acc[segment.group]) acc[segment.group] = [];
+    if (!acc[segment.group]) {
+      acc[segment.group] = [];
+    }
     acc[segment.group].push(segment);
     return acc;
-  }, {} as { [group: string]: DecodedSegment[] }) || {};
+  }, {} as { [key: string]: DecodedSegment[] }) || {};
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h2 className={styles.title}>HVAC Model Number Decoder</h2>
-        <p className={styles.subtitle}>
-          Enter your HVAC model number to get a detailed breakdown of its specifications
-        </p>
-      </div>
-
-      <form onSubmit={handleDecode} className={styles.form}>
-        <div className={styles.inputGroup}>
-          <input
-            type="text"
-            value={modelNumber}
-            onChange={(e) => setModelNumber(e.target.value)}
-            placeholder="Enter model number (e.g., HT024-A1C2)"
-            className={styles.input}
-            disabled={isLoading}
-          />
-          <button
-            type="submit"
-            disabled={isLoading || !modelNumber.trim()}
-            className={styles.decodeButton}
-          >
-            {isLoading ? (
-              <>
-                <span className={styles.spinner}></span>
-                Decoding...
-              </>
-            ) : (
-              'Decode'
-            )}
-          </button>
-        </div>
-      </form>
-
-      {error && (
-        <div className={styles.error}>
-          <div className={styles.errorIcon}>⚠️</div>
-          <div className={styles.errorContent}>
-            <div className={styles.errorText}>{error}</div>
-            <div className={styles.errorHelp}>
-              {error.includes('connection') && (
-                <div className={styles.troubleshoot}>
-                  <p><strong>Troubleshooting steps:</strong></p>
-                  <ul>
-                    <li>Check your internet connection</li>
-                    <li>Refresh the page and try again</li>
-                    <li>Contact support if the problem persists</li>
-                  </ul>
-                </div>
-              )}
-              {error.includes('characters') && (
-                <div className={styles.troubleshoot}>
-                  <p><strong>Valid model number examples:</strong></p>
-                  <ul>
-                    <li>25HCC024300</li>
-                    <li>XR13ACO24</li>
-                    <li>AC-123-456</li>
-                  </ul>
-                </div>
-              )}
-              {error.includes('timeout') && (
-                <div className={styles.troubleshoot}>
-                  <p><strong>Try these steps:</strong></p>
-                  <ul>
-                    <li>Check your internet connection speed</li>
-                    <li>Try with a shorter model number</li>
-                    <li>Wait a moment and try again</li>
-                  </ul>
-                </div>
-              )}
-              {error.includes('Database') && (
-                <div className={styles.troubleshoot}>
-                  <p><strong>This is a temporary service issue:</strong></p>
-                  <ul>
-                    <li>Our team has been notified</li>
-                    <li>Please try again in a few minutes</li>
-                    <li>Contact support if this persists</li>
-                  </ul>
-                </div>
-              )}
-            </div>
+      {/* Card Container */}
+      <div className={styles.decoderCard}>
+        {/* Header */}
+        <div className={styles.cardHeader}>
+          <div className={styles.headerContent}>
+            <h2 className={styles.cardTitle}>HVAC Model Decoder</h2>
+            <p className={styles.cardSubtitle}>
+              Decode any HVAC model number instantly and get detailed specifications
+            </p>
+          </div>
+          <div className={styles.headerIcon}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M20 5h-6v6h6V5zm-6 8h1.5v1.5H14V13zm1.5 1.5H17V16h-1.5v-1.5zm1.5 1.5v1.5H20V16h-3.5zm0 3H20v1.5h-3.5V19z" fill="currentColor"/>
+            </svg>
           </div>
         </div>
-      )}
 
-      {result && (
-        <div className={styles.results}>
-          <div className={styles.resultHeader}>
-            <h3 className={styles.resultTitle}>Decoding Results</h3>
-            <div 
-              className={styles.confidence}
-              style={{ backgroundColor: getConfidenceColor(result.confidence) }}
-            >
-              {getConfidenceText(result.confidence)}
-            </div>
-          </div>
-
-          <div className={styles.basicInfo}>
-            <div className={styles.infoGrid}>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>Model Number:</span>
-                <span className={styles.infoValue}>{result.modelNumber}</span>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={`${styles.inputContainer} ${isInputFocused ? styles.inputFocused : ''} ${hasValidationError ? styles.inputError : ''}`}>
+            <label htmlFor="modelNumber" className={styles.inputLabel}>
+              Model Number
+            </label>
+            <div className={styles.inputWrapper}>
+              <div className={styles.inputIcon}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <polyline points="14,2 14,8 20,8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <polyline points="10,9 9,9 8,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>Brand:</span>
-                <span className={styles.infoValue}>{result.brand}</span>
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>Manufacturer:</span>
-                <span className={styles.infoValue}>{result.manufacturer}</span>
-              </div>
-            </div>
-          </div>
-
-          {result.segments.length > 0 && (
-            <div className={styles.segmentsSection}>
-              <h4 className={styles.sectionTitle}>Model Number Breakdown</h4>
-              
-              {Object.entries(groupedSegments).map(([group, segments]) => (
-                <div key={group} className={styles.groupSection}>
-                  <h5 className={styles.groupTitle}>{group}</h5>
-                  <div className={styles.segmentsList}>
-                    {segments.map((segment, index) => (
-                      <div key={index} className={styles.segment}>
-                        <div className={styles.segmentCode}>{segment.characters}</div>
-                        <div className={styles.segmentMeaning}>{segment.meaning}</div>
-                        <div className={styles.segmentPosition}>Position {segment.position}</div>
-                      </div>
-                    ))}
+              <input
+                type="text"
+                id="modelNumber"
+                value={modelNumber}
+                onChange={handleInputChange}
+                onFocus={() => setIsInputFocused(true)}
+                onBlur={() => setIsInputFocused(false)}
+                placeholder="e.g., CM-350-TR, HT024-A1C2"
+                className={styles.input}
+                disabled={isLoading}
+              />
+              {modelNumber && (
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className={styles.clearButton}
+                  aria-label="Clear input"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              )}
+              <button
+                type="submit"
+                disabled={isLoading || !modelNumber.trim()}
+                className={`${styles.submitButton} ${isLoading ? styles.loading : ''}`}
+              >
+                {isLoading ? (
+                  <div className={styles.loadingSpinner}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </div>
+                ) : (
+                  <>
+                    <span>Decode</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </>
+                )}
+              </button>
+            </div>
+            {error && (
+              <div className={styles.errorMessage}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                {error}
+              </div>
+            )}
+          </div>
+        </form>
+
+        {/* Results */}
+        {result && (
+          <div className={styles.results}>
+            <div className={styles.resultHeader}>
+              <div className={styles.resultInfo}>
+                <h3 className={styles.resultTitle}>Decoded: {result.modelNumber}</h3>
+                <div className={styles.resultMeta}>
+                  <span className={styles.brand}>{result.brand}</span>
+                  <span className={styles.manufacturer}>{result.manufacturer}</span>
+                  <div className={`${styles.confidence} ${styles[`confidence${result.confidence.charAt(0).toUpperCase() + result.confidence.slice(1)}`]}`}>
+                    {result.confidence} confidence
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowHorizontalView(!showHorizontalView)}
+                className={styles.viewToggle}
+                aria-label={showHorizontalView ? "Switch to list view" : "Switch to horizontal view"}
+              >
+                {showHorizontalView ? (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3h18v18H3zM9 9h6v6H9z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+              </button>
+            </div>
+
+            {/* Horizontal Visualization */}
+            {showHorizontalView && (
+              <div className={styles.horizontalView}>
+                <div className={styles.modelVisualization}>
+                  {result.segments.map((segment, index) => (
+                    <div 
+                      key={index} 
+                      className={styles.segmentItem}
+                      style={{ '--segment-color': getGroupColor(segment.group) } as React.CSSProperties}
+                    >
+                      <div className={styles.segmentCharacters}>
+                        {segment.characters}
+                      </div>
+                      <div className={styles.segmentLine}></div>
+                      <div className={styles.segmentTooltip}>
+                        <div className={styles.tooltipGroup}>{segment.group}</div>
+                        <div className={styles.tooltipMeaning}>{segment.meaning}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Detailed Breakdown */}
+            <div className={styles.breakdown}>
+              {Object.entries(groupedSegments).map(([group, segments]) => (
+                <div key={group} className={styles.segmentGroup}>
+                  <button
+                    onClick={() => toggleSection(group)}
+                    className={styles.groupHeader}
+                    style={{ '--group-color': getGroupColor(group) } as React.CSSProperties}
+                  >
+                    <div className={styles.groupIcon}></div>
+                    <span className={styles.groupTitle}>{group}</span>
+                    <div className={styles.groupBadge}>{segments.length}</div>
+                    <div className={`${styles.expandIcon} ${expandedSections[group] ? styles.expanded : ''}`}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  </button>
+                  
+                  {expandedSections[group] && (
+                    <div className={styles.groupContent}>
+                      {segments.map((segment, index) => (
+                        <div key={index} className={styles.segmentDetail}>
+                          <div className={styles.detailHeader}>
+                            <span className={styles.detailCharacters}>{segment.characters}</span>
+                            <span className={styles.detailPosition}>Position {segment.position}</span>
+                          </div>
+                          <p className={styles.detailMeaning}>{segment.meaning}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
-          )}
 
-          {result.unmatchedSegments.length > 0 && (
-            <div className={styles.unmatchedSection}>
-              <h4 className={styles.sectionTitle}>Unmatched Segments</h4>
-              <div className={styles.unmatchedList}>
-                {result.unmatchedSegments.map((segment, index) => (
-                  <div key={index} className={styles.unmatchedSegment}>
-                    <div className={styles.segmentCode}>{segment.characters}</div>
-                    <div className={styles.segmentAttempted}>Attempted: {segment.attempted}</div>
-                    <div className={styles.segmentPosition}>Position {segment.position}</div>
-                  </div>
-                ))}
+            {/* Unmatched Segments */}
+            {result.unmatchedSegments.length > 0 && (
+              <div className={styles.unmatchedSection}>
+                <h4 className={styles.unmatchedTitle}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M9 9h6v6H9z" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                  Unmatched Segments
+                </h4>
+                <div className={styles.unmatchedGrid}>
+                  {result.unmatchedSegments.map((segment, index) => (
+                    <div key={index} className={styles.unmatchedItem}>
+                      <span className={styles.unmatchedCharacters}>{segment.characters}</span>
+                      <span className={styles.unmatchedGroup}>{segment.group}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <p className={styles.unmatchedNote}>
-                These segments could not be decoded. They may be serial numbers, 
-                date codes, or patterns not yet in our database.
-              </p>
-            </div>
-          )}
-
-          {result.segments.length === 0 && (
-            <div className={styles.noResults}>
-              <div className={styles.noResultsIcon}>🔍</div>
-              <h4>No Pattern Match Found</h4>
-              <p>
-                We couldn't find matching patterns for <strong>{result.modelNumber}</strong> in our database. 
-                This could mean:
-              </p>
-              <ul>
-                <li>The model number format is not yet supported</li>
-                <li>It might be from a newer or less common manufacturer</li>
-                <li>There could be a typo in the model number</li>
-                <li>It might be a serial number instead of a model number</li>
-              </ul>
-              
-              <div className={styles.suggestions}>
-                <h5>💡 Suggestions:</h5>
-                <ul>
-                  <li>Try removing any serial numbers or suffixes (e.g., try "25HCC024" instead of "25HCC024300-ABC123")</li>
-                  <li>Check if you have the correct model number (not serial number)</li>
-                  <li>Look for the model number on the unit's nameplate or manual</li>
-                  <li>Try one of our working examples: <code>25HCC024300</code>, <code>XR13ACO24</code>, or <code>XC13024</code></li>
-                </ul>
-              </div>
-              
-              <div className={styles.contactHelp}>
-                <p>
-                  <strong>Need help?</strong> Contact our support team with your model number and we'll add it to our database.
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

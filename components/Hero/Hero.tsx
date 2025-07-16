@@ -18,12 +18,12 @@ export default function Hero() {
       </video>
       <div className={styles.overlay}></div>
       <div className={styles.content}>
-        <h1 className={styles.title}>Welcome to TechTag</h1>
+        <h1 className={styles.title}>Decode Any HVAC Model Number Instantly</h1>
         <p className={styles.subtitle}>
-          Decode any HVAC model number in seconds. Get clear, accurate nomenclature breakdowns instantly.
+          Get clear, accurate nomenclature breakdowns in seconds with TechTag's industry-leading decoder.
         </p>
         <a href="/decode" className={styles.button}>
-          Decode a Model Number
+          Start Decoding
         </a>
       </div>
     </section>
