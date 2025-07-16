@@ -214,7 +214,7 @@ export default function useProjects() {
     loadProjects();
   }, []);
 
-  const addProject = (newProject: Omit<Project, 'id'>) => {
+  const addProject = (newProject: Omit<Project, 'id' | 'communicationLogs'>) => {
     const project: Project = {
       ...newProject,
       id: `project-${Date.now()}`,
