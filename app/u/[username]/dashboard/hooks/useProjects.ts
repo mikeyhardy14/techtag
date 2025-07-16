@@ -1,10 +1,19 @@
 // app/dashboard/hooks/useProjects.ts
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Project, CommunicationLog } from '../../../../components/ProjectsTable';
 
 export default function useProjects() {
-  const [projects, setProjects] = useState<Project[]>([
+  const [isLoading, setIsLoading] = useState(true);
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  // Simulate loading initial data
+  useEffect(() => {
+    const loadProjects = async () => {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setProjects([
     {
       id: 'sample-1',
       name: 'Downtown Office HVAC Upgrade',
@@ -115,16 +124,103 @@ export default function useProjects() {
           contactPerson: 'Jennifer Davis'
         }
       ]
+    },
+    {
+      id: 'sample-6',
+      name: 'Manufacturing Facility Expansion',
+      client: 'TechParts LLC',
+      model: 'HT024-A1C2',
+      status: 'Completed',
+      outcome: 'Won',
+      submittalFile: 'https://example.com/submittal.pdf',
+      communicationLogs: [
+        {
+          id: 'comm-8',
+          date: '2023-12-15',
+          type: 'Meeting',
+          subject: 'Site survey and requirements',
+          notes: 'Large manufacturing space requires industrial-grade system.',
+          contactPerson: 'Mike Rodriguez'
+        },
+        {
+          id: 'comm-9',
+          date: '2024-01-05',
+          type: 'Email',
+          subject: 'Project completion confirmation',
+          notes: 'System installed and operational. Client very satisfied with performance.',
+          contactPerson: 'Mike Rodriguez'
+        }
+      ]
+    },
+    {
+      id: 'sample-7',
+      name: 'Regional Medical Center',
+      client: 'Regional Medical Center',
+      model: 'CM-750-MED',
+      status: 'Completed',
+      outcome: 'Lost',
+      submittalFile: undefined,
+      communicationLogs: [
+        {
+          id: 'comm-10',
+          date: '2023-11-20',
+          type: 'Meeting',
+          subject: 'Initial consultation',
+          notes: 'Hospital needs specialized HVAC for new surgical wing.',
+          contactPerson: 'Dr. Patricia Lee'
+        },
+        {
+          id: 'comm-11',
+          date: '2023-12-10',
+          type: 'Email',
+          subject: 'Bid submission',
+          notes: 'Submitted competitive bid for medical-grade HVAC system.',
+          contactPerson: 'Dr. Patricia Lee'
+        },
+        {
+          id: 'comm-12',
+          date: '2024-01-08',
+          type: 'Phone',
+          subject: 'Bid result notification',
+          notes: 'Unfortunately lost to competitor with lower bid. Feedback was positive on technical approach.',
+          contactPerson: 'Dr. Patricia Lee'
+        }
+      ]
+    },
+    {
+      id: 'sample-8',
+      name: 'School District HVAC Modernization',
+      client: 'Riverside School District',
+      model: 'CM-400-SCH',
+      status: 'Approved',
+      outcome: undefined,
+      submittalFile: 'https://example.com/school-submittal.pdf',
+      communicationLogs: [
+        {
+          id: 'comm-13',
+          date: '2024-01-25',
+          type: 'Meeting',
+          subject: 'District-wide HVAC assessment',
+          notes: 'Multiple schools need system upgrades. Phased approach recommended.',
+          contactPerson: 'Janet Thompson'
+        }
+      ]
     }
   ]);
+      
+      setIsLoading(false);
+    };
 
-  const addProject = (newProject: Omit<Project, 'id' | 'communicationLogs'>) => {
+    loadProjects();
+  }, []);
+
+  const addProject = (newProject: Omit<Project, 'id'>) => {
     const project: Project = {
       ...newProject,
-      id: Math.random().toString(36).substr(2, 9), // Simple ID generation
-      communicationLogs: [], // Initialize with empty communication logs
+      id: `project-${Date.now()}`,
+      communicationLogs: []
     };
-    setProjects((prev) => [...prev, project]);
+    setProjects(prev => [...prev, project]);
   };
 
   const updateProject = (updatedProject: Project) => {
@@ -155,6 +251,7 @@ export default function useProjects() {
 
   return {
     projects,
+    isLoading,
     addProject,
     updateProject,
     addCommunication,

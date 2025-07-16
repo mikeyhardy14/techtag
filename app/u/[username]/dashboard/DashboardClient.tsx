@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider/AuthProvider';
 import styles from './page.module.css';
-import DecoderForm from '@/components/DecoderForm/DecoderForm';
+
 import ProjectDrawer from '../../../components/ProjectDrawer';
 import ProjectsTable, { Project } from '../../../components/ProjectsTable';
 import CommunicationLogDrawer from '../../../components/CommunicationLogDrawer';
@@ -11,12 +11,14 @@ import AddCommunicationModal from '../../../components/AddCommunicationModal';
 import ProjectDetailsDrawer from '../../../components/ProjectDetailsDrawer';
 import DashboardSidebar from '@/components/DashboardSidebar/DashboardSidebar';
 import DashboardHeader from '@/components/DashboardHeader/DashboardHeader';
+import DashboardKPICards from '@/components/DashboardKPICards/DashboardKPICards';
+import SkeletonLoader from '@/components/SkeletonLoader/SkeletonLoader';
 import useProjects from './hooks/useProjects';
 
 export default function DashboardClient() {
   const { user, loading, signOut } = useAuth();
   const router = useRouter();
-  const { projects, addProject, updateProject, addCommunication } = useProjects();
+  const { projects, addProject, updateProject, addCommunication, isLoading } = useProjects();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [communicationDrawerOpen, setCommunicationDrawerOpen] = useState(false);
   const [addCommunicationModalOpen, setAddCommunicationModalOpen] = useState(false);
@@ -70,18 +72,36 @@ export default function DashboardClient() {
     setSelectedProject(null);
   };
 
+  // Show auth loading state
   if (loading) {
     return (
       <DashboardSidebar>
-        <div className={styles.loading}>
-          Loading...
-        </div>
+        <SkeletonLoader />
       </DashboardSidebar>
     );
   }
 
   if (!user) {
     return null; // Will redirect to login
+  }
+
+  // Show data loading state
+  if (isLoading) {
+    return (
+      <DashboardSidebar>
+        <DashboardHeader
+          title="Projects"
+          actionButton={{
+            label: "CREATE PROJECT",
+            icon: "➕",
+            onClick: () => setDrawerOpen(true)
+          }}
+        />
+        <div className={styles.content}>
+          <SkeletonLoader />
+        </div>
+      </DashboardSidebar>
+    );
   }
 
   return (
@@ -96,8 +116,10 @@ export default function DashboardClient() {
       />
       
       <div className={styles.content}>
-        <DecoderForm />
+        {/* KPI Cards */}
+        <DashboardKPICards projects={projects} />
 
+        {/* Projects Table */}
         <div className={styles.projectsSection}>
           <ProjectsTable
             projects={projects}

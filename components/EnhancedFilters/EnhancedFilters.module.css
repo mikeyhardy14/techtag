@@ -1,0 +1,262 @@
+.container {
+  background: #F8FAFC;
+  border-bottom: 1px solid #E5E7EB;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.filtersRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  gap: 24px;
+}
+
+.filterGroups {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filterSelect {
+  padding: 8px 12px;
+  border: 1px solid #D1D5DB;
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: #374151;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  min-width: 140px;
+  font-family: inherit;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.filterActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.clearAllButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  color: #6B7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.clearAllButton:hover {
+  background: #F3F4F6;
+  border-color: #9CA3AF;
+  color: #374151;
+}
+
+.projectCount {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  border: 1px solid #E5E7EB;
+}
+
+.countNumber {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+.countLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6B7280;
+}
+
+/* Active Filters */
+.activeFilters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 32px 20px 32px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.activeFiltersLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6B7280;
+  flex-shrink: 0;
+}
+
+.filterChips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filterChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: #3B82F6;
+  color: white;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  animation: fadeInScale 0.2s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.chipLabel {
+  white-space: nowrap;
+}
+
+.chipRemove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 4px;
+  width: 18px;
+  height: 18px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.chipRemove:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .filtersRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 16px 24px;
+  }
+  
+  .filterGroups {
+    gap: 16px;
+  }
+  
+  .filterActions {
+    margin-left: 0;
+    justify-content: space-between;
+  }
+  
+  .filterSelect {
+    min-width: 120px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .activeFilters {
+    padding: 12px 24px 16px 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .filterChips {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .filtersRow {
+    padding: 12px 16px;
+  }
+  
+  .filterGroups {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+  }
+  
+  .filterGroup {
+    width: 100%;
+  }
+  
+  .filterSelect {
+    min-width: 100%;
+  }
+  
+  .filterActions {
+    flex-direction: column-reverse;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .clearAllButton {
+    justify-content: center;
+  }
+  
+  .activeFilters {
+    padding: 12px 16px;
+  }
+} 

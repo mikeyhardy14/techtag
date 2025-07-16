@@ -1,0 +1,387 @@
+.content {
+  padding: 32px;
+  background: #F8FAFC;
+  min-height: calc(100vh - 80px);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settingsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.settingsCard {
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  animation: fadeInUp 0.5s ease-out;
+  animation-delay: var(--delay, 0s);
+  animation-fill-mode: both;
+}
+
+.settingsCard:nth-child(1) { --delay: 0.1s; }
+.settingsCard:nth-child(2) { --delay: 0.2s; }
+.settingsCard:nth-child(3) { --delay: 0.3s; }
+.settingsCard:nth-child(4) { --delay: 0.4s; }
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 24px 0 24px;
+  margin-bottom: 20px;
+}
+
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  flex-shrink: 0;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0;
+}
+
+.cardContent {
+  padding: 0 24px 24px 24px;
+}
+
+/* Form Elements */
+.settingItem {
+  margin-bottom: 24px;
+}
+
+.settingItem:last-child {
+  margin-bottom: 0;
+}
+
+.settingLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+  letter-spacing: 0.025em;
+}
+
+.settingInput {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #D1D5DB;
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: #1F2937;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.settingInput:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settingInput:disabled {
+  background: #F9FAFB;
+  color: #6B7280;
+  cursor: not-allowed;
+}
+
+.settingSelect {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #D1D5DB;
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: #1F2937;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.settingSelect:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settingHint {
+  display: block;
+  font-size: 0.75rem;
+  color: #6B7280;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* Toggle Switches */
+.toggleGroup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.toggleInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.toggleLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.toggleDescription {
+  font-size: 0.75rem;
+  color: #6B7280;
+  line-height: 1.4;
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggleSlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #D1D5DB;
+  transition: all 0.3s ease;
+  border-radius: 24px;
+}
+
+.toggleSlider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle input:checked + .toggleSlider {
+  background-color: #3B82F6;
+}
+
+.toggle input:checked + .toggleSlider:before {
+  transform: translateX(20px);
+}
+
+.toggle input:focus + .toggleSlider {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Danger Button */
+.dangerButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 10px;
+  color: #DC2626;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  margin-bottom: 8px;
+}
+
+.dangerButton:hover {
+  background: #FEE2E2;
+  border-color: #FCA5A5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+}
+
+.dangerButton:active {
+  transform: translateY(0);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .content {
+    padding: 20px 16px;
+  }
+  
+  .settingsGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .cardHeader {
+    padding: 20px 20px 0 20px;
+    margin-bottom: 16px;
+  }
+  
+  .cardContent {
+    padding: 0 20px 20px 20px;
+  }
+  
+  .cardIcon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .cardTitle {
+    font-size: 1.125rem;
+  }
+  
+  .settingItem {
+    margin-bottom: 20px;
+  }
+  
+  .settingInput,
+  .settingSelect {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .toggleGroup {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .toggle {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 16px 12px;
+  }
+  
+  .settingsGrid {
+    gap: 16px;
+  }
+  
+  .cardHeader {
+    padding: 16px 16px 0 16px;
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .cardContent {
+    padding: 0 16px 16px 16px;
+  }
+  
+  .cardIcon {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .cardTitle {
+    font-size: 1rem;
+  }
+  
+  .settingItem {
+    margin-bottom: 16px;
+  }
+  
+  .settingInput,
+  .settingSelect {
+    padding: 10px 12px;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .content {
+    background: #FFFFFF;
+  }
+  
+  .settingsCard {
+    border-color: #000000;
+  }
+  
+  .settingInput,
+  .settingSelect {
+    border-color: #000000;
+  }
+  
+  .toggleSlider {
+    border: 2px solid #000000;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .content,
+  .settingsCard,
+  .settingInput,
+  .settingSelect,
+  .toggleSlider,
+  .toggleSlider:before,
+  .dangerButton {
+    animation: none;
+    transition: none;
+  }
+  
+  .dangerButton:hover {
+    transform: none;
+  }
+}
+
+/* Focus indicators for accessibility */
+.settingInput:focus-visible,
+.settingSelect:focus-visible,
+.toggle input:focus-visible + .toggleSlider,
+.dangerButton:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+} 

@@ -1,6 +1,7 @@
 'use client';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styles from './ProjectsTable.module.css';
+import EnhancedFilters from '@/components/EnhancedFilters/EnhancedFilters';
 
 export interface CommunicationLog {
   id: string;
@@ -47,6 +48,11 @@ export default function ProjectsTable({ projects, onUpdate, onViewCommunications
 
   const handleOutcomeChange = (project: Project, newOutcome: Project['outcome']) => {
     onUpdate({ ...project, outcome: newOutcome });
+  };
+
+  const handleClearAllFilters = () => {
+    setStatusFilter('all');
+    setOutcomeFilter('all');
   };
 
   const getStatusIcon = (status: string) => {
@@ -130,42 +136,15 @@ export default function ProjectsTable({ projects, onUpdate, onViewCommunications
         </div>
       </div>
 
-      {/* Filters */}
-      <div className={styles.filters}>
-        <div className={styles.filterGroup}>
-          <label className={styles.filterLabel}>Status</label>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className={styles.filterSelect}
-          >
-            <option value="all">All Statuses</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Submitted">Submitted</option>
-            <option value="Approved">Approved</option>
-            <option value="Completed">Completed</option>
-          </select>
-        </div>
-
-        <div className={styles.filterGroup}>
-          <label className={styles.filterLabel}>Outcome</label>
-          <select
-            value={outcomeFilter}
-            onChange={(e) => setOutcomeFilter(e.target.value)}
-            className={styles.filterSelect}
-          >
-            <option value="all">All Outcomes</option>
-            <option value="Won">Won</option>
-            <option value="Lost">Lost</option>
-          </select>
-        </div>
-
-        <div className={styles.filterSummary}>
-          <span className={styles.projectCount}>
-            {filteredProjects.length} {filteredProjects.length === 1 ? 'project' : 'projects'}
-          </span>
-        </div>
-      </div>
+      {/* Enhanced Filters */}
+      <EnhancedFilters
+        statusFilter={statusFilter}
+        outcomeFilter={outcomeFilter}
+        onStatusChange={setStatusFilter}
+        onOutcomeChange={setOutcomeFilter}
+        onClearAll={handleClearAllFilters}
+        projectCount={filteredProjects.length}
+      />
 
       {/* Table */}
       <div className={styles.tableWrapper}>
@@ -315,22 +294,37 @@ export default function ProjectsTable({ projects, onUpdate, onViewCommunications
         </table>
       </div>
 
-      {/* Empty State */}
+      {/* Enhanced Empty State */}
       {filteredProjects.length === 0 && (
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <polyline points="14,2 14,8 20,8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z" fill="currentColor"/>
             </svg>
           </div>
-          <h4 className={styles.emptyTitle}>No projects found</h4>
+          <h4 className={styles.emptyTitle}>
+            {statusFilter !== 'all' || outcomeFilter !== 'all' 
+              ? 'No projects match your filters'
+              : 'No projects yet'
+            }
+          </h4>
           <p className={styles.emptyMessage}>
             {statusFilter !== 'all' || outcomeFilter !== 'all' 
-              ? 'Try adjusting your filters to see more projects.'
-              : 'Get started by creating your first project.'
+              ? 'Try adjusting your filters to see more projects, or create a new project to get started.'
+              : 'Create your first project to start tracking your HVAC work and manage your pipeline.'
             }
           </p>
+          {(statusFilter !== 'all' || outcomeFilter !== 'all') && (
+            <button 
+              onClick={handleClearAllFilters}
+              className={styles.clearFiltersButton}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Clear Filters
+            </button>
+          )}
         </div>
       )}
     </div>

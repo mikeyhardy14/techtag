@@ -534,6 +534,29 @@
   line-height: 1.5;
 }
 
+.clearFiltersButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #3B82F6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+  font-family: inherit;
+}
+
+.clearFiltersButton:hover {
+  background: #2563EB;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
 /* Legacy Status Styles (for fallback) */
 .statusInProgress {
   display: none;
