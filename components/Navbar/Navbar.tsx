@@ -23,8 +23,24 @@ export default function Navbar() {
   }, []);
 
   const handleSignOut = async () => {
-    await signOut();
-    setIsMobileMenuOpen(false);
+    try {
+      await signOut();
+      setIsMobileMenuOpen(false);
+      // Force clear any remaining session data
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Sign out error:', error);
+      // Force clear on error
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.reload();
+      }
+    }
   };
 
   const closeMobileMenu = () => {
