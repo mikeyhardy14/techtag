@@ -1,14 +1,48 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/AuthProvider/AuthProvider';
 import Hero from '@/components/Hero/Hero';
 import HowItWorksSection from '@/components/HowItWorksSection/HowItWorksSection';
 
 export default function HomePage() {
+  const router = useRouter();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    // If user is authenticated, redirect to their dashboard
+    if (!loading && user) {
+      const username = user.email?.split('@')[0] || 'user';
+      router.push(`/u/${username}/dashboard`);
+    }
+  }, [user, loading, router]);
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Form submission logic will be added later
   };
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '50vh',
+        fontSize: '1.1rem',
+        color: 'var(--text-secondary)'
+      }}>
+        Loading...
+      </div>
+    );
+  }
+
+  // If user is authenticated, don't render the homepage (redirect is in progress)
+  if (user) {
+    return null;
+  }
 
   return (
     <>

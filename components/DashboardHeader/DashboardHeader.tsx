@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider/AuthProvider';
 import styles from './DashboardHeader.module.css';
 
@@ -14,7 +15,8 @@ interface DashboardHeaderProps {
 }
 
 export default function DashboardHeader({ title, actionButton, onSearch }: DashboardHeaderProps) {
-  const { user } = useAuth();
+  const router = useRouter();
+  const { user, signOut } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
@@ -30,6 +32,15 @@ export default function DashboardHeader({ title, actionButton, onSearch }: Dashb
     setSearchQuery('');
     if (onSearch) {
       onSearch('');
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.push('/');
+    } catch (error) {
+      console.error('Sign out error:', error);
     }
   };
 
@@ -135,7 +146,7 @@ export default function DashboardHeader({ title, actionButton, onSearch }: Dashb
                 Settings
               </a>
               <hr className={styles.dropdownDivider} />
-              <button className={styles.dropdownItem}>
+              <button className={styles.dropdownItem} onClick={handleSignOut}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <polyline points="16,17 21,12 16,7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
