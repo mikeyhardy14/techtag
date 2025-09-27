@@ -80,6 +80,24 @@ const GEH_GEV_SEGMENTS: ModelSegment[] = [
   { startPos: 34, endPos: 35, id: 'drain_pan', group: 'Drain Pan', characters: '' }
 ];
 
+const EXW_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'model_series', group: 'Model Series', characters: '' },
+  { startPos: 3, endPos: 4, id: 'development_sequence', group: 'Development Sequence', characters: '' },
+  { startPos: 4, endPos: 7, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },
+  { startPos: 8, endPos: 9, id: 'heat_exchanger', group: 'Heat Exchanger', characters: '' },
+  { startPos: 9, endPos: 10, id: 'design_sequence', group: 'Design Sequence', characters: '' },
+  { startPos: 10, endPos: 11, id: 'refrigeration_sequence', group: 'Refrigeration Sequence', characters: '' },
+  { startPos: 11, endPos: 12, id: 'open_digit_1', group: 'Open Digit', characters: '' },
+  { startPos: 12, endPos: 13, id: 'freeze_protection', group: 'Freeze Protection', characters: '' },
+  { startPos: 13, endPos: 14, id: 'open_digit_2', group: 'Open Digit', characters: '' },
+  { startPos: 14, endPos: 15, id: 'open_digit_3', group: 'Open Digit', characters: '' },
+  { startPos: 15, endPos: 16, id: 'open_digit_4', group: 'Open Digit', characters: '' },
+  { startPos: 16, endPos: 17, id: 'controls', group: 'Controls', characters: '' },
+  { startPos: 17, endPos: 18, id: 'tstat_location', group: 'Tstat Location', characters: '' }
+];
+
+
 // GET model number parsing configuration (36 digits) - Crane
 const GET_SEGMENTS: ModelSegment[] = [
   { startPos: 0, endPos: 3, id: 'model_series', group: 'Model Series', characters: '' },
@@ -197,6 +215,211 @@ const VSH_VSV_SEGMENTS: ModelSegment[] = [
   { startPos: 18, endPos: 19, id: 'blower_configuration', group: 'Blower Configuration', characters: '' }
 ];
 
+// DAIKIN Brands  
+const WCA_WHA_WRA_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_category', group: 'Product Category', characters: '' },
+  { startPos: 1, endPos: 4, id: 'product_identifier', group: 'Product Identifier', characters: '' },
+  { startPos: 4, endPos: 5, id: 'design_series', group: 'Design Series', characters: '' },
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },
+  { startPos: 8, endPos: 9, id: 'unit_controls', group: 'Unit Controls', characters: '' },
+  { startPos: 9, endPos: 10, id: 'voltage', group: 'Voltage', characters: '' },
+  { startPos: 10, endPos: 11, id: 'head_pressure_control', group: 'Head Pressure Control', characters: '' },
+  { startPos: 11, endPos: 12, id: 'water_piping_location', group: 'Water Piping Location', characters: '' },
+  { startPos: 12, endPos: 13, id: 'control_box_location', group: 'Control Box Location', characters: '' },
+  { startPos: 13, endPos: 15, id: 'status_lights', group: 'Status Lights', characters: '' },
+  { startPos: 15, endPos: 17, id: 'freezestat', group: 'Freezestat', characters: '' },
+  { startPos: 17, endPos: 18, id: 'construction_type', group: 'Construction Type', characters: '' },
+  { startPos: 18, endPos: 19, id: 'source_water_heat_exchanger_construction', group: 'Source Water to Refrigerant Heat Exchanger Construction', characters: '' },
+  { startPos: 19, endPos: 20, id: 'desuperheater', group: 'Desuperheater', characters: '' },
+  { startPos: 20, endPos: 21, id: 'refrigerant', group: 'Refrigerant', characters: '' },
+  { startPos: 21, endPos: 24, id: 'cabinet_electrical', group: 'Cabinet Electrical', characters: '' }
+];
+
+const WSC_WSD_WSM_WSN_WSS_WST_WSLV_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_category', group: 'Product Category', characters: '' },
+  { startPos: 1, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },
+  { startPos: 3, endPos: 4, id: 'configuration', group: 'Configuration', characters: '' },
+  { startPos: 4, endPos: 7, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },
+  { startPos: 8, endPos: 9, id: 'design_series', group: 'Design Series', characters: '' },
+  { startPos: 9, endPos: 10, id: 'piping_hand', group: 'Piping Hand', characters: '' },
+  { startPos: 10, endPos: 12, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },
+  { startPos: 12, endPos: 13, id: 'water_coil_type', group: 'Water Coil Type', characters: '' },
+  { startPos: 13, endPos: 14, id: 'unit_controls', group: 'Unit Controls', characters: '' },
+  { startPos: 14, endPos: 15, id: 'controller_options', group: 'Controller Options', characters: '' },
+  { startPos: 15, endPos: 16, id: 'fan_motor_options', group: 'Fan Motor Options', characters: '' },
+  { startPos: 16, endPos: 17, id: 'insulation', group: 'Insulation', characters: '' },
+  { startPos: 17, endPos: 18, id: 'water_coil_indoor_coil', group: 'Water Coil Indoor Coil', characters: '' },
+  { startPos: 18, endPos: 19, id: 'dehumidification', group: 'Dehumidification', characters: '' },
+  { startPos: 19, endPos: 20, id: 'transformer', group: 'Transformer', characters: '' },
+  { startPos: 20, endPos: 22, id: 'options', group: 'Options', characters: '' },
+  { startPos: 22, endPos: 23, id: 'filter_racks_and_filter', group: 'Filter Racks and Filter', characters: '' },
+  { startPos: 23, endPos: 24, id: 'water_flow_options', group: 'Water Flow Options', characters: '' },
+  { startPos: 24, endPos: 25, id: 'piping_package', group: 'Piping Package', characters: '' },
+  { startPos: 25, endPos: 26, id: 'electric_heat_size', group: 'Electric Heat Size', characters: '' },
+  { startPos: 26, endPos: 27, id: 'electric_heat_control', group: 'Electric Heat Control', characters: '' },
+  { startPos: 27, endPos: 28, id: 'cabinet_color', group: 'Cabinet Color', characters: '' },
+  { startPos: 28, endPos: 29, id: 'standard_or_special', group: 'Standard or Special', characters: '' },
+  { startPos: 29, endPos: 30, id: 'drain_pan_material', group: 'Drain Pan Material', characters: '' },
+  { startPos: 30, endPos: 31, id: 'electrical_options', group: 'Electrical Options', characters: '' },
+  { startPos: 31, endPos: 32, id: 'corrosion_protection', group: 'Corrosion Protection', characters: '' },
+  { startPos: 32, endPos: 33, id: 'future_use', group: 'Future Use', characters: '' },
+  { startPos: 33, endPos: 34, id: 'extended_warranty', group: 'Extended Warranty', characters: '' }
+];
+
+const WSR_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_category', group: 'Product Category', characters: '' },
+  { startPos: 1, endPos: 4, id: 'model_type', group: 'Model Type', characters: '' },
+  { startPos: 4, endPos: 5, id: 'design_series', group: 'Design Series', characters: '' },
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },
+  { startPos: 9, endPos: 10, id: 'voltage', group: 'Voltage', characters: '' },
+  { startPos: 10, endPos: 11, id: 'cabinet_height', group: 'Cabinet Height', characters: '' },
+  { startPos: 11, endPos: 12, id: 'return_air_corrosion_protection', group: 'Return Air Corrosion Protection', characters: '' },
+  { startPos: 12, endPos: 13, id: 'discharge_air', group: 'Discharge Air', characters: '' },
+  { startPos: 13, endPos: 15, id: 'fan_motor_options', group: 'Fan Motor Options', characters: '' },
+  { startPos: 15, endPos: 16, id: 'cabinet_type', group: 'Cabinet Type', characters: '' },
+  { startPos: 16, endPos: 17, id: 'discharge_grille', group: 'Discharge Grille', characters: '' },
+  { startPos: 17, endPos: 18, id: 'construction_type', group: 'Construction Type', characters: '' },
+  { startPos: 18, endPos: 19, id: 'water_refrigerant_heat_exchanger_construction', group: 'Water to Refrigerant Heat Exchanger Construction', characters: '' },
+  { startPos: 19, endPos: 20, id: 'heating_options', group: 'Heating Options', characters: '' },
+  { startPos: 20, endPos: 22, id: 'future_use_21_22', group: 'Future Use', characters: '' },
+  { startPos: 22, endPos: 23, id: 'piping_hand', group: 'Piping Hand', characters: '' },
+  { startPos: 23, endPos: 24, id: 'thermostat_control', group: 'Thermostat Control', characters: '' },
+  { startPos: 24, endPos: 25, id: 'thermostat_programmability', group: 'Thermostat Programmability', characters: '' },
+  { startPos: 25, endPos: 26, id: 'thermostat_option', group: 'Thermostat Option', characters: '' },
+  { startPos: 26, endPos: 29, id: 'standard_or_special', group: 'Standard or Special', characters: '' },
+  { startPos: 29, endPos: 32, id: 'options', group: 'Options', characters: '' },
+  { startPos: 32, endPos: 33, id: 'refrigerant', group: 'Refrigerant', characters: '' },
+  { startPos: 33, endPos: 34, id: 'power_connection', group: 'Power Connection', characters: '' },
+  { startPos: 34, endPos: 37, id: 'cabinet_electrical', group: 'Cabinet Electrical', characters: '' },
+  { startPos: 37, endPos: 38, id: 'water_flow_control', group: 'Water Flow Control', characters: '' },
+  { startPos: 38, endPos: 39, id: 'color', group: 'Color', characters: '' },
+  { startPos: 39, endPos: 40, id: 'outside_air', group: 'Outside Air', characters: '' },
+  { startPos: 40, endPos: 41, id: 'agency_type', group: 'Agency Type', characters: '' },
+  { startPos: 41, endPos: 42, id: 'packaging', group: 'Packaging', characters: '' },
+  { startPos: 42, endPos: 43, id: 'extended_warranty', group: 'Extended Warranty', characters: '' },
+  { startPos: 43, endPos: 44, id: 'product_style', group: 'Product Style', characters: '' }
+];
+
+const WGC_WGD_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_category', group: 'Product Category', characters: '' },
+  { startPos: 1, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },
+  { startPos: 3, endPos: 4, id: 'configuration', group: 'Configuration', characters: '' },
+  { startPos: 4, endPos: 7, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },
+  { startPos: 8, endPos: 9, id: 'design_series', group: 'Design Series', characters: '' },
+  { startPos: 9, endPos: 11, id: 'return_air_discharge_air', group: 'Return Air Discharge Air', characters: '' },
+  { startPos: 11, endPos: 12, id: 'water_coil_type', group: 'Water Coil Type', characters: '' },
+  { startPos: 12, endPos: 13, id: 'unit_controls', group: 'Unit Controls', characters: '' },
+  { startPos: 13, endPos: 14, id: 'fan_motor_options', group: 'Fan Motor Options', characters: '' },
+  { startPos: 14, endPos: 15, id: 'insulation', group: 'Insulation', characters: '' },
+  { startPos: 15, endPos: 17, id: 'options', group: 'Options', characters: '' },
+  { startPos: 17, endPos: 18, id: 'filters_and_racks', group: 'Filters and Racks', characters: '' },
+  { startPos: 18, endPos: 19, id: 'two_way_motorized_valve', group: 'Two-Way Motorized Valve', characters: '' },
+  { startPos: 19, endPos: 20, id: 'electric_heat', group: 'Electric Heat', characters: '' },
+  { startPos: 20, endPos: 21, id: 'additional_options', group: 'Additional Options', characters: '' },
+  { startPos: 21, endPos: 22, id: 'standard_or_special_22', group: 'Standard or Special', characters: '' },
+  { startPos: 22, endPos: 24, id: 'transformer', group: 'Transformer', characters: '' },
+  { startPos: 24, endPos: 25, id: 'corrosion_protection_25', group: 'Corrosion Protection', characters: '' },
+  { startPos: 25, endPos: 26, id: 'disconnect_switch', group: 'Disconnect Switch', characters: '' },
+  { startPos: 26, endPos: 27, id: 'electric_heat_control', group: 'Electric Heat Control', characters: '' },
+  { startPos: 27, endPos: 28, id: 'cabinet_color', group: 'Cabinet Color', characters: '' },
+  { startPos: 28, endPos: 29, id: 'standard_or_special_29', group: 'Standard or Special', characters: '' },
+  { startPos: 29, endPos: 30, id: 'drain_pan_material', group: 'Drain Pan Material', characters: '' },
+  { startPos: 30, endPos: 31, id: 'electrical_options', group: 'Electrical Options', characters: '' },
+  { startPos: 31, endPos: 32, id: 'corrosion_protection_32', group: 'Corrosion Protection', characters: '' },
+  { startPos: 32, endPos: 33, id: 'future_use_33', group: 'Future Use', characters: '' }
+];
+
+const MHC_MHW_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_category', group: 'Product Category', characters: '' },           // Digit 1
+  { startPos: 1, endPos: 4, id: 'model_type', group: 'Model Type', characters: '' },                       // Digits 2–4
+  { startPos: 4, endPos: 5, id: 'design_series', group: 'Design Series', characters: '' },                 // Digit 5
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },           // Digits 6–8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                           // Digit 9
+  { startPos: 9, endPos: 10, id: 'voltage', group: 'Voltage', characters: '' },                            // Digit 10
+  { startPos: 10, endPos: 11, id: 'cabinet_height', group: 'Cabinet Height', characters: '' },             // Digit 11
+  { startPos: 11, endPos: 12, id: 'return_air', group: 'Return Air', characters: '' },                     // Digit 12
+  { startPos: 12, endPos: 13, id: 'discharge_air', group: 'Discharge Air', characters: '' },               // Digit 13
+  { startPos: 13, endPos: 15, id: 'blower_motor', group: 'Blower Motor', characters: '' },                 // Digits 14–15
+  { startPos: 15, endPos: 16, id: 'cabinet_type', group: 'Cabinet Type', characters: '' },                 // Digit 16
+  { startPos: 16, endPos: 17, id: 'discharge_grille', group: 'Discharge Grille', characters: '' },         // Digit 17
+  { startPos: 17, endPos: 18, id: 'heating_options', group: 'Heating Options', characters: '' },           // Digit 18
+  { startPos: 18, endPos: 19, id: 'water_refrigerant_hx_construction', group: 'Water to Refrigerant Heat Exchanger Construction', characters: '' }, // Digit 19
+  // Missing Digits 20
+  { startPos: 20, endPos: 22, id: 'future_use_21_22', group: 'Future Use', characters: '' },               // Digits 21–22
+  { startPos: 22, endPos: 23, id: 'piping_hand', group: 'Piping Hand', characters: '' },                   // Digit 23
+  { startPos: 23, endPos: 24, id: 'thermostat_control', group: 'Thermostat Control', characters: '' },     // Digit 24
+  { startPos: 24, endPos: 25, id: 'thermostat_programmability', group: 'Thermostat Programmability', characters: '' }, // Digit 25
+  { startPos: 25, endPos: 26, id: 'thermostat_option', group: 'Thermostat Option', characters: '' },       // Digit 26
+  // Missing Digits 27-29
+  { startPos: 29, endPos: 32, id: 'options', group: 'Options', characters: '' },                           // Digits 30–32
+  { startPos: 32, endPos: 33, id: 'future_use_33', group: 'Future Use', characters: '' },                  // Digit 33
+  { startPos: 33, endPos: 34, id: 'power_connection', group: 'Power Connection', characters: '' },         // Digit 34
+  { startPos: 34, endPos: 37, id: 'cabinet_electrical', group: 'Cabinet Electrical', characters: '' },     // Digits 35–37
+  { startPos: 37, endPos: 38, id: 'water_flow_control', group: 'Water Flow Control', characters: '' }      // Digit 38
+];
+
+const WCC_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_category', group: 'Product Category', characters: '' },         // Digit 1
+  { startPos: 1, endPos: 4, id: 'product_identifier', group: 'Product Identifier', characters: '' },     // Digits 2–4
+  { startPos: 4, endPos: 5, id: 'design_series', group: 'Design Series', characters: '' },               // Digit 5
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },         // Digits 6–8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                         // Digit 9
+  { startPos: 9, endPos: 10, id: 'voltage', group: 'Voltage', characters: '' },                          // Digit 10
+  { startPos: 10, endPos: 11, id: 'empty', group: 'Empty', characters: '' },                          // Digit 11
+  { startPos: 11, endPos: 12, id: 'return_air', group: 'Return Air', characters: '' },                   // Digit 12
+  { startPos: 12, endPos: 13, id: 'discharge_air', group: 'Discharge Air', characters: '' },             // Digit 13
+  { startPos: 13, endPos: 15, id: 'blower_motor', group: 'Blower Motor', characters: '' },               // Digits 14–15
+  { startPos: 15, endPos: 17, id: 'empty', group: 'Empty', characters: '' },                       // Digits 16–17
+  { startPos: 17, endPos: 18, id: 'construction_type', group: 'Construction Type', characters: '' },     // Digit 18
+  { startPos: 18, endPos: 19, id: 'heat_exchanger', group: 'Heat Exchanger', characters: '' },           // Digit 19
+  { startPos: 19, endPos: 29, id: 'empty', group: 'Empty', characters: '' },                       // Digits 20–29
+  { startPos: 29, endPos: 32, id: 'drain_pan', group: 'Drain Pan', characters: '' },                     // Digits 30–32
+  { startPos: 32, endPos: 33, id: 'refrigerant', group: 'Refrigerant', characters: '' },                 // Digit 33
+  { startPos: 33, endPos: 34, id: 'empty', group: 'Empty', characters: '' },                          // Digit 34
+  { startPos: 34, endPos: 37, id: 'cabinet_electrical', group: 'Cabinet Electrical', characters: '' },   // Digits 35–37
+  { startPos: 37, endPos: 38, id: 'empty', group: 'Empty', characters: '' },                          // Digit 38
+  { startPos: 38, endPos: 39, id: 'color', group: 'Color', characters: '' },                             // Digit 39
+  { startPos: 39, endPos: 40, id: 'empty', group: 'Empty', characters: '' },                          // Digit 40
+  { startPos: 40, endPos: 41, id: 'agency_listing', group: 'Agency Listing', characters: '' },           // Digit 41
+  { startPos: 41, endPos: 42, id: 'packaging', group: 'Packaging', characters: '' },                     // Digit 42
+  { startPos: 42, endPos: 43, id: 'empty', group: 'Empty', characters: '' },                          // Digit 43
+  { startPos: 43, endPos: 44, id: 'product_style', group: 'Product Style', characters: '' }              // Digit 44
+];
+
+// McQuay
+const MCQUAY_STANDARD_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_category', group: 'Product Category', characters: '' },       // Digit 1
+  { startPos: 1, endPos: 4, id: 'product_identifier', group: 'Product Identifier', characters: '' },   // Digits 2–4
+  { startPos: 4, endPos: 5, id: 'design_series', group: 'Design Series', characters: '' },             // Digit 5
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },       // Digits 6–8
+  { startPos: 8, endPos: 9, id: 'voltage', group: 'Voltage', characters: '' },                         // Digit 9
+  { startPos: 9, endPos: 10, id: 'coil_options', group: 'Coil Options', characters: '' }               // Digit 10
+];
+
+const CCH_CCW_CRH_CRW_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_category', group: 'Product Category', characters: '' },        // Digit 1
+  { startPos: 1, endPos: 4, id: 'product_identifier', group: 'Product Identifier', characters: '' },    // Digits 2–4
+  { startPos: 4, endPos: 5, id: 'design_series', group: 'Design Series', characters: '' },              // Digit 5
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },        // Digits 6–8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                        // Digit 9
+  { startPos: 9, endPos: 10, id: 'voltage', group: 'Voltage', characters: '' },                         // Digit 10
+  { startPos: 10, endPos: 11, id: 'future', group: 'Future', characters: '' },                          // Digit 11
+  { startPos: 11, endPos: 12, id: 'return_air', group: 'Return Air', characters: '' },                   // Digit 12
+  { startPos: 12, endPos: 13, id: 'discharge_air', group: 'Discharge Air', characters: '' }              // Digit 13
+];
+
+const MWH_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'brand_name', group: 'Brand Name', characters: '' },                             // Digit 1
+  { startPos: 1, endPos: 3, id: 'water_source_heat_pump', group: 'Water Source Heat Pump', characters: '' },     // Digits 2–3
+  { startPos: 3, endPos: 6, id: 'nominal_cooling_capacity', group: 'Nominal Cooling Capacity', characters: '' }, // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'generation', group: 'Generation', characters: '' },                             // Digit 7
+  { startPos: 7, endPos: 8, id: 'cooling_or_heat_pump', group: 'Cooling Only or Heat Pump', characters: '' }     // Digit 8
+];
+
+
 // Supabase configuration
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -214,7 +437,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { modelNumber } = body;
-    
+
     // Validate input
     if (!modelNumber) {
       return NextResponse.json(
@@ -253,55 +476,59 @@ export async function POST(request: NextRequest) {
     }
 
     const cleanModelNumber = modelNumber.trim().toUpperCase();
-    
+
+    // Define brand configurations with their prefixes
+    const brandConfigs = [
+      {
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        prefixes: ['HT'],
+        getModelType: (_modelNumber: string, prefix: string) => prefix
+      },
+      {
+        brand: 'Trane',
+        manufacturer: 'trane',
+        prefixes: ['GEH', 'GEV', 'EXV', 'EXH', 'VSH', 'VSV','GET', 'GWS', 'GSK', 'GSJ'],
+        getModelType: (_modelNumber: string, prefix: string) => prefix
+      },
+      {
+        brand: 'Daikin',
+        manufacturer: 'daikin',
+        prefixes: ['WWCA', 'WWHA', 'WRWA','WWSC', 'WWSD', 'WWSM', 'WWSN', 'WWSS', 'WWST', 'WWSL', 'WWSR','WWGC','WWGD','WWMHC','WWMHW','WWWCC'],
+        getModelType: (modelNumber: string, prefix: string) => modelNumber.substring(1, 4)
+      },
+      {
+        brand: 'McQuay',
+        manufacturer: 'mcquay',
+        prefixes: ['FDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'CCH', 'CCH', 'CCW','CRH','CRW', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS', 'MWH'],
+        getModelType: (modelNumber: string, prefix: string) => modelNumber.substring(1, 4)
+      },
+    ];
+
     // Determine model type, brand, and manufacturer based on prefix
-    let brand: string;
-    let manufacturer: string;
-    let modelType: string;
-    
-    if (cleanModelNumber.startsWith('HT')) {
-      brand = 'ClimateMaster';
-      manufacturer = 'climatemaster';
-      modelType = 'HT';
-    } else if (cleanModelNumber.startsWith('GEH') || cleanModelNumber.startsWith('GEV')) {
-      brand = 'Trane';
-      manufacturer = 'trane';
-      modelType = cleanModelNumber.substring(0, 3); // GEH or GEV
-    } else if (cleanModelNumber.startsWith('GET')) {
-      brand = 'Trane';
-      manufacturer = 'trane';
-      modelType = 'GET';
-    } else if (cleanModelNumber.startsWith('GWS')) {
-      brand = 'Trane';
-      manufacturer = 'trane';
-      modelType = 'GWS';
-    } else if (cleanModelNumber.startsWith('GSK')) {
-      brand = 'Trane';
-      manufacturer = 'trane';
-      modelType = 'GSK';
-    } else if (cleanModelNumber.startsWith('GSJ')) {
-      brand = 'Trane';
-      manufacturer = 'trane';
-      modelType = 'GSJ';
-    } else if (cleanModelNumber.startsWith('VSH') || cleanModelNumber.startsWith('VSV')) {
-      brand = 'Trane';
-      manufacturer = 'trane';
-      modelType = cleanModelNumber.substring(0, 3); // VSH or VSV
-    } else {
-      // Default fallback for unknown prefixes
-      brand = 'Unknown';
-      manufacturer = 'unknown';
-      modelType = cleanModelNumber.substring(0, 2);
+    let brand: string = 'Unknown';
+    let manufacturer: string = 'unknown';
+    let modelType: string = cleanModelNumber.substring(0, 2);
+
+    // Find matching brand configuration
+    for (const config of brandConfigs) {
+      const matchingPrefix = config.prefixes.find(prefix => cleanModelNumber.startsWith(prefix));
+      if (matchingPrefix) {
+        brand = config.brand;
+        manufacturer = config.manufacturer;
+        modelType = config.getModelType(cleanModelNumber, matchingPrefix);
+        break;
+      }
     }
-    
+
     // Decode the model number using appropriate parsing configuration
     const decodedResult = await decodeClimateMasterModel(cleanModelNumber, brand, manufacturer, modelType);
-    
+
     return NextResponse.json(decodedResult);
-    
+
   } catch (error) {
     console.error('Decode error:', error);
-    
+
     // Provide specific error messages based on error type
     if (error instanceof Error) {
       if (error.message.includes('ECONNREFUSED') || error.message.includes('fetch')) {
@@ -310,7 +537,7 @@ export async function POST(request: NextRequest) {
           { status: 503 }
         );
       }
-      
+
       if (error.message.includes('timeout')) {
         return NextResponse.json(
           { error: 'Request timed out. Please try again.' },
@@ -325,7 +552,7 @@ export async function POST(request: NextRequest) {
         );
       }
     }
-    
+
     return NextResponse.json(
       { error: 'Internal server error. Please try again later.' },
       { status: 500 }
@@ -333,17 +560,30 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Query the Supabase "techtag" table for EXV/EXH models with fallback logic
+async function queryDatabaseWithFallback(segmentType: string, manufacturer: string, characters: string, modelType: string): Promise<string | null> {
+  // For EXV/EXH models, try trane_exh first, then fallback to trane
+  if (modelType === 'EXV' || modelType === 'EXH') {
+    // First try with trane_exh
+    let result = await queryDatabase(segmentType, `${manufacturer}_${modelType.toLowerCase()}`, characters);
+    if (result) {
+      return result;
+    }
+
+    // If no result, fallback to trane
+    result = await queryDatabase(segmentType, manufacturer, characters);
+    return result;
+  }
+
+  // For all other models, use the original manufacturer
+  return await queryDatabase(segmentType, manufacturer, characters);
+}
+
 // Query the Supabase "techtag" table for a specific segment
 async function queryDatabase(segmentType: string, manufacture: string, characters: string): Promise<string | null> {
   try {
-    // Debug logging to see what we're requesting
-    console.log(`🔍 Making database query:`, {
-      'segmentType': segmentType,
-      'manufacture': manufacture, 
-      'characters': characters,
-      'ACTUAL_QUERY': `SELECT * FROM techtag WHERE id='${characters}' AND manufacture='${manufacture}' AND description='${segmentType}'`
-    });
-    
+    // Query techtag table for segment meaning
+
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
       console.error('Supabase configuration missing');
       return null;
@@ -366,24 +606,17 @@ async function queryDatabase(segmentType: string, manufacture: string, character
     }
 
     const results = await response.json();
-    
+
     // Debug logging to see what Supabase returns
-    console.log(`Supabase query for segment_type=${segmentType}, characters=${characters}:`, {
-      actualUrl: `${SUPABASE_URL}/rest/v1/techtag?id=eq.${characters}&manufacture=eq.${manufacture}&description=eq.${segmentType}`,
-      status: response.status,
-      results: results,
-      resultCount: results?.length || 0
-    });
-    
+    // Execute Supabase query for segment lookup
+
     // Return the value from the first matching result
     if (results && results.length > 0 && results[0].value) {
-      console.log(`✅ Found meaning for segment ${segmentType} with characters "${characters}": "${results[0].value}"`);
       return results[0].value;
     }
-    
-    console.log(`❌ No meaning found for segment ${segmentType} with characters "${characters}"`);
+
     return null;
-    
+
   } catch (error) {
     console.error(`Supabase query error for ${segmentType}:`, error);
     return null;
@@ -392,58 +625,118 @@ async function queryDatabase(segmentType: string, manufacture: string, character
 
 // Decode model number using character position parsing
 async function decodeClimateMasterModel(
-  modelNumber: string, 
-  brand: string, 
+  modelNumber: string,
+  brand: string,
   manufacturer: string,
   modelType: string
 ): Promise<DecodedResult> {
-  console.log(`🚀 Starting decode for model: "${modelNumber}" (${brand}) - Type: ${modelType}`);
-  
   const segments: DecodedSegment[] = [];
   const unmatchedSegments: UnmatchedSegment[] = [];
-  
+
+  // Define segment configurations for different model types
+  const segmentConfigs = [
+    {
+      modelTypes: ['GEH', 'GEV', 'EXV', 'EXH'],
+      segments: GEH_GEV_SEGMENTS,
+      getConfigName: (modelType: string) => 
+        modelType === 'EXV' || modelType === 'EXH' ? `${modelType} (Trane)` : 'GEH/GEV (Trane)'
+    },
+    {
+      modelTypes: ['GET'],
+      segments: GET_SEGMENTS,
+      getConfigName: () => 'GET (Crane)'
+    },
+    {
+      modelTypes: ['GWS'],
+      segments: GWS_SEGMENTS,
+      getConfigName: () => 'GWS (Trane)'
+    },
+    {
+      modelTypes: ['GSK', 'GSJ'],
+      segments: GSK_SEGMENTS,
+      getConfigName: (modelType: string) => `${modelType} (Trane)`
+    },
+    {
+      modelTypes: ['VSH', 'VSV'],
+      segments: VSH_VSV_SEGMENTS,
+      getConfigName: (modelType: string) => `${modelType} (Trane)`
+    },
+    {
+      modelTypes: ['WCA', 'WHA', 'WRA'],
+      segments: WCA_WHA_WRA_SEGMENTS,
+      getConfigName: () => 'WCA (Daikin)'
+    },
+    {
+      modelTypes: ['WSC', 'WSD', 'WSM', 'WSN', 'WSS', 'WST', 'WSL'],
+      segments: WSC_WSD_WSM_WSN_WSS_WST_WSLV_SEGMENTS,
+      getConfigName: () => 'WCA (Daikin)'
+    },
+    {
+      modelTypes: ['WSR'],
+      segments: WSR_SEGMENTS,
+      getConfigName: () => 'WSR (Daikin)'
+    },
+    {
+      modelTypes: ['WGC', 'WGD'],
+      segments: WGC_WGD_SEGMENTS,
+      getConfigName: () => 'WGC (Daikin)'
+    },
+    {
+      modelTypes: ['MHC', 'MHW'],
+      segments: MHC_MHW_SEGMENTS,
+      getConfigName: () => 'MHC (Daikin)'
+    },
+    {
+      modelTypes: ['WCC',],
+      segments: WCC_SEGMENTS,
+      getConfigName: () => 'WCC (Daikin)'
+    },
+    {
+      modelTypes: ['FDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS'],
+      segments: MCQUAY_STANDARD_SEGMENTS,
+      getConfigName: () => 'McQuay'
+    },
+    {
+      modelTypes: [ 'CCH', 'CCW', 'CRH', 'CRW'],
+      segments: CCH_CCW_CRH_CRW_SEGMENTS,
+      getConfigName: () => 'McQuay'
+    },
+    {
+      modelTypes: ['MWH'],
+      segments: MWH_SEGMENTS,
+      getConfigName: () => 'McQuay'
+    },
+  ];
+
   // Select appropriate parsing configuration based on model type
-  let segmentConfig: ModelSegment[];
-  let configName: string;
-  
-  if (modelType === 'GEH' || modelType === 'GEV') {
-    segmentConfig = GEH_GEV_SEGMENTS;
-    configName = 'GEH/GEV (Trane)';
-  } else if (modelType === 'GET') {
-    segmentConfig = GET_SEGMENTS;
-    configName = 'GET (Crane)';
-  } else if (modelType === 'GWS') {
-    segmentConfig = GWS_SEGMENTS;
-    configName = 'GWS (Trane)';
-  } else if (modelType === 'GSK' || modelType === 'GSJ') {
-    segmentConfig = GSK_SEGMENTS;
-    configName = `${modelType} (Trane)`;
-  } else if (modelType === 'VSH' || modelType === 'VSV') {
-    segmentConfig = VSH_VSV_SEGMENTS;
-    configName = `${modelType} (Trane)`;
-  } else {
-    segmentConfig = CLIMATEMASTER_SEGMENTS;
-    configName = 'HT (ClimateMaster)';
+  let segmentConfig: ModelSegment[] = CLIMATEMASTER_SEGMENTS;
+  let configName: string = 'HT (ClimateMaster)';
+
+  // Find matching segment configuration
+  for (const config of segmentConfigs) {
+    if (config.modelTypes.includes(modelType)) {
+      segmentConfig = config.segments;
+      configName = config.getConfigName(modelType);
+      break;
+    }
   }
-  
-  console.log(`📋 Using ${configName} parsing configuration`);
-  
+
+  // Using selected parsing configuration
+
   // Parse each segment according to the selected specification
   for (const segment of segmentConfig) {
     // Extract characters for this segment
     const characters = modelNumber.substring(segment.startPos, segment.endPos);
-    
-    console.log(`📍 Parsing segment "${segment.group}": positions ${segment.startPos + 1}-${segment.endPos} = "${characters}"`);
-    
+
+    // Parse segment characters from model number
+
     // Skip if we don't have enough characters
     if (characters.length === 0) {
-      console.log(`⏭️ Skipping empty segment: ${segment.group}`);
       continue;
     }
-    
+
     // Handle 'not_applicable' and 'open_digit' segments without database query
     if (segment.id === 'not_applicable') {
-      console.log(`✅ Skipping database query for not applicable segment: ${segment.group}`);
       segments.push({
         position: `${segment.startPos + 1}-${segment.endPos}`, // 1-based position for display
         characters,
@@ -452,9 +745,8 @@ async function decodeClimateMasterModel(
       });
       continue;
     }
-    
+
     if (segment.id === 'open_digit' || segment.id === 'open_digit_2') {
-      console.log(`✅ Skipping database query for open digit segment: ${segment.group}`);
       segments.push({
         position: `${segment.startPos + 1}-${segment.endPos}`, // 1-based position for display
         characters,
@@ -463,9 +755,8 @@ async function decodeClimateMasterModel(
       });
       continue;
     }
-    
+
     if (segment.id === 'not_used') {
-      console.log(`✅ Skipping database query for not used segment: ${segment.group}`);
       segments.push({
         position: `${segment.startPos + 1}-${segment.endPos}`, // 1-based position for display
         characters,
@@ -474,9 +765,8 @@ async function decodeClimateMasterModel(
       });
       continue;
     }
-    
+
     if (segment.id === 'standard') {
-      console.log(`✅ Skipping database query for standard segment: ${segment.group}`);
       segments.push({
         position: `${segment.startPos + 1}-${segment.endPos}`, // 1-based position for display
         characters,
@@ -485,10 +775,10 @@ async function decodeClimateMasterModel(
       });
       continue;
     }
-    
-    // Query database for this segment
-    const meaning = await queryDatabase(segment.id, manufacturer, characters);
-    
+
+    // Query database for this segment (with fallback for EXV/EXH models)
+    const meaning = await queryDatabaseWithFallback(segment.id, manufacturer, characters, modelType);
+
     if (meaning) {
       segments.push({
         position: `${segment.startPos + 1}-${segment.endPos}`, // 1-based position for display
@@ -507,7 +797,7 @@ async function decodeClimateMasterModel(
       });
     }
   }
-  
+
   // Handle any extra characters beyond the expected length
   const expectedLength = segmentConfig[segmentConfig.length - 1].endPos;
   if (modelNumber.length > expectedLength) {
@@ -520,19 +810,10 @@ async function decodeClimateMasterModel(
       attempted: 'Beyond expected model number length'
     });
   }
-  
+
   // Calculate confidence based on successful database lookups
   const confidence = calculateClimateMasterConfidence(segments, unmatchedSegments, modelNumber, segmentConfig);
-  
-  console.log(`📊 Decode complete:`, {
-    modelNumber,
-    matchedSegments: segments.length,
-    unmatchedSegments: unmatchedSegments.length,
-    confidence,
-    segments: segments.map(s => `${s.group}: ${s.characters} = ${s.meaning}`),
-    unmatched: unmatchedSegments
-  });
-  
+
   return {
     modelNumber,
     brand,
@@ -544,20 +825,20 @@ async function decodeClimateMasterModel(
 }
 
 function calculateClimateMasterConfidence(
-  segments: DecodedSegment[], 
-  unmatchedSegments: UnmatchedSegment[], 
+  segments: DecodedSegment[],
+  unmatchedSegments: UnmatchedSegment[],
   modelNumber: string,
   segmentConfig: ModelSegment[]
 ): 'high' | 'medium' | 'low' {
   const totalSegments = segmentConfig.length;
   const matchedSegments = segments.length;
   const matchPercentage = matchedSegments / totalSegments;
-  
+
   // For longer models, adjust minimum length requirement based on expected length
   const isVeryLongModel = segmentConfig === GEH_GEV_SEGMENTS || segmentConfig === GET_SEGMENTS || segmentConfig === GWS_SEGMENTS || segmentConfig === GSK_SEGMENTS;
   const isMediumModel = segmentConfig === VSH_VSV_SEGMENTS;
   let minLength: number;
-  
+
   if (isVeryLongModel) {
     minLength = 20; // Very long models (35+ digits)
   } else if (isMediumModel) {
@@ -565,13 +846,13 @@ function calculateClimateMasterConfidence(
   } else {
     minLength = 10; // Legacy models
   }
-  
+
   // High confidence: 80%+ segments matched and model number is proper length
   if (matchPercentage >= 0.8 && modelNumber.length >= minLength) return 'high';
-  
+
   // Medium confidence: 60%+ segments matched
   if (matchPercentage >= 0.6 && matchedSegments >= 4) return 'medium';
-  
+
   // Low confidence: everything else
   return 'low';
 }

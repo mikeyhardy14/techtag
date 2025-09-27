@@ -8,7 +8,6 @@ export default function HomePage() {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Form submission logic will be added later
-    console.log('Form submitted');
   };
 
   return (

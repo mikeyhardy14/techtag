@@ -230,7 +230,7 @@ export default function DecoderForm() {
                 <h3 className={styles.resultTitle}>Decoded: {result.modelNumber}</h3>
                 <div className={styles.resultMeta}>
                   <span className={styles.brand}>{result.brand}</span>
-                  <span className={styles.manufacturer}>{result.manufacturer}</span>
+                  {/* <span className={styles.manufacturer}>{result.manufacturer}</span> */}
                   <div className={`${styles.confidence} ${styles[`confidence${result.confidence.charAt(0).toUpperCase() + result.confidence.slice(1)}`]}`}>
                     {result.confidence} confidence
                   </div>

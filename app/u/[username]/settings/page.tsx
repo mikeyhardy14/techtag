@@ -37,7 +37,6 @@ export default function SettingsPage() {
   };
 
   const handleSave = () => {
-    console.log('Saving settings:', settings);
     // Here you would typically save to your backend
   };
 

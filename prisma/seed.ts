@@ -13,7 +13,7 @@ async function main() {
       meaning: 'Heat Pump - Air Conditioner',
       group: 'Product Type',
       brand: 'Carrier',
-      manufactor: 'Carrier Corporation'
+      manufacturer: 'Carrier Corporation'
     },
     {
       position: 2,
@@ -21,7 +21,7 @@ async function main() {
       meaning: 'Comfort Series',
       group: 'Product Series',
       brand: 'Carrier',
-      manufactor: 'Carrier Corporation'
+      manufacturer: 'Carrier Corporation'
     },
     {
       position: 3,
@@ -29,7 +29,7 @@ async function main() {
       meaning: '2 Ton (24,000 BTU/hr)',
       group: 'Cooling Capacity',
       brand: 'Carrier',
-      manufactor: 'Carrier Corporation'
+      manufacturer: 'Carrier Corporation'
     },
     {
       position: 3,
@@ -37,7 +37,7 @@ async function main() {
       meaning: '3 Ton (36,000 BTU/hr)',
       group: 'Cooling Capacity',
       brand: 'Carrier',
-      manufactor: 'Carrier Corporation'
+      manufacturer: 'Carrier Corporation'
     },
     {
       position: 3,
@@ -45,7 +45,7 @@ async function main() {
       meaning: '4 Ton (48,000 BTU/hr)',
       group: 'Cooling Capacity',
       brand: 'Carrier',
-      manufactor: 'Carrier Corporation'
+      manufacturer: 'Carrier Corporation'
     },
     {
       position: 4,
@@ -53,7 +53,7 @@ async function main() {
       meaning: '13 SEER',
       group: 'Efficiency Rating',
       brand: 'Carrier',
-      manufactor: 'Carrier Corporation'
+      manufacturer: 'Carrier Corporation'
     },
     {
       position: 4,
@@ -61,7 +61,7 @@ async function main() {
       meaning: '14 SEER',
       group: 'Efficiency Rating',
       brand: 'Carrier',
-      manufactor: 'Carrier Corporation'
+      manufacturer: 'Carrier Corporation'
     }
   ];
 
@@ -73,7 +73,7 @@ async function main() {
       meaning: 'XR Series Air Conditioner',
       group: 'Product Type',
       brand: 'Trane',
-      manufactor: 'Trane Inc.'
+      manufacturer: 'Trane Inc.'
     },
     {
       position: 2,
@@ -81,7 +81,7 @@ async function main() {
       meaning: '13 SEER Efficiency',
       group: 'Efficiency Rating',
       brand: 'Trane',
-      manufactor: 'Trane Inc.'
+      manufacturer: 'Trane Inc.'
     },
     {
       position: 2,
@@ -89,7 +89,7 @@ async function main() {
       meaning: '14 SEER Efficiency',
       group: 'Efficiency Rating',
       brand: 'Trane',
-      manufactor: 'Trane Inc.'
+      manufacturer: 'Trane Inc.'
     },
     {
       position: 2,
@@ -97,7 +97,7 @@ async function main() {
       meaning: '16 SEER Efficiency',
       group: 'Efficiency Rating',
       brand: 'Trane',
-      manufactor: 'Trane Inc.'
+      manufacturer: 'Trane Inc.'
     },
     {
       position: 3,
@@ -105,7 +105,7 @@ async function main() {
       meaning: 'Standard Coil Configuration',
       group: 'Coil Type',
       brand: 'Trane',
-      manufactor: 'Trane Inc.'
+      manufacturer: 'Trane Inc.'
     },
     {
       position: 4,
@@ -113,7 +113,7 @@ async function main() {
       meaning: '2 Ton (24,000 BTU/hr)',
       group: 'Cooling Capacity',
       brand: 'Trane',
-      manufactor: 'Trane Inc.'
+      manufacturer: 'Trane Inc.'
     },
     {
       position: 4,
@@ -121,7 +121,7 @@ async function main() {
       meaning: '3 Ton (36,000 BTU/hr)',
       group: 'Cooling Capacity',
       brand: 'Trane',
-      manufactor: 'Trane Inc.'
+      manufacturer: 'Trane Inc.'
     },
     {
       position: 4,
@@ -129,7 +129,7 @@ async function main() {
       meaning: '4 Ton (48,000 BTU/hr)',
       group: 'Cooling Capacity',
       brand: 'Trane',
-      manufactor: 'Trane Inc.'
+      manufacturer: 'Trane Inc.'
     }
   ];
 
@@ -141,7 +141,7 @@ async function main() {
       meaning: 'XC Series High Efficiency',
       group: 'Product Series',
       brand: 'Lennox',
-      manufactor: 'Lennox International'
+      manufacturer: 'Lennox International'
     },
     {
       position: 2,
@@ -149,7 +149,7 @@ async function main() {
       meaning: '13 SEER Air Conditioner',
       group: 'Product Type',
       brand: 'Lennox',
-      manufactor: 'Lennox International'
+      manufacturer: 'Lennox International'
     },
     {
       position: 2,
@@ -157,7 +157,7 @@ async function main() {
       meaning: '16 SEER Air Conditioner',
       group: 'Product Type',
       brand: 'Lennox',
-      manufactor: 'Lennox International'
+      manufacturer: 'Lennox International'
     },
     {
       position: 3,
@@ -165,7 +165,7 @@ async function main() {
       meaning: '2 Ton (24,000 BTU/hr)',
       group: 'Cooling Capacity',
       brand: 'Lennox',
-      manufactor: 'Lennox International'
+      manufacturer: 'Lennox International'
     },
     {
       position: 3,
@@ -173,7 +173,7 @@ async function main() {
       meaning: '3 Ton (36,000 BTU/hr)',
       group: 'Cooling Capacity',
       brand: 'Lennox',
-      manufactor: 'Lennox International'
+      manufacturer: 'Lennox International'
     },
     {
       position: 3,
@@ -181,7 +181,7 @@ async function main() {
       meaning: '4 Ton (48,000 BTU/hr)',
       group: 'Cooling Capacity',
       brand: 'Lennox',
-      manufactor: 'Lennox International'
+      manufacturer: 'Lennox International'
     }
   ];
 

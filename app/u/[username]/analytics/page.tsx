@@ -29,7 +29,7 @@ export default function AnalyticsPage() {
         actionButton={{
           label: "EXPORT REPORT",
           icon: "📊",
-          onClick: () => console.log('Export report clicked')
+          onClick: () => { /* TODO: Implement export report functionality */ }
         }}
       />
       <div className={styles.content}>

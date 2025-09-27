@@ -10,9 +10,9 @@ export default function HistoryPage() {
       <DashboardHeader
         title="History"
         actionButton={{
-          label: "CLEAR HISTORY",
+          label: "CREATE PROJECT",
           icon: "🗑️",
-          onClick: () => console.log('Clear history clicked')
+          onClick: () => { /* TODO: Implement clear history functionality */ }
         }}
       />
       <div className={styles.content}>
