@@ -17,7 +17,7 @@ model CodeRule {
   meaning    String
   group      String   // e.g. "Model Type", "Unit Size"
   brand      String   // e.g. "HeatController"
-  manufactor String   // e.g. "Carrier"
+  manufacturer String   // e.g. "Carrier"
   
   @@map("code_rules")
 }
