@@ -35,6 +35,17 @@ export default function DashboardSidebar({ children }: DashboardSidebarProps) {
       path: `/u/${user?.email?.split('@')[0]}/dashboard`,
     },
     {
+      id: 'profile',
+      label: 'Profile',
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
+        </svg>
+      ),
+      path: `/u/${user?.email?.split('@')[0]}/profile`,
+    },
+    {
       id: 'decode',
       label: 'Model Decoder',
       icon: (
@@ -105,6 +116,7 @@ export default function DashboardSidebar({ children }: DashboardSidebarProps) {
       
       // For dashboard routes
       if (item.id === 'dashboard' && pathSegments[3] === 'dashboard') return true;
+      if (item.id === 'profile' && pathSegments[3] === 'profile') return true;
       if (item.id === 'projects' && pathSegments[3] === 'dashboard') return true;
       if (item.id === 'decode' && pathSegments[3] === 'decode') return true;
       if (item.id === 'history' && pathSegments[3] === 'history') return true;

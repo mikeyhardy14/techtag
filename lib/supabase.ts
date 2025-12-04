@@ -80,7 +80,7 @@ export const profiles = {
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .single()
+      .maybeSingle()
     
     return { profile: data as Profile | null, error }
   },
