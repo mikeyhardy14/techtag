@@ -11,8 +11,12 @@ interface AuthGuardProps {
 }
 
 export default function AuthGuard({ children, admin = false }: AuthGuardProps) {
-  const { data: session, status } = useSession();
+  const sessionData = useSession();
   const router = useRouter();
+
+  // Handle case where useSession returns undefined during SSR/prerendering
+  const session = sessionData?.data;
+  const status = sessionData?.status ?? 'loading';
 
   // List of admin emails via env var (comma-separated)
   const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? '').split(',');

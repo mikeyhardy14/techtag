@@ -1,3 +1,4 @@
+"use client";
 
 import AuthGuard from '@/components/AuthGuard/AuthGuard';
 import AdminPanel from '@/components/AdminPanel/AdminPanel';

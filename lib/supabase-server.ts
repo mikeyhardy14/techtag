@@ -2,8 +2,8 @@ import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
 // Server-side Supabase client for API routes
-export function createServerSupabaseClient() {
-  const cookieStore = cookies();
+export async function createServerSupabaseClient() {
+  const cookieStore = await cookies();
   
   // Get the access token from cookies
   const accessToken = cookieStore.get('sb-access-token')?.value;

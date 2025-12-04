@@ -122,7 +122,7 @@ export async function DELETE(request: NextRequest) {
 
     // Update profile to remove avatar URL
     const { profile: updatedProfile, error: updateError } = await profiles.updateProfile(user.id, {
-      avatar_url: null
+      avatar_url: undefined
     });
     
     if (updateError) {
