@@ -419,6 +419,23 @@ const MWH_SEGMENTS: ModelSegment[] = [
   { startPos: 7, endPos: 8, id: 'cooling_or_heat_pump', group: 'Cooling Only or Heat Pump', characters: '' }     // Digit 8
 ];
 
+// SA model number parsing configuration
+const SA_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_name', group: 'Product Name', characters: '' },       // Digit 1
+  { startPos: 1, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },           // Digit 2
+  { startPos: 2, endPos: 3, id: 'future', group: 'Future', characters: '' },                   // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },               // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },               // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                 // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },               // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                // Digit 10
+  { startPos: 10, endPos: 11, id: 'future_2', group: 'Future', characters: '' },               // Digit 11
+  { startPos: 11, endPos: 12, id: 'future_3', group: 'Future', characters: '' },               // Digit 12
+  { startPos: 12, endPos: 13, id: 'future_4', group: 'Future', characters: '' },               // Digit 13
+  { startPos: 13, endPos: 14, id: 'blower_motor', group: 'Blower Motor', characters: '' },     // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }              // Digit 15
+];
+
 
 // Supabase configuration
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -482,25 +499,25 @@ export async function POST(request: NextRequest) {
       {
         brand: 'ClimateMaster',
         manufacturer: 'climatemaster',
-        prefixes: ['HT'],
+        prefixes: ['SA', 'HT'],
         getModelType: (_modelNumber: string, prefix: string) => prefix
       },
       {
         brand: 'Trane',
         manufacturer: 'trane',
-        prefixes: ['GEH', 'GEV', 'EXV', 'EXH', 'VSH', 'VSV','GET', 'GWS', 'GSK', 'GSJ'],
+        prefixes: ['GEH', 'GEV', 'EXV', 'EXH', 'VSH', 'VSV', 'GET', 'GWS', 'GSK', 'GSJ'],
         getModelType: (_modelNumber: string, prefix: string) => prefix
       },
       {
         brand: 'Daikin',
         manufacturer: 'daikin',
-        prefixes: ['WWCA', 'WWHA', 'WRWA','WWSC', 'WWSD', 'WWSM', 'WWSN', 'WWSS', 'WWST', 'WWSL', 'WWSR','WWGC','WWGD','WWMHC','WWMHW','WWWCC'],
+        prefixes: ['WWCA', 'WWHA', 'WRWA', 'WWSC', 'WWSD', 'WWSM', 'WWSN', 'WWSS', 'WWST', 'WWSL', 'WWSR', 'WWGC', 'WWGD', 'WWMHC', 'WWMHW', 'WWWCC'],
         getModelType: (modelNumber: string, prefix: string) => modelNumber.substring(1, 4)
       },
       {
         brand: 'McQuay',
         manufacturer: 'mcquay',
-        prefixes: ['FDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'CCH', 'CCH', 'CCW','CRH','CRW', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS', 'MWH'],
+        prefixes: ['FDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'CCH', 'CCH', 'CCW', 'CRH', 'CRW', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS', 'MWH'],
         getModelType: (modelNumber: string, prefix: string) => modelNumber.substring(1, 4)
       },
     ];
@@ -638,7 +655,7 @@ async function decodeClimateMasterModel(
     {
       modelTypes: ['GEH', 'GEV', 'EXV', 'EXH'],
       segments: GEH_GEV_SEGMENTS,
-      getConfigName: (modelType: string) => 
+      getConfigName: (modelType: string) =>
         modelType === 'EXV' || modelType === 'EXH' ? `${modelType} (Trane)` : 'GEH/GEV (Trane)'
     },
     {
@@ -697,7 +714,7 @@ async function decodeClimateMasterModel(
       getConfigName: () => 'McQuay'
     },
     {
-      modelTypes: [ 'CCH', 'CCW', 'CRH', 'CRW'],
+      modelTypes: ['CCH', 'CCW', 'CRH', 'CRW'],
       segments: CCH_CCW_CRH_CRW_SEGMENTS,
       getConfigName: () => 'McQuay'
     },
@@ -705,6 +722,11 @@ async function decodeClimateMasterModel(
       modelTypes: ['MWH'],
       segments: MWH_SEGMENTS,
       getConfigName: () => 'McQuay'
+    },
+    {
+      modelTypes: ['SA'],
+      segments: SA_SEGMENTS,
+      getConfigName: () => 'SA (ClimateMaster)'
     },
   ];
 
