@@ -52,7 +52,7 @@ const CLIMATEMASTER_SEGMENTS: ModelSegment[] = [
   { startPos: 12, endPos: 13, id: 'return_air', group: 'Return Air', characters: '' },
   { startPos: 13, endPos: 14, id: 'supply_air', group: 'Supply Air', characters: '' }
 ];
-
+// ClimateMaster model number parsing configuration (legacy) - 14 digits
 // GEH/GEV model number parsing configuration (35 digits)
 const GEH_GEV_SEGMENTS: ModelSegment[] = [
   { startPos: 0, endPos: 3, id: 'model_series', group: 'Model Series', characters: '' },
@@ -215,7 +215,7 @@ const VSH_VSV_SEGMENTS: ModelSegment[] = [
   { startPos: 18, endPos: 19, id: 'blower_configuration', group: 'Blower Configuration', characters: '' }
 ];
 
-// DAIKIN Brands  
+// DAIKIN Brands
 const WCA_WHA_WRA_SEGMENTS: ModelSegment[] = [
   { startPos: 0, endPos: 1, id: 'product_category', group: 'Product Category', characters: '' },
   { startPos: 1, endPos: 4, id: 'product_identifier', group: 'Product Identifier', characters: '' },
@@ -434,6 +434,513 @@ const SA_SEGMENTS: ModelSegment[] = [
   { startPos: 12, endPos: 13, id: 'future_4', group: 'Future', characters: '' },               // Digit 13
   { startPos: 13, endPos: 14, id: 'blower_motor', group: 'Blower Motor', characters: '' },     // Digit 14
   { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }              // Digit 15
+];
+
+// WaterFurnace
+// ND and NS model numbers parsing configuration
+const ND_NS_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                                        // Digits 0–2
+  { startPos: 2, endPos: 3, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                  // Digit 2
+  { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                            // Digits 3–6
+  { startPos: 6, endPos: 7, id: 'vintage', group: 'Vintage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 7
+  { startPos: 8, endPos: 9, id: 'hot_water_option', group: 'Hot Water Option', characters: '' },                            // Digit 8
+  { startPos: 9, endPos: 10, id: 'blower_options', group: 'Blower Options', characters: '' },                               // Digit 9
+  { startPos: 10, endPos: 11, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                      // Digit 10
+  { startPos: 11, endPos: 12, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },    // Digit 11
+  { startPos: 12, endPos: 13, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },          // Digit 12
+  { startPos: 13, endPos: 14, id: 'filter_option', group: 'Filter Option', characters: '' },                                // Digit 13
+  { startPos: 14, endPos: 15, id: 'controls_options', group: 'Controls Options', characters: '' },                          // Digit 14
+  { startPos: 15, endPos: 16, id: 'intellistart_options', group: 'Intellistart Options', characters: '' }                   // Digit 15
+];
+
+// NV model number parsing configuration
+const NV_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                                        // Digits 0–2
+  { startPos: 2, endPos: 3, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                  // Digit 2
+  { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                            // Digits 3–6
+  { startPos: 6, endPos: 7, id: 'vintage', group: 'Vintage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 7
+  { startPos: 8, endPos: 9, id: 'hot_water_option', group: 'Hot Water Option', characters: '' },                            // Digit 8
+  { startPos: 9, endPos: 10, id: 'blower_options', group: 'Blower Options', characters: '' },                               // Digit 9
+  { startPos: 10, endPos: 11, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                      // Digit 10
+  { startPos: 11, endPos: 12, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },    // Digit 11
+  { startPos: 12, endPos: 13, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },          // Digit 12
+  { startPos: 13, endPos: 14, id: 'filter_option', group: 'Filter Option', characters: '' },                                // Digit 13
+  { startPos: 14, endPos: 15, id: 'controls_options', group: 'Controls Options', characters: '' },                          // Digit 14
+  { startPos: 15, endPos: 16, id: 'future_option', group: 'Future Option', characters: '' }                                 // Digit 15
+];
+
+// Synergy 3D and LS model numbers parsing configuration
+const SYNERGY_LS_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                                        // Digits 0–2
+  { startPos: 2, endPos: 3, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                  // Digit 2
+  { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                            // Digits 3–6
+  { startPos: 6, endPos: 7, id: 'vintage', group: 'Vintage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 7
+  { startPos: 8, endPos: 9, id: 'hot_water_option', group: 'Hot Water Option', characters: '' },                            // Digit 8
+  { startPos: 9, endPos: 10, id: 'fan_option', group: 'Fan Option', characters: '' },                                       // Digit 9
+  { startPos: 10, endPos: 11, id: 'coax_options', group: 'Coax Options', characters: '' },                                  // Digit 10
+  { startPos: 11, endPos: 12, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },    // Digit 11
+  { startPos: 12, endPos: 13, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },          // Digit 12
+];
+
+// NSW model number parsing configuration
+const NSW_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },                                        // Digits 0–2
+  { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                            // Digits 3–6
+  { startPos: 6, endPos: 7, id: 'vintage', group: 'Vintage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 7
+  { startPos: 8, endPos: 9, id: 'hot_water_option', group: 'Hot Water Option', characters: '' },                            // Digit 8
+  { startPos: 9, endPos: 10, id: 'reversible_option', group: 'Reversible Option', characters: '' },                         // Digit 9
+  { startPos: 10, endPos: 11, id: 'source_coax', group: 'Source Coax', characters: '' },                                    // Digit 10
+  { startPos: 11, endPos: 12, id: 'load_coax', group: 'Load Coax', characters: '' }                                         // Digit 11
+];
+
+// NDW model number parsing configuration
+const NDW_WATERFURNACE_SEGEMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },                                        // Digits 0–2
+  { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                            // Digits 3–6
+  { startPos: 6, endPos: 7, id: 'operation', group: 'Operation', characters: '' },                                          // Digit 6
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 7
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                                            // Digit 8
+  { startPos: 9, endPos: 10, id: 'intellistart_options', group: 'Intellistart Options', characters: '' },                   // Digit 9
+  { startPos: 10, endPos: 11, id: 'water_connections', group: 'Water Connections', characters: '' },                        // Digit 10
+  { startPos: 11, endPos: 13, id: 'non_standard_options', group: 'Non Standard Options', characters: '' },                  // Digits 11–12
+  { startPos: 13, endPos: 14, id: 'voltage', group: 'Voltage', characters: '' }                                             // Digit 13
+];
+
+// NL and NX model number parsing configuration
+const NL_NX_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                                                // Digits 0–2
+  { startPos: 2, endPos: 5, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                                    // Digits 2–5
+  { startPos: 5, endPos: 6, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },              // Digit 5
+  { startPos: 6, endPos: 7, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },                    // Digit 6
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                                      // Digit 7
+  { startPos: 8, endPos: 9, id: 'future_option', group: 'Future Option', characters: '' },                                          // Digit 8
+  { startPos: 9, endPos: 10, id: 'blower_options', group: 'Blower Options', characters: '' },                                       // Digit 9
+  { startPos: 10, endPos: 11, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                              // Digit 10
+  { startPos: 11, endPos: 12, id: 'sound_kit_options', group: 'Sound Kit Options', characters: '' },                                // Digit 11
+  { startPos: 12, endPos: 13, id: 'hot_gas_bypass_and_reheat_option', group: 'Hot Gas Bypass and Reheat Option', characters: '' },  // Digit 12
+  { startPos: 13, endPos: 14, id: 'water_control_option', group: 'Water Control Option', characters: '' },                          // Digit 13
+  { startPos: 14, endPos: 15, id: 'controls_options', group: 'Controls Options', characters: '' },                                  // Digit 14
+  { startPos: 15, endPos: 16, id: 'air_coil_and_insulation_option', group: 'Air Coil and Insulation Option', characters: '' },      // Digit 15
+  { startPos: 16, endPos: 18, id: 'non_standard_options', group: 'Non Standard Options', characters: '' },                          // Digit 16
+  { startPos: 18, endPos: 19, id: 'vintage', group: 'Vintage', characters: '' }                                                     // Digit 17
+];
+
+// NS Single Speed and ND Dual Speed model number parsing configuration
+const NS_ND_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                                                // Digits 0–2
+  { startPos: 2, endPos: 3, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                          // Digit 2
+  { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                                    // Digits 3–6
+  { startPos: 6, endPos: 7, id: 'cabinet_configuration_2', group: 'Cabinet Configuration 2', characters: '' },                      // Digit 6
+  { startPos: 7, endPos: 8, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },                    // Digit 7
+  { startPos: 8, endPos: 9, id: 'voltage', group: 'Voltage', characters: '' },                                                      // Digit 8
+  { startPos: 9, endPos: 10, id: 'hot_water_option', group: 'Hot Water Option', characters: '' },                                   // Digit 9
+  { startPos: 10, endPos: 11, id: 'blower_options', group: 'Blower Options', characters: '' },                                      // Digit 10
+  { startPos: 11, endPos: 12, id: 'coax_options', group: 'Coax Options', characters: '' },                                          // Digit 11
+  { startPos: 12, endPos: 13, id: 'sound_kit_options', group: 'Sound Kit Options', characters: '' },                                // Digit 12
+  { startPos: 13, endPos: 14, id: 'hot_gas_bypass_and_reheat_option', group: 'Hot Gas Bypass and Reheat Option', characters: '' },  // Digit 13
+  { startPos: 14, endPos: 15, id: 'water_control_option', group: 'Water Control Option', characters: '' },                          // Digit 14
+  { startPos: 15, endPos: 16, id: 'controls_options', group: 'Controls Options', characters: '' },                                  // Digit 15
+  { startPos: 16, endPos: 17, id: 'air_coil_and_insulation_option', group: 'Air Coil and Insulation Option', characters: '' },      // Digit 16
+  { startPos: 17, endPos: 19, id: 'non_standard_options', group: 'Non Standard Options', characters: '' },                          // Digit 17-19
+  { startPos: 19, endPos: 20, id: 'vintage', group: 'Vintage', characters: '' }                                                     // Digit 19
+];
+
+// EW Series model number parsing configuration
+const EW_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                                        // Digits 0–2
+  { startPos: 2, endPos: 5, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                            // Digits 2–5
+  { startPos: 5, endPos: 6, id: 'operation', group: 'Operation', characters: '' },                                          // Digit 5
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 8, id: 'desuperheater', group: 'Desuperheater', characters: '' },                                  // Digit 7
+  { startPos: 8, endPos: 10, id: 'non_standard_options', group: 'Non Standard Options', characters: '' },                   // Digits 8–9
+  { startPos: 10, endPos: 11, id: 'vintage', group: 'Vintage', characters: '' }                                             // Digit 10
+];
+
+// LC R410A model number parsing configuration
+const LC_R410A_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                                            // Digits 0–2
+  { startPos: 2, endPos: 3, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                      // Digit 2
+  { startPos: 3, endPos: 5, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                                // Digits 3–5
+  { startPos: 5, endPos: 6, id: 'piping_option', group: 'Piping Option', characters: '' },                                      // Digit 5
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                                  // Digit 6
+  { startPos: 7, endPos: 8, id: 'controls_options', group: 'Controls Options', characters: '' },                                // Digit 7
+  { startPos: 8, endPos: 9, id: 'thermostat_control', group: 'Thermostart Control', characters: '' },                           // Digit 8
+  { startPos: 9, endPos: 10, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                           // Digit 9
+  { startPos: 10, endPos: 11, id: 'future_option', group: 'Future Option', characters: '' },                                    // Digit 10
+  { startPos: 11, endPos: 12, id: 'future_option', group: 'Future Option', characters: '' },                                    // Digit 11
+  { startPos: 12, endPos: 13, id: 'sound_kit_options', group: 'Sound Kit Options', characters: '' },                            // Digit 12
+  { startPos: 13, endPos: 14, id: 'air_coil_and_insulation_option', group: 'Air Coil and Insulation Option', characters: '' },  // Digit 13
+  { startPos: 14, endPos: 16, id: 'non_standard_options', group: 'Non Standard Options', characters: '' },                      // Digit 14-16
+  { startPos: 16, endPos: 17, id: 'vintage', group: 'Vintage', characters: '' }                                                 // Digit 16
+];
+
+// NC R410A model number parsing configuration
+const NC_R410A_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                                            // Digits 0–2
+  { startPos: 2, endPos: 3, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                      // Digit 2
+  { startPos: 3, endPos: 5, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                                // Digits 3–5
+  { startPos: 5, endPos: 6, id: 'piping_option', group: 'Piping Option', characters: '' },                                      // Digit 5
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                                  // Digit 6
+  { startPos: 7, endPos: 8, id: 'controls_options', group: 'Controls Options', characters: '' },                                // Digit 7
+  { startPos: 8, endPos: 9, id: 'thermostat_control', group: 'Thermostart Control', characters: '' },                           // Digit 8
+  { startPos: 9, endPos: 10, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                           // Digit 9
+  { startPos: 10, endPos: 11, id: 'motorized_outside_air_damper', group: 'Motorized Outside Air Damper', characters: '' },      // Digit 10
+  { startPos: 11, endPos: 12, id: 'auxillary_electric_heat', group: 'Auxillary Electric Heat', characters: '' },                // Digit 11
+  { startPos: 12, endPos: 13, id: 'sound_kit_options', group: 'Sound Kit Options', characters: '' },                            // Digit 12
+  { startPos: 13, endPos: 14, id: 'air_coil_and_insulation_option', group: 'Air Coil and Insulation Option', characters: '' },  // Digit 13
+  { startPos: 14, endPos: 16, id: 'non_standard_options', group: 'Non Standard Options', characters: '' },                      // Digit 14-16
+  { startPos: 16, endPos: 17, id: 'vintage', group: 'Vintage', characters: '' }                                                 // Digit 16
+];
+
+// V3C model number parsing configuration
+const V3C_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },                                          // Digits 0–3
+  { startPos: 3, endPos: 4, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                    // Digit 3
+  { startPos: 4, endPos: 7, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                              // Digits 4–7
+  { startPos: 7, endPos: 8, id: 'refrigerant', group: 'Refrigerant', characters: '' },                                        // Digit 7
+  { startPos: 8, endPos: 9, id: 'compressor_type', group: 'Compressor Type', characters: '' },                                // Digit 8
+  { startPos: 9, endPos: 10, id: 'voltage', group: 'Voltage', characters: '' },                                               // Digit 9
+  { startPos: 10, endPos: 11, id: 'vintage_factory_use', group: 'Vintage Factory Use', characters: '' },                      // Digit 10
+  { startPos: 11, endPos: 12, id: 'future_option', group: 'Future Option', characters: '' },                                  // Digit 11
+  { startPos: 12, endPos: 13, id: 'blower_options_r454b', group: 'Blower Options R454B', characters: '' },                    // Digit 12
+  { startPos: 13, endPos: 14, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                        // Digit 13
+  { startPos: 14, endPos: 15, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },      // Digit 14
+  { startPos: 15, endPos: 16, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },            // Digit 15
+  { startPos: 16, endPos: 17, id: 'sound_kit_option', group: 'Sound Kit Option', characters: '' },                            // Digit 16
+  { startPos: 17, endPos: 18, id: 'controls_options_r454b_models', group: 'Controls Options R454B Models', characters: '' },  // Digit 17
+  { startPos: 18, endPos: 19, id: 'electrical_options', group: 'Electrical Options', characters: '' },                        // Digit 18
+  { startPos: 19, endPos: 20, id: 'water_control_option', group: 'Water Control Option', characters: '' },                    // Digit 19
+  { startPos: 20, endPos: 21, id: 'cabinet_option', group: 'Cabinet Option', characters: '' },                                // Digit 20
+  { startPos: 21, endPos: 22, id: 'air_coil_option', group: 'Air Coil Option', characters: '' },                              // Digit 21
+  { startPos: 22, endPos: 23, id: 'thermostat_control', group: 'Thermostat Control', characters: '' },                        // Digit 22
+  { startPos: 23, endPos: 26, id: 'non_standard_options', group: 'Non Standard Options', characters: '' }                     // Digits 23-25
+];
+
+// V5C model number parsing configuration
+const V5C_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },                                          // Digits 0–3
+  { startPos: 3, endPos: 4, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                    // Digit 3
+  { startPos: 4, endPos: 7, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                              // Digits 4–7
+  { startPos: 7, endPos: 8, id: 'refrigerant', group: 'Refrigerant', characters: '' },                                        // Digit 7
+  { startPos: 8, endPos: 9, id: 'compressor_type', group: 'Compressor Type', characters: '' },                                // Digit 8
+  { startPos: 9, endPos: 10, id: 'voltage', group: 'Voltage', characters: '' },                                               // Digit 9
+  { startPos: 10, endPos: 11, id: 'vintage_factory_use', group: 'Vintage Factory Use', characters: '' },                      // Digit 10
+  { startPos: 11, endPos: 12, id: 'refrigeration_option', group: 'Refrigeration Option', characters: '' },                    // Digit 11
+  { startPos: 12, endPos: 13, id: 'blower_options_r454b', group: 'Blower Options R454B', characters: '' },                    // Digit 12
+  { startPos: 13, endPos: 14, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                        // Digit 13
+  { startPos: 14, endPos: 15, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },      // Digit 14
+  { startPos: 15, endPos: 16, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },            // Digit 15
+  { startPos: 16, endPos: 17, id: 'sound_kit_option', group: 'Sound Kit Option', characters: '' },                            // Digit 16
+  { startPos: 17, endPos: 18, id: 'controls_options_r454b_models', group: 'Controls Options R454B Models', characters: '' },  // Digit 17
+  { startPos: 18, endPos: 19, id: 'auxillary_electric_heat', group: 'Auxillary Electric Heat', characters: '' },              // Digit 18
+  { startPos: 19, endPos: 20, id: 'water_control_option', group: 'Water Control Option', characters: '' },                    // Digit 19
+  { startPos: 20, endPos: 21, id: 'cabinet_option', group: 'Cabinet Option', characters: '' },                                // Digit 20
+  { startPos: 21, endPos: 22, id: 'air_coil_option', group: 'Air Coil Option', characters: '' },                              // Digit 21
+  { startPos: 22, endPos: 23, id: 'thermostat_control', group: 'Thermostat Control', characters: '' },                        // Digit 22
+  { startPos: 23, endPos: 26, id: 'non_standard_options', group: 'Non Standard Options', characters: '' }                     // Digits 23-25
+];
+
+// VXA model number parsing configuration
+const VXA_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },                                          // Digits 0–3
+  { startPos: 3, endPos: 4, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                    // Digit 3
+  { startPos: 4, endPos: 7, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                              // Digits 4–7
+  { startPos: 7, endPos: 8, id: 'refrigerant', group: 'Refrigerant', characters: '' },                                        // Digit 7
+  { startPos: 8, endPos: 9, id: 'compressor_type', group: 'Compressor Type', characters: '' },                                // Digit 8
+  { startPos: 9, endPos: 10, id: 'voltage', group: 'Voltage', characters: '' },                                               // Digit 9
+  { startPos: 10, endPos: 11, id: 'vintage_factory_use', group: 'Vintage Factory Use', characters: '' },                      // Digit 10
+  { startPos: 11, endPos: 12, id: 'refrigeration_option', group: 'Refrigeration Option', characters: '' },                    // Digit 11
+  { startPos: 12, endPos: 13, id: 'blower_options_r454b', group: 'Blower Options R454B', characters: '' },                    // Digit 12
+  { startPos: 13, endPos: 14, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                        // Digit 13
+  { startPos: 14, endPos: 15, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },      // Digit 14
+  { startPos: 15, endPos: 16, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },            // Digit 15
+  { startPos: 16, endPos: 17, id: 'sound_kit_option', group: 'Sound Kit Option', characters: '' },                            // Digit 16
+  { startPos: 17, endPos: 18, id: 'controls_options_r454b_models', group: 'Controls Options R454B Models', characters: '' },  // Digit 17
+  { startPos: 18, endPos: 19, id: 'electrical_options', group: 'Electrical Options', characters: '' },                        // Digit 18
+  { startPos: 19, endPos: 20, id: 'water_control_option', group: 'Water Control Option', characters: '' },                    // Digit 19
+  { startPos: 20, endPos: 21, id: 'cabinet_option', group: 'Cabinet Option', characters: '' },                                // Digit 20
+  { startPos: 21, endPos: 22, id: 'air_coil_option', group: 'Air Coil Option', characters: '' },                              // Digit 21
+  { startPos: 22, endPos: 23, id: 'drain_pan_options', group: 'Drain Pan Options', characters: '' },                          // Digit 22
+  { startPos: 23, endPos: 26, id: 'non_standard_options', group: 'Non Standard Options', characters: '' }                     // Digits 23-25
+];
+
+// UD model number parsing configuration
+const UD_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                                        // Digits 0–2
+  { startPos: 2, endPos: 3, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                  // Digit 2
+  { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                            // Digits 3–6
+  { startPos: 6, endPos: 7, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },      // Digit 6
+  { startPos: 7, endPos: 8, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },            // Digit 7
+  { startPos: 8, endPos: 9, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 8
+  { startPos: 9, endPos: 10, id: 'refrigeration_option', group: 'Refrigeration Option', characters: '' },                   // Digit 9
+  { startPos: 10, endPos: 11, id: 'blower_options', group: 'Blower Options', characters: '' },                              // Digit 10
+  { startPos: 11, endPos: 12, id: 'future_option', group: 'Future Option', characters: '' },                                // Digit 11
+  { startPos: 12, endPos: 13, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                      // Digit 12
+  { startPos: 13, endPos: 14, id: 'sound_kit_option', group: 'Sound Kit Option', characters: '' },                          // Digit 13
+  { startPos: 14, endPos: 15, id: 'water_control_option', group: 'Water Control Option', characters: '' },                  // Digit 14
+  { startPos: 15, endPos: 16, id: 'controls_options', group: 'Controls Options', characters: '' },                          // Digit 15
+  { startPos: 16, endPos: 17, id: 'electrical_options', group: 'Electrical Options', characters: '' },                      // Digit 16
+  { startPos: 17, endPos: 18, id: 'cabinet_option', group: 'Cabinet Option', characters: '' },                              // Digit 17
+  { startPos: 18, endPos: 19, id: 'future_option', group: 'Future Option', characters: '' },                                // Digit 18
+  { startPos: 19, endPos: 20, id: 'air_coil_option', group: 'Air Coil Option', characters: '' },                            // Digit 19
+  { startPos: 20, endPos: 21, id: 'economizer_option', group: 'Economizer Option', characters: '' },                        // Digits 20-21
+  { startPos: 21, endPos: 23, id: 'non_standard_options', group: 'Non Standard Options', characters: '' },                  // Digit 21-22
+  { startPos: 23, endPos: 24, id: 'vintage', group: 'Vintage', characters: '' }                                             // Digit 23
+];
+
+// NB and UB model number parsing configuration
+const NB_UB_WATERFURNACE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                                        // Digits 0–2
+  { startPos: 2, endPos: 3, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                  // Digit 2
+  { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                            // Digits 3–6
+  { startPos: 6, endPos: 7, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },      // Digit 6
+  { startPos: 7, endPos: 8, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },            // Digit 7
+  { startPos: 8, endPos: 9, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 8
+  { startPos: 9, endPos: 10, id: 'refrigeration_option', group: 'Refrigeration Option', characters: '' },                   // Digit 9
+  { startPos: 10, endPos: 11, id: 'blower_options', group: 'Blower Options', characters: '' },                              // Digit 10
+  { startPos: 11, endPos: 12, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                                // Digit 11
+  { startPos: 12, endPos: 13, id: 'sound_kit_option', group: 'Sound Kit Option', characters: '' },                        // Digit 12
+  { startPos: 13, endPos: 14, id: 'water_control_option', group: 'Water Control Option', characters: '' },                  // Digit 13
+  { startPos: 14, endPos: 15, id: 'controls_options', group: 'Controls Options', characters: '' },                          // Digit 14
+  { startPos: 15, endPos: 16, id: 'electrical_options', group: 'Electrical Options', characters: '' },                      // Digit 15
+  { startPos: 16, endPos: 17, id: 'cabinet_option', group: 'Cabinet Option', characters: '' },                              // Digit 16
+  { startPos: 17, endPos: 18, id: 'filter_option', group: 'Filter Option', characters: '' },                            // Digit 17
+  { startPos: 18, endPos: 19, id: 'air_coil_option', group: 'Air Coil Option', characters: '' },                            // Digit 18
+  { startPos: 19, endPos: 20, id: 'drain_pan_options', group: 'Drain Pan Options', characters: '' },                          // Digit 19
+  { startPos: 20, endPos: 22, id: 'non_standard_options', group: 'Non Standard Options', characters: '' },                  // Digit 20-21
+  { startPos: 22, endPos: 23, id: 'vintage', group: 'Vintage', characters: '' }                                             // Digit 22
+];
+
+// BOSCH models
+// CP, CF, CL, ES, EP, QV, LV, and MC model number parsing configuration
+const STANDARD_BOSCH_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                                    // Digits 0–2
+  { startPos: 2, endPos: 5, id: 'size', group: 'Size', characters: '' },                                                    // Digits 2–5
+  { startPos: 5, endPos: 6, id: 'dash', group: 'Dash', characters: '' },                                                    // Digit 5
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 9, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                  // Digit 7-9
+  { startPos: 9, endPos: 10, id: 'coax_options', group: 'Coax Options', characters: '' },                                   // Digit 9
+  { startPos: 10, endPos: 11, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 10
+  { startPos: 11, endPos: 12, id: 'water_connections', group: 'Water Connections', characters: '' },                        // Digit 11
+  { startPos: 12, endPos: 13, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },          // Digit 12
+  { startPos: 13, endPos: 14, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },    // Digit 13
+  { startPos: 14, endPos: 15, id: 'fan_motor_options', group: 'Fan Motor Options', characters: '' },                        // Digit 14
+  { startPos: 15, endPos: 16, id: 'air_coil', group: 'Air Coil', characters: '' },                                          // Digit 15
+  { startPos: 16, endPos: 17, id: 'revision_level', group: 'Revision Level', characters: '' },                              // Digit 16
+  { startPos: 17, endPos: 18, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 17
+  { startPos: 18, endPos: 19, id: 'electric_heat', group: 'Electric Heat', characters: '' },                                // Digit 18
+  { startPos: 19, endPos: 20, id: 'cabinet_construction', group: 'Cabinet Construction', characters: '' },                  // Digit 19
+  { startPos: 20, endPos: 21, id: 'application', group: 'Application', characters: '' },                                    // Digit 20
+  { startPos: 21, endPos: 26, id: 'electrical_options', group: 'Electrical Options', characters: '' },                      // Digits 21–26
+  { startPos: 26, endPos: 27, id: 'refrigeration', group: 'Refrigeration', characters: '' },                                // Digit 26
+  { startPos: 27, endPos: 28, id: 'transformer', group: 'Transformer', characters: '' },                                    // Digit 27
+  { startPos: 28, endPos: 29, id: 'controls', group: 'Controls', characters: '' },                                          // Digit 28
+  { startPos: 29, endPos: 30, id: 'water_flow_control_options', group: 'Water Flow Control Options', characters: '' },      // Digit 29
+  { startPos: 30, endPos: 31, id: 'economizer', group: 'Economizer', characters: '' },                                      // Digit 30
+  { startPos: 31, endPos: 32, id: 'open', group: 'Open', characters: '' },                                                  // Digit 31
+  { startPos: 32, endPos: 33, id: 'air_filtration', group: 'Air Filtration', characters: '' },                              // Digit 32
+  { startPos: 33, endPos: 34, id: 'motor_hp', group: 'Motor HP', characters: '' },                                          // Digit 33
+  { startPos: 34, endPos: 35, id: 'drive_speed', group: 'Drive Speed', characters: '' },                                    // Digit 34
+  { startPos: 35, endPos: 36, id: 'open', group: 'Open', characters: '' },                                                  // Digit 35
+  { startPos: 36, endPos: 37, id: 'agency_options', group: 'Agency Options', characters: '' },                              // Digit 36
+  { startPos: 37, endPos: 38, id: 'standard_or_special', group: 'Standard or Special', characters: '' },                    // Digit 37
+  { startPos: 38, endPos: 39, id: 'channel', group: 'Channel', characters: '' },                                            // Digit 38
+  { startPos: 39, endPos: 40, id: 'code_string_level', group: 'Code String Level', characters: '' }                         // Digit 39
+];
+
+// CA models number parsing configuration
+const CA_BOSCH_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                                    // Digits 0–2
+  { startPos: 2, endPos: 5, id: 'size', group: 'Size', characters: '' },                                                    // Digits 2–5
+  { startPos: 5, endPos: 6, id: 'dash', group: 'Dash', characters: '' },                                                    // Digit 5
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 9, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                  // Digit 7-9
+  { startPos: 9, endPos: 10, id: 'coax_options', group: 'Coax Options', characters: '' },                                   // Digit 9
+  { startPos: 10, endPos: 11, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 10
+  { startPos: 11, endPos: 12, id: 'cabinet_width', group: 'Cabinet Width', characters: '' },                                // Digit 11
+  { startPos: 12, endPos: 13, id: 'supply_air_configuration', group: 'Supply Air Configuration', characters: '' },          // Digit 12
+  { startPos: 13, endPos: 14, id: 'fan_motor_options', group: 'Fan Motor Options', characters: '' },                        // Digit 13
+  { startPos: 14, endPos: 15, id: 'air_coil', group: 'Air Coil', characters: '' },                                          // Digit 14
+  { startPos: 15, endPos: 16, id: 'cabinet_construction', group: 'Cabinet Construction', characters: '' },                  // Digit 15
+  { startPos: 16, endPos: 17, id: 'revision_level', group: 'Revision Level', characters: '' },                              // Digit 16
+  { startPos: 17, endPos: 18, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 17
+  { startPos: 18, endPos: 19, id: 'electric_heat', group: 'Electric Heat', characters: '' },                                // Digit 18
+  { startPos: 19, endPos: 20, id: 'application', group: 'Application', characters: '' },                                    // Digit 19
+  { startPos: 20, endPos: 21, id: 'electrical_options', group: 'Electrical Options', characters: '' },                      // Digit 20
+  { startPos: 21, endPos: 26, id: 'refrigeration', group: 'Refrigeration', characters: '' },                                // Digits 21–26
+  { startPos: 26, endPos: 27, id: 'transformer', group: 'Transformer', characters: '' },                                    // Digit 26
+  { startPos: 27, endPos: 28, id: 'controls', group: 'Controls', characters: '' },                                          // Digit 27
+  { startPos: 28, endPos: 29, id: 'water_flow_control_options', group: 'Water Flow Control Options', characters: '' },      // Digit 28
+  { startPos: 29, endPos: 30, id: 'economizer', group: 'Economizer', characters: '' },                                      // Digit 29
+  { startPos: 30, endPos: 31, id: 'open', group: 'Open', characters: '' },                                                  // Digit 30
+  { startPos: 31, endPos: 32, id: 'air_filtration', group: 'Air Filtration', characters: '' },                              // Digit 31
+  { startPos: 32, endPos: 33, id: 'motor_hp', group: 'Motor HP', characters: '' },                                          // Digit 32
+  { startPos: 33, endPos: 34, id: 'drive_speed', group: 'Drive Speed', characters: '' },                                    // Digit 33
+  { startPos: 34, endPos: 35, id: 'open', group: 'Open', characters: '' },                                                  // Digit 34
+  { startPos: 35, endPos: 36, id: 'open', group: 'Open', characters: '' },                                                  // Digit 35
+  { startPos: 36, endPos: 37, id: 'standard_or_special', group: 'Standard or Special', characters: '' },                    // Digit 36
+  { startPos: 37, endPos: 38, id: 'channel', group: 'Channel', characters: '' },                                            // Digit 37
+  { startPos: 38, endPos: 39, id: 'code_string_level', group: 'Code String Level', characters: '' },                        // Digit 38
+];
+
+// SM model number parsing configuration
+const SM_BOSCH_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                                    // Digits 0–2
+  { startPos: 2, endPos: 5, id: 'size', group: 'Size', characters: '' },                                                    // Digits 2–5
+  { startPos: 5, endPos: 6, id: 'dash', group: 'Dash', characters: '' },                                                    // Digit 5
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 9, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                  // Digit 7-9
+  { startPos: 9, endPos: 10, id: 'coax_options', group: 'Coax Options', characters: '' },                                   // Digit 9
+  { startPos: 10, endPos: 11, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 10
+  { startPos: 11, endPos: 12, id: 'water_connections', group: 'Water Connections', characters: '' },                        // Digit 11
+  { startPos: 12, endPos: 13, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },          // Digit 12
+  { startPos: 13, endPos: 14, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },    // Digit 13
+  { startPos: 14, endPos: 15, id: 'dash', group: 'Dash', characters: '' },                        // Digit 14
+  { startPos: 15, endPos: 16, id: 'fan_motor_options', group: 'Fan Motor Options', characters: '' },                        // Digit 15
+  { startPos: 16, endPos: 17, id: 'revision_level', group: 'Revision Level', characters: '' },                              // Digit 16
+  { startPos: 17, endPos: 18, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 17
+  { startPos: 18, endPos: 19, id: 'electric_heat', group: 'Electric Heat', characters: '' },                                // Digit 18
+  { startPos: 19, endPos: 20, id: 'refrigeration', group: 'Refrigeration', characters: '' },                                // Digit 19
+  { startPos: 20, endPos: 21, id: 'open', group: 'Open', characters: '' },                                                  // Digit 20
+  { startPos: 21, endPos: 22, id: 'smart_start', group: 'Smart Start', characters: '' },                                    // Digit 21
+  { startPos: 22, endPos: 23, id: 'sm_electrical_options', group: 'SM Electrical Options', characters: '' },                // Digit 22
+  { startPos: 23, endPos: 24, id: 'standard_or_special', group: 'Standard or Special', characters: '' },                    // Digit 23
+];
+
+// WT model number parsing configuration
+const WT_BOSCH_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                                    // Digits 0–2
+  { startPos: 2, endPos: 5, id: 'size', group: 'Size', characters: '' },                                                    // Digits 2–5
+  { startPos: 5, endPos: 6, id: 'dash', group: 'Dash', characters: '' },                                                    // Digit 5
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 9, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                  // Digit 7-9
+  { startPos: 9, endPos: 10, id: 'coax_options', group: 'Coax Options', characters: '' },                                   // Digit 9
+  { startPos: 10, endPos: 11, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 10
+  { startPos: 11, endPos: 12, id: 'water_connections', group: 'Water Connections', characters: '' },                        // Digit 11
+  { startPos: 12, endPos: 13, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },          // Digit 12
+  { startPos: 13, endPos: 14, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },    // Digit 13
+  { startPos: 14, endPos: 15, id: 'fan_motor_options', group: 'Fan Motor Options', characters: '' },                        // Digit 14
+  { startPos: 15, endPos: 16, id: 'coax_options', group: 'Coax Options', characters: '' },                                   // Digit 15
+  { startPos: 16, endPos: 17, id: 'revision_level', group: 'Revision Level', characters: '' },                              // Digit 16
+  { startPos: 17, endPos: 18, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 17
+  { startPos: 18, endPos: 19, id: 'electric_heat', group: 'Electric Heat', characters: '' },                                // Digit 18
+  { startPos: 19, endPos: 20, id: 'cabinet_construction', group: 'Cabinet Construction', characters: '' },                  // Digit 19
+  { startPos: 20, endPos: 21, id: 'application', group: 'Application', characters: '' },                                    // Digit 20
+  { startPos: 21, endPos: 26, id: 'electrical_options', group: 'Electrical Options', characters: '' },                      // Digits 21–26
+  { startPos: 26, endPos: 27, id: 'refrigeration', group: 'Refrigeration', characters: '' },                                // Digit 26
+  { startPos: 27, endPos: 28, id: 'transformer', group: 'Transformer', characters: '' },                                    // Digit 27
+  { startPos: 28, endPos: 29, id: 'controls', group: 'Controls', characters: '' },                                          // Digit 28
+  { startPos: 29, endPos: 30, id: 'open', group: 'Open', characters: '' },                                                  // Digit 29
+  { startPos: 30, endPos: 31, id: 'open', group: 'Open', characters: '' },                                                  // Digit 30
+  { startPos: 31, endPos: 32, id: 'open', group: 'Open', characters: '' },                                                  // Digit 31
+  { startPos: 32, endPos: 33, id: 'open', group: 'Open', characters: '' },                                                  // Digit 32
+  { startPos: 33, endPos: 34, id: 'open', group: 'Open', characters: '' },                                                  // Digit 33
+  { startPos: 34, endPos: 35, id: 'open', group: 'Open', characters: '' },                                                  // Digit 34
+  { startPos: 35, endPos: 36, id: 'open', group: 'Open', characters: '' },                                                  // Digit 35
+  { startPos: 36, endPos: 37, id: 'open', group: 'Open', characters: '' },                              // Digit 36
+  { startPos: 37, endPos: 38, id: 'standard_or_special', group: 'Standard or Special', characters: '' },                    // Digit 37
+  { startPos: 38, endPos: 39, id: 'channel', group: 'Channel', characters: '' },                                            // Digit 38
+  { startPos: 39, endPos: 40, id: 'code_string_level', group: 'Code String Level', characters: '' }                         // Digit 39
+];
+
+// BP model number parsing configuration
+const BP_BOSCH_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                                    // Digits 0–2
+  { startPos: 2, endPos: 5, id: 'size', group: 'Size', characters: '' },                                                    // Digits 2–5
+  { startPos: 5, endPos: 6, id: 'dash', group: 'Dash', characters: '' },                                                    // Digit 5
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 9, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                  // Digit 7-9
+  { startPos: 9, endPos: 10, id: 'coax_options', group: 'Coax Options', characters: '' },                                   // Digit 9
+  { startPos: 10, endPos: 11, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 10
+  { startPos: 11, endPos: 12, id: 'water_connections', group: 'Water Connections', characters: '' },                        // Digit 11
+  { startPos: 12, endPos: 13, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },          // Digit 12
+  { startPos: 13, endPos: 14, id: 'supply_air_configuration', group: 'Supply Air Configuration', characters: '' },          // Digit 13
+];
+
+// EC Model number parsing configuration
+const EC_BOSCH_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                                    // Digits 0–2
+  { startPos: 2, endPos: 5, id: 'size', group: 'Size', characters: '' },                                                    // Digits 2–5
+  { startPos: 5, endPos: 6, id: 'dash', group: 'Dash', characters: '' },                                                    // Digit 5
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 9, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                  // Digit 7-9
+  { startPos: 9, endPos: 10, id: 'coax_options', group: 'Coax Options', characters: '' },                                   // Digit 9
+  { startPos: 10, endPos: 11, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 10
+  { startPos: 11, endPos: 12, id: 'water_connections', group: 'Water Connections', characters: '' },                        // Digit 11
+  { startPos: 12, endPos: 13, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },          // Digit 12
+  { startPos: 13, endPos: 14, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },    // Digit 13
+  { startPos: 14, endPos: 15, id: 'fan_motor_options', group: 'Fan Motor Options', characters: '' },                        // Digit 14
+  { startPos: 15, endPos: 16, id: 'air_coil', group: 'Air Coil', characters: '' },                                          // Digit 15
+  { startPos: 16, endPos: 17, id: 'revision_level', group: 'Revision Level', characters: '' },                              // Digit 16
+  { startPos: 17, endPos: 18, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 17
+  { startPos: 18, endPos: 19, id: 'electric_heat', group: 'Electric Heat', characters: '' },                                // Digit 18
+  { startPos: 19, endPos: 20, id: 'cabinet_construction', group: 'Cabinet Construction', characters: '' },                  // Digit 19
+  { startPos: 20, endPos: 21, id: 'application', group: 'Application', characters: '' },                                    // Digit 20
+  { startPos: 21, endPos: 26, id: 'electrical_options', group: 'Electrical Options', characters: '' },                      // Digits 21–26
+  { startPos: 26, endPos: 27, id: 'refrigeration', group: 'Refrigeration', characters: '' },                                // Digit 26
+  { startPos: 27, endPos: 28, id: 'transformer', group: 'Transformer', characters: '' },                                    // Digit 27
+  { startPos: 28, endPos: 29, id: 'controls', group: 'Controls', characters: '' },                                          // Digit 28
+  { startPos: 29, endPos: 30, id: 'water_flow_control_options', group: 'Water Flow Control Options', characters: '' },      // Digit 29
+  { startPos: 30, endPos: 31, id: 'economizer', group: 'Economizer', characters: '' },                                      // Digit 30
+  { startPos: 31, endPos: 32, id: 'open', group: 'Open', characters: '' },                                                  // Digit 31
+  { startPos: 32, endPos: 33, id: 'air_filtration', group: 'Air Filtration', characters: '' },                              // Digit 32
+  { startPos: 33, endPos: 34, id: 'motor_hp', group: 'Motor HP', characters: '' },                                          // Digit 33
+  { startPos: 34, endPos: 35, id: 'drive_speed', group: 'Drive Speed', characters: '' },                                    // Digit 34
+  { startPos: 35, endPos: 36, id: 'motor_or_blower_orientation', group: 'Motor or Blower Orientation', characters: '' },    // Digit 35
+  { startPos: 36, endPos: 37, id: 'agency_options', group: 'Agency Options', characters: '' },                              // Digit 36
+  { startPos: 37, endPos: 38, id: 'standard_or_special', group: 'Standard or Special', characters: '' },                    // Digit 37
+  { startPos: 38, endPos: 39, id: 'channel', group: 'Channel', characters: '' },                                            // Digit 38
+  { startPos: 39, endPos: 40, id: 'code_string_level', group: 'Code String Level', characters: '' }                         // Digit 39
+];
+
+// FLORIDA HEAT PUMP
+// Standard FLORIDA HEAT PUMP model number parsing configuration
+const STANDARD_FLORIDA_HEAT_PUMP_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                                    // Digits 0–2
+  { startPos: 2, endPos: 5, id: 'size', group: 'Size', characters: '' },                                                    // Digits 2–5
+  { startPos: 5, endPos: 6, id: 'dash', group: 'Dash', characters: '' },                                                    // Digit 5
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 9, id: 'cabinet_construction', group: 'Cabinet Construction', characters: '' },                    // Digit 7-9
+  { startPos: 9, endPos: 10, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                       // Digit 9
+  { startPos: 10, endPos: 11, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 10
+  { startPos: 11, endPos: 12, id: 'water_connections', group: 'Water Connections', characters: '' },                        // Digit 11
+  { startPos: 12, endPos: 13, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },          // Digit 12
+  { startPos: 13, endPos: 14, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },    // Digit 13
+];
+
+// CA and CS model number parsing configuration
+const CA_CS_FLORIDA_HEAT_PUMP_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                                    // Digits 0–2
+  { startPos: 2, endPos: 5, id: 'size', group: 'Size', characters: '' },                                                    // Digits 2–5
+  { startPos: 5, endPos: 6, id: 'dash', group: 'Dash', characters: '' },                                                    // Digit 5
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 6
+  { startPos: 7, endPos: 9, id: 'control_options', group: 'Control Options', characters: '' },                              // Digit 7-9
+  { startPos: 9, endPos: 10, id: 'water_connections', group: 'Water Connections', characters: '' },                         // Digit 9
+  { startPos: 10, endPos: 11, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                      // Digit 10
+  { startPos: 11, endPos: 12, id: 'open', group: 'Open', characters: '' },                                                  // Digit 11
+  { startPos: 12, endPos: 13, id: 'open', group: 'Open', characters: '' },                                                  // Digit 12
+  { startPos: 13, endPos: 14, id: 'open', group: 'Open', characters: '' },                                                  // Digit 13
+];
+
+// GS and GT model number parsing configuration
+const GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                                    // Digits 0–2
+  { startPos: 2, endPos: 5, id: 'size', group: 'Size', characters: '' },                                                    // Digits 2–5
+  { startPos: 5, endPos: 6, id: 'discharge_air_configuration', group: 'Discharge Air Configuration', characters: '' },      // Digit 5
+  { startPos: 6, endPos: 7, id: 'return_air_configuration', group: 'Return Air Configuration', characters: '' },            // Digit 6
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 7
+  { startPos: 8, endPos: 9, id: 'hot_water_options', group: 'Hot Water Options', characters: '' },                          // Digit 8
+  { startPos: 9, endPos: 10, id: 'blower_options', group: 'Blower Options', characters: '' },                               // Digit 9
+  { startPos: 10, endPos: 11, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                      // Digit 10
+  { startPos: 11, endPos: 12, id: 'sound_kit', group: 'Sound Kit', characters: '' },                                        // Digit 11 Unsure if this is supposed to be sound kit or sound kit option
+  { startPos: 12, endPos: 13, id: 'cabinet_options', group: 'Cabinet Options', characters: '' },                            // Digit 12
+  { startPos: 13, endPos: 14, id: 'non_standard_options', group: 'Non Standard Options', characters: '' },                  // Digit 13
+  { startPos: 14, endPos: 15, id: 'non_standard_options_details', group: 'Non Standard Options Details', characters: '' },  // Digit 14
+  { startPos: 15, endPos: 16, id: 'vintage', group: 'Vintage', characters: '' }                                             // Digit 15
 ];
 
 
