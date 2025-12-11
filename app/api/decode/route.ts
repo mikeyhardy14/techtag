@@ -498,11 +498,7 @@ const NSW_WATERFURNACE_SEGMENTS: ModelSegment[] = [
 ];
 
 // NDW model number parsing configuration
-<<<<<<< HEAD
 const NDW_WATERFURNACE_SEGMENTS: ModelSegment[] = [
-=======
-const NDW_WATERFURNACE_SEGEMENTS: ModelSegment[] = [
->>>>>>> 3631c91 (Water Furnace, Bosch, and Florida Heat Pump)
   { startPos: 0, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },                                        // Digits 0–2
   { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                            // Digits 3–6
   { startPos: 6, endPos: 7, id: 'operation', group: 'Operation', characters: '' },                                          // Digit 6
@@ -648,7 +644,7 @@ const V5C_WATERFURNACE_SEGMENTS: ModelSegment[] = [
   { startPos: 23, endPos: 26, id: 'non_standard_options', group: 'Non Standard Options', characters: '' }                     // Digits 23-25
 ];
 
-// VXA model number parsing configuration
+// V7A, V5A, and V3A model number parsing configuration
 const VXA_WATERFURNACE_SEGMENTS: ModelSegment[] = [
   { startPos: 0, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },                                          // Digits 0–3
   { startPos: 3, endPos: 4, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                    // Digit 3
@@ -947,7 +943,6 @@ const GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS: ModelSegment[] = [
   { startPos: 15, endPos: 16, id: 'vintage', group: 'Vintage', characters: '' }                                             // Digit 15
 ];
 
-<<<<<<< HEAD
 // WHALEN
 // WHALEN 2021 model number parsing configuration // needs to be renamed
 const OLDER_WHALEN_SEGMENTS: ModelSegment[] = [
@@ -1039,8 +1034,6 @@ const WVI_WVP_WHALEN_SEGMENTS: ModelSegment[] = [
   { startPos : 28, endPos: 29, id: 'air_and_fluid_sensor', group: 'Air and Fluid Sensor', characters: ''}, // Digit 28
   { startPos: 29, endPos: 30, id: 'coil_height', group: 'Coil Height', characters: '' }                           // Digit 29
 ];
-=======
->>>>>>> 3631c91 (Water Furnace, Bosch, and Florida Heat Pump)
 
 // Supabase configuration
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -1398,76 +1391,6 @@ async function decodeClimateMasterModel(
       segments: VXA_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'WaterFurnace'
     },
-    {
-      modelTypes: ['UD'],
-      segments: UD_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'UD'
-    },
-    {
-      modelTypes: ['NB', 'UB'],
-      segments: NB_UB_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'WaterFurnace'
-    },
-    {
-      modelTypes: ['CP', 'CF', 'CL', 'ES', 'EP', 'QV', 'LV', 'MC'],
-      segments: STANDARD_BOSCH_SEGMENTS,
-      getConfigName: () => 'Bosch'
-    },
-    {
-      modelTypes: ['CA'],
-      segments: CA_BOSCH_SEGMENTS,
-      getConfigName: () => 'Bosch'
-    },
-    {
-      modelTypes: ['SM'],
-      segments: SM_BOSCH_SEGMENTS,
-      getConfigName: () => 'SM'
-    },
-    {
-      modelTypes: ['WT'],
-      segments: WT_BOSCH_SEGMENTS,
-      getConfigName: () => 'WT'
-    },
-    {
-      modelTypes: ['BP'],
-      segments: BP_BOSCH_SEGMENTS,
-      getConfigName: () => 'BP'
-    },
-    {
-      modelTypes: ['EC'],
-      segments: EC_BOSCH_SEGMENTS,
-      getConfigName: () => 'EC'
-    },
-    {
-      modelTypes: ['AP', 'EC', 'EM', 'ES', 'EV', 'GO', 'AU', 'HE', 'SE'],
-      segments: STANDARD_FLORIDA_HEAT_PUMP_SEGMENTS,
-      getConfigName: () => 'Florida Heat Pump'
-    },
-    {
-      modelTypes: ['CA', 'CS'],
-      segments: CA_CS_FLORIDA_HEAT_PUMP_SEGMENTS,
-      getConfigName: () => 'Florida Heat Pump'
-    },
-    {
-      modelTypes: ['GS', 'GT'],
-      segments: GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS,
-      getConfigName: () => 'Florida Heat Pump'
-    },
-    {
-      modelTypes: ['VI', 'VP', 'VH', 'VS', 'VT', 'VR'],
-      segments: OLDER_WHALEN_SEGMENTS,
-      getConfigName: () => 'Whalen'
-    },
-    {
-      modelTypes: [' VD', 'VN', 'VI', 'VP', 'VH', 'VS', 'VT'],
-      segments: NEWER_WHALEN_SEGMENTS,
-      getConfigName: () => 'Whalen'
-    },
-    {
-      modelTypes: ['WVI', 'WVP'],
-      segments: WVI_WVP_WHALEN_SEGMENTS,
-      getConfigName: () => 'Whalen'
-    }
   ];
 
   // Select appropriate parsing configuration based on model type
