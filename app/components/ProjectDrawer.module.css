@@ -4,18 +4,21 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: var(--overlay-background);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: flex-end;
-  z-index: 1000;
+  z-index: 1100;
 }
 
 .drawer {
   width: 400px;
-  background-color: var(--white);
+  background-color: #FFFFFF;
   height: 100%;
   padding: 2rem;
-  box-shadow: var(--shadow-strong);
+  box-shadow: var(--shadow-xl);
+  overflow-y: auto;
+  position: relative;
+  z-index: 1101;
 }
 
 .header {
@@ -27,7 +30,7 @@
 
 .header h2 {
   margin: 0;
-  color: var(--darker-gray);
+  color: var(--gray-800);
 }
 
 .closeButton {
@@ -37,14 +40,14 @@
   cursor: pointer;
   padding: 0.5rem;
   line-height: 1;
-  color: var(--text-gray);
+  color: var(--gray-500);
   transition: all 0.2s ease;
   border-radius: 4px;
 }
 
 .closeButton:hover {
-  background-color: var(--light-gray);
-  color: var(--darker-gray);
+  background-color: var(--gray-100);
+  color: var(--gray-800);
 }
 
 .form {
@@ -57,25 +60,28 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  position: relative;
 }
 
 .formGroup label {
   font-weight: 500;
-  color: var(--dark-gray);
+  color: var(--gray-700);
 }
 
 .input {
   padding: 0.75rem;
-  border: 2px solid var(--input-border);
+  border: 2px solid var(--gray-200);
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.2s ease;
+  background-color: #FFFFFF;
+  color: var(--gray-800);
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgba(63, 111, 224, 0.1);
+  border-color: var(--tech-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 .actions {
@@ -92,30 +98,44 @@
   font-weight: 500;
   flex: 1;
   transition: all 0.2s ease;
-  box-shadow: var(--shadow-light);
+  box-shadow: var(--shadow-sm);
 }
 
 .cancelButton {
-  background-color: var(--white);
-  border: 2px solid var(--medium-gray);
-  color: var(--dark-gray);
+  background-color: #FFFFFF;
+  border: 2px solid var(--gray-300);
+  color: var(--gray-700);
 }
 
 .submitButton {
-  background: var(--primary-blue-gradient);
-  color: var(--white);
+  background: linear-gradient(135deg, var(--tech-blue) 0%, var(--tech-indigo) 100%);
+  color: #FFFFFF;
   border: none;
 }
 
 .submitButton:hover {
-  background: linear-gradient(135deg, var(--primary-blue-hover) 0%, var(--primary-blue) 100%);
+  background: linear-gradient(135deg, var(--tech-blue-hover) 0%, var(--tech-blue) 100%);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
+  box-shadow: var(--shadow-md);
 }
 
 .cancelButton:hover {
-  background-color: var(--light-gray);
+  background-color: var(--gray-100);
   transform: translateY(-1px);
+}
+
+/* Select Dropdown Specific Styles */
+select.input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+select.input:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%233B82F6' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
 }
 
 /* Mobile Responsiveness */
@@ -145,6 +165,10 @@
   .input {
     font-size: 16px; /* Prevents zoom on iOS */
     padding: 12px 16px;
+  }
+
+  select.input {
+    padding-right: 40px;
   }
 
   .actions {
