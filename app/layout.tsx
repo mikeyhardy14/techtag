@@ -10,7 +10,12 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "TechTag",
   description: "Decode HVAC model nomenclatures",
-  viewport: "width=device-width, initial-scale=1, shrink-to-fit=no",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  shrinkToFit: "no",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
