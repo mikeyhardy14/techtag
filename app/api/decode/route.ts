@@ -943,6 +943,97 @@ const GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS: ModelSegment[] = [
   { startPos: 15, endPos: 16, id: 'vintage', group: 'Vintage', characters: '' }                                             // Digit 15
 ];
 
+// WHALEN
+// WHALEN 2021 model number parsing configuration // needs to be renamed
+const OLDER_WHALEN_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_family', group: 'Product Family', characters: '' },                                // Digit 0
+  { startPos: 1, endPos: 2, id: 'product_type', group: 'Product Type', characters: '' },                                  // Digit 1
+  { startPos: 2, endPos: 3, id: 'system_configuration', group: 'System Configuration', characters: '' },                        // Digit 2
+  { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                          // Digits 3–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                                    // Digit 6
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 7
+  { startPos: 8, endPos: 9, id: 'fan', group: 'Fan', characters: '' },                                                  // Digit 8
+  { startPos: 9, endPos: 10, id: 'minor_revision', group: 'Minor Revision', characters: '' },                                    // Digit 9
+  { startPos: 10, endPos: 11, id: 'sound_attenuation', group: 'Sound Attenuation', characters: '' },                          // Digit 10
+  { startPos: 11, endPos: 12, id: 'cabinet_type_and_height', group: 'Cabinet Type and Height', characters: '' },          // Digit 11
+  { startPos: 12, endPos: 13, id: 'electric_heat', group: 'Electric Heat', characters: '' },                                // Digit 12
+  { startPos: 13, endPos: 14, id: 'electric_heat_voltage', group: 'Electric Heat Voltage', characters: '' },                // Digit 13
+  { startPos: 14, endPos: 15, id: 'fan_control', group: 'Fan Control', characters: '' },                                // Digit 14
+  { startPos: 15, endPos: 16, id: 'supply_air_discharge', group: 'Supply Air Discharge', characters: '' },                // Digit 15
+  { startPos: 16, endPos: 17, id: 'cabinet_protection', group: 'Cabinet Protection', characters: '' },                // Digit 16
+  { startPos: 17, endPos: 18, id: 'power_termination_and_entry_location', group: 'Power Termination and Entry Location', characters: '' },
+  { startPos: 18, endPos: 19, id: 'thermostat_extension', group: 'Thermostat Extension', characters: '' },                // Digit 18
+  { startPos: 19, endPos: 20, id: 'control_type', group: 'Control Type', characters: '' },                                     // Digit 19
+  { startPos: 20, endPos: 21, id: 'water_temperature_sensors', group: 'Water Temperature Sensors', characters: '' },                             // Digit 20
+  { startPos: 21, endPos: 22, id: 'ddc_control', group: 'DDC Control', characters: '' },                                     // Digit 21
+  { startPos: 22, endPos: 23, id: 'drain_pan_options', group: 'Drain Pan Options', characters: '' },                                                  // Digit 22
+  { startPos: 23, endPos: 24, id: 'insulation_option', group: 'Insulation Option', characters: '' },                                                  // Digit 23
+  { startPos: 24, endPos: 25, id: 'outdoor_air', group: 'Outdoor Air', characters: '' },                                                  // Digit 24
+  { startPos: 25, endPos: 26, id: 'filtration', group: 'Filtration', characters: '' },                                                  // Digit 25
+  { startPos: 26, endPos: 27, id: 'riser_style', group: 'Riser Style', characters: '' },                           // Digit 26
+  { startPos: 27, endPos: 28, id: 'riser_spacing', group: 'Riser Spacing', characters: '' },                           // Digit 27
+  { startPos: 28, endPos: 29, id: 'riser_location', group: 'Riser Location', characters: '' },                           // Digit 28
+  { startPos: 29, endPos: 30, id: 'special_configuration', group: 'Special Configuration', characters: '' },                           // Digit 29
+];
+
+// WHALEN 2024 model number parsing configuration // needs to be renamed
+const NEWER_WHALEN_SEGMENTS: ModelSegment[] = [
+    { startPos: 0, endPos: 1, id: 'product_family', group: 'Product Family', characters: '' },                                // Digit 0
+  { startPos: 1, endPos: 2, id: 'product_type', group: 'Product Type', characters: '' },                                  // Digit 1
+  { startPos: 2, endPos: 3, id: 'system_configuration', group: 'System Configuration', characters: '' },                        // Digit 2
+  { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                          // Digits 3–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                                    // Digit 6
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 7
+  { startPos: 8, endPos: 9, id: 'fan', group: 'Fan', characters: '' },                                                  // Digit 8
+  { startPos: 9, endPos: 10, id: 'minor_revision', group: 'Minor Revision', characters: '' },                                    // Digit 9
+  { startPos: 10, endPos: 11, id: 'sound_attenuation', group: 'Sound Attenuation', characters: '' },                          // Digit 10
+  { startPos: 11, endPos: 12, id: 'cabinet_type_and_height', group: 'Cabinet Type and Height', characters: '' },          // Digit 11
+  { startPos: 12, endPos: 13, id: 'electric_heat', group: 'Electric Heat', characters: '' },                                // Digit 12
+  { startPos: 13, endPos: 14, id: 'electric_heat_voltage', group: 'Electric Heat Voltage', characters: '' },                // Digit 13
+  { startPos: 14, endPos: 15, id: 'fan_control_wiring', group: 'Fan Control Wiring', characters: '' },                                // Digit 14
+  { startPos: 15, endPos: 16, id: 'supply_air_discharge_r454b', group: 'Supply Air Discharge R454B', characters: '' },                // Digit 15
+  { startPos: 16, endPos: 17, id: 'cabinet_protection', group: 'Cabinet Protection', characters: '' },                // Digit 16
+  { startPos: 17, endPos: 18, id: 'power_termination_r454b', group: 'Power Termination R454B', characters: '' },
+  { startPos: 18, endPos: 19, id: 'thermostat_extension', group: 'Thermostat Extension', characters: '' },                // Digit 18
+  { startPos: 20, endPos: 21, id: 'water_temperature_sensors', group: 'Water Temperature Sensors', characters: '' },                             // Digit 20
+  { startPos: 21, endPos: 22, id: 'ddc_control', group: 'DDC Control', characters: '' },                                     // Digit 21
+  { startPos: 22, endPos: 23, id: 'drain_pan_options', group: 'Drain Pan Options', characters: '' },                                                  // Digit 22
+  { startPos: 23, endPos: 24, id: 'insulation_option', group: 'Insulation Option', characters: '' },                                                  // Digit 23
+  { startPos: 24, endPos: 25, id: 'outdoor_air', group: 'Outdoor Air', characters: '' },                                                  // Digit 24
+  { startPos: 25, endPos: 26, id: 'filtration', group: 'Filtration', characters: '' },                                                  // Digit 25
+  { startPos: 26, endPos: 27, id: 'riser_style_r454b', group: 'Riser Style R454B', characters: '' },                           // Digit 26
+  { startPos: 27, endPos: 28, id: 'riser_spacing_r454b', group: 'Riser Spacing R454B', characters: '' },                           // Digit 27
+  { startPos: 28, endPos: 29, id: 'riser_location_r454b', group: 'Riser Location R454B', characters: '' },                           // Digit 28
+  { startPos: 29, endPos: 30, id: 'special_configuration', group: 'Special Configuration', characters: '' },                           // Digit 29
+];
+
+// WVI and WVP model number parsing configuration
+const WVI_WVP_WHALEN_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'brand', group: 'Brand', characters: '' },                                                // Digit 0
+  { startPos: 1, endPos: 3, id: 'product_family', group: 'Product Family', characters: '' },                                    // Digits 1–3
+  { startPos: 3, endPos: 4, id: 'system_configuration', group: 'System Configuration', characters: '' },                        // Digit 3
+  { startPos: 4, endPos: 7, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                          // Digits 4–7
+  { startPos: 7, endPos: 8, id: 'revision', group: 'Revision', characters: '' },                                    // Digit 7
+  { startPos: 8, endPos: 9, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 8
+  { startPos: 9, endPos: 10, id: 'compressor', group: 'Compressor', characters: '' },                                                  // Digit 9
+  { startPos: 10, endPos: 11, id: 'distributor_options', group: 'Distributor Options', characters: '' },                               // Digit 10
+  { startPos: 11, endPos: 12, id: 'minor_revision', group: 'Minor Revision', characters: ''},                                    // Digit 11
+  { startPos: 12, endPos: 13, id: 'control_voltage', group: 'Control Voltage', characters: '' },                          // Digit 12
+  { startPos: 13, endPos: 14, id: 'control_type', group: 'Cabinet Type', characters: '' },          // Digit 13
+  { startPos: 14, endPos: 15, id: 'sound_attenuation', group: 'Sound Attenuation', characters: '' },                                // Digit 14
+  { startPos: 15, endPos: 16, id: 'coil_and_chasis_protection', group: 'Coil and Chasis Protection', characters: ''}, // Digit 15
+  { startPos: 16, endPos: 17, id: 'hot_water_coil', group: 'Hot Water Coil', characters: '' },
+  { startPos: 17, endPos: 18, id: 'control_valve', group: 'Control Valve', characters: '' },                                // Digit 17
+  { startPos: 18, endPos: 19, id: 'flow_control', group: 'Flow Control', characters: '' },                // Digit 18
+  { startPos: 19, endPos: 23, id: 'water_flow', group: 'Water Flow', characters: ''}, // Digits 19-23
+  { startPos: 23, endPos: 24, id: 'strainer', group: 'Strainer', characters: ''}, // Digit 23
+  { startPos: 24, endPos: 25, id: 'water_connections', group: 'Water Connections', characters: ''}, // Digit 24
+  { startPos: 25, endPos: 26, id: 'water_side_access_ports', group: 'Water Side Access Ports', characters: ''}, // Digit 25
+  { startPos: 26, endPos: 27, id: 'coax_type', group: 'Coax Type', characters: ''}, // Digit 26
+  { startPos: 27, endPos: 28, id: 'chassis_plug', group: 'Chassis Plug', characters: ''}, // Digit 27
+  { startPos : 28, endPos: 29, id: 'air_and_fluid_sensor', group: 'Air and Fluid Sensor', characters: ''}, // Digit 28
+  { startPos: 29, endPos: 30, id: 'coil_height', group: 'Coil Height', characters: '' }                           // Digit 29
+];
 
 // Supabase configuration
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
