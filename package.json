@@ -25,6 +25,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "lightningcss": "^1.28.0",
     "prisma": "^6.10.1",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
