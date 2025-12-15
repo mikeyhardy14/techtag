@@ -107,12 +107,11 @@ export const profiles = {
     return { profile: data as Profile | null, error }
   },
 
-  // Update profile
+  // Update profile (upsert - creates if doesn't exist)
   updateProfile: async (userId: string, updates: ProfileUpdate) => {
     const { data, error } = await supabase
       .from('profiles')
-      .update(updates)
-      .eq('id', userId)
+      .upsert({ id: userId, ...updates }, { onConflict: 'id' })
       .select()
       .single()
     

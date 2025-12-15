@@ -73,7 +73,7 @@
 
 /* Desktop Sidebar */
 .sidebar {
-  width: 280px;
+  width: 80px;
   background: #FFFFFF;
   border-right: 1px solid #E5E7EB;
   display: flex;
@@ -82,9 +82,15 @@
   top: 0;
   left: 0;
   height: 100vh;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 4px 0 12px rgba(0, 0, 0, 0.05);
   z-index: 100;
+}
+
+.sidebar:not(.collapsed) {
+  width: 280px;
+  box-shadow: 8px 0 24px rgba(0, 0, 0, 0.15);
+  z-index: 200;
 }
 
 .sidebar.collapsed {
@@ -388,17 +394,16 @@
 
 /* Main Content */
 .main {
-  margin-left: 280px;
+  margin-left: 80px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background: #F8FAFC;
-  transition: margin-left 0.3s ease;
 }
 
 /* Collapsed State Adjustments */
 .mainCollapsed {
-  margin-left: 80px !important;
+  margin-left: 80px;
 }
 
 .sidebar.collapsed .sidebarHeader {
@@ -501,17 +506,26 @@
 /* Tablet Responsive */
 @media (max-width: 1024px) and (min-width: 769px) {
   .sidebar {
+    width: 72px;
+  }
+  
+  .sidebar:not(.collapsed) {
     width: 240px;
   }
   
   .sidebar.collapsed {
     width: 72px;
   }
+  
+  .main,
+  .mainCollapsed {
+    margin-left: 72px;
+  }
 }
 
 /* Small Desktop Responsive */
 @media (max-width: 1200px) and (min-width: 1025px) {
-  .sidebar {
+  .sidebar:not(.collapsed) {
     width: 260px;
   }
 } 
