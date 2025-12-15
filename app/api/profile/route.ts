@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { profiles } from '@/lib/supabase';
-import { getUserFromRequest } from '@/lib/supabase-server';
+import { getUserFromRequest, serverProfiles } from '@/lib/supabase-server';
 
-// GET - Get current user's profile
+// GET - Get current user's profile (auto-creates if doesn't exist)
 export async function GET(request: NextRequest) {
   try {
     // Get current user from Authorization header
@@ -16,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get profile
-    const { profile, error } = await profiles.getProfile(user.id);
+    let { profile, error } = await serverProfiles.getProfile(user.id);
     
     if (error) {
       console.error('Profile fetch error:', error);
@@ -24,6 +23,26 @@ export async function GET(request: NextRequest) {
         { error: 'Failed to fetch profile' },
         { status: 500 }
       );
+    }
+
+    // Auto-create profile if it doesn't exist
+    if (!profile) {
+      const username = user.email?.split('@')[0] || `user_${user.id.slice(0, 8)}`;
+      const { profile: newProfile, error: createError } = await serverProfiles.updateProfile(user.id, {
+        email: user.email || '',
+        username: username,
+        display_name: username,
+      });
+      
+      if (createError) {
+        console.error('Profile auto-create error:', createError);
+        return NextResponse.json(
+          { error: 'Failed to create profile' },
+          { status: 500 }
+        );
+      }
+      
+      profile = newProfile;
     }
 
     return NextResponse.json({ profile });
@@ -54,7 +73,7 @@ export async function PUT(request: NextRequest) {
 
     // Validate username if provided
     if (updates.username) {
-      const { available, error: checkError } = await profiles.isUsernameAvailable(
+      const { available, error: checkError } = await serverProfiles.isUsernameAvailable(
         updates.username,
         user.id
       );
@@ -75,7 +94,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update profile
-    const { profile, error } = await profiles.updateProfile(user.id, updates);
+    const { profile, error } = await serverProfiles.updateProfile(user.id, updates);
     
     if (error) {
       console.error('Profile update error:', error);
@@ -109,7 +128,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Delete profile
-    const { error: deleteError } = await profiles.deleteProfile(user.id);
+    const { error: deleteError } = await serverProfiles.deleteProfile(user.id);
     
     if (deleteError) {
       console.error('Profile deletion error:', deleteError);

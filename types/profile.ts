@@ -34,6 +34,7 @@ export interface Profile {
 }
 
 export interface ProfileUpdate {
+  email?: string;
   username?: string;
   display_name?: string;
   avatar_url?: string;
