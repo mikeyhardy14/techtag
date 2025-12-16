@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './DecoderForm.module.css';
 
 interface DecodedSegment {
@@ -27,284 +27,613 @@ interface DecodedResult {
   unmatchedSegments: UnmatchedSegment[];
 }
 
+interface ManufacturerPattern {
+  name: string;
+  patterns: RegExp[];
+  format: string;
+  example: string;
+}
+
+const MANUFACTURER_PATTERNS: ManufacturerPattern[] = [
+  { name: 'Carrier', patterns: [/^(24|25|38|40|48|50)/], format: '##XXX###XX', example: '24ACC636A003' },
+  { name: 'Trane', patterns: [/^(4T|2T|XR|XL|XV)/i], format: 'XXXX#####', example: '4TTR5030E1000AA' },
+  { name: 'Lennox', patterns: [/^(XC|SL|EL|ML|13|14|15|16)/i], format: 'XX##-###-##', example: 'XC21-060-230' },
+  { name: 'Rheem/Ruud', patterns: [/^(RA|RC|RH|RP|RU)/i], format: 'XX##XXX###', example: 'RA1424AJ1NA' },
+  { name: 'Goodman/Amana', patterns: [/^(GSX|GSZ|GSXC|AVXC|SSX)/i], format: 'XXXX##XXXX', example: 'GSXC180601' },
+  { name: 'York', patterns: [/^(YC|YZ|TM|DERA|DERA)/i], format: 'XXXX###X##', example: 'DERA060A00A' },
+  { name: 'Daikin', patterns: [/^(DX|DZ|DP)/i], format: 'XX##XX####', example: 'DX16SA0603' },
+  { name: 'ClimateMaster', patterns: [/^(CM|TT|TS|TW|TH|HT|TC)/i], format: 'XX-###-XX', example: 'CM-350-TR' },
+];
+
+const EXAMPLE_MODELS = [
+  { model: 'HTH024A1C00ALK', brand: 'ClimateMaster', description: 'Water Source Heat Pump' },
+  { model: 'HT024-A1C2', brand: 'ClimateMaster', description: 'Horizontal Unit' },
+  { model: '24ACC636A003', brand: 'Carrier', description: 'Infinity Series AC' },
+  { model: 'GSXC180601', brand: 'Goodman', description: '18 SEER Condenser' },
+];
+
+const COMMON_MISTAKES = [
+  { mistake: 'Using O instead of 0', tip: 'Model numbers typically use zeros (0), not the letter O' },
+  { mistake: 'Missing dashes', tip: 'Some brands use dashes (CM-350-TR), others don\'t' },
+  { mistake: 'Partial numbers', tip: 'Enter the complete model number from the unit nameplate' },
+];
+
+// Why this matters context for each spec group
+const SPEC_CONTEXT: { [key: string]: { icon: string; why: string } } = {
+  'Capacity': { 
+    icon: '⚡', 
+    why: 'Determines if the unit can adequately heat/cool the space' 
+  },
+  'Voltage': { 
+    icon: '🔌', 
+    why: 'Must match your electrical supply to avoid damage' 
+  },
+  'Refrigerant': { 
+    icon: '❄️', 
+    why: 'Affects serviceability and environmental compliance' 
+  },
+  'Configuration': { 
+    icon: '📐', 
+    why: 'Impacts installation requirements and space planning' 
+  },
+  'Product Type': { 
+    icon: '🏷️', 
+    why: 'Identifies the unit\'s primary function in your system' 
+  },
+  'Efficiency': { 
+    icon: '📊', 
+    why: 'Higher ratings mean lower operating costs' 
+  },
+  'Model Series': { 
+    icon: '📋', 
+    why: 'Helps locate documentation and compatible parts' 
+  },
+  'Features': { 
+    icon: '✨', 
+    why: 'Special capabilities that may require specific setup' 
+  },
+  'Options': { 
+    icon: '🔧', 
+    why: 'Factory-installed options affecting performance' 
+  },
+  'Version': { 
+    icon: '🔄', 
+    why: 'Indicates design revisions or regional variants' 
+  },
+};
+
+// Priority order for spec display
+const SPEC_PRIORITY = [
+  'Product Type',
+  'Capacity', 
+  'Configuration',
+  'Voltage',
+  'Efficiency',
+  'Refrigerant',
+  'Model Series',
+  'Features',
+  'Options',
+  'Version',
+];
+
 export default function DecoderForm() {
   const [modelNumber, setModelNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DecodedResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [hasValidationError, setHasValidationError] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({});
-  const [showHorizontalView, setShowHorizontalView] = useState(true);
+  const [errorType, setErrorType] = useState<'validation' | 'network' | 'decode' | null>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [detectedManufacturer, setDetectedManufacturer] = useState<ManufacturerPattern | null>(null);
+  const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({});
+  const [showAllSpecs, setShowAllSpecs] = useState(false);
+  const [decodeTime, setDecodeTime] = useState<number | null>(null);
+  const [hoveredSegment, setHoveredSegment] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
-  // Color palette for different segment groups
-  const getGroupColor = (group: string): string => {
-    const colorMap: { [key: string]: string } = {
-      'Product Type': '#3B82F6', // Blue
-      'Model Series': '#10B981', // Green
-      'Configuration': '#F59E0B', // Amber
-      'Capacity': '#EF4444', // Red
-      'Efficiency': '#8B5CF6', // Purple
-      'Features': '#06B6D4', // Cyan
-      'Options': '#F97316', // Orange
-      'Version': '#84CC16', // Lime
-      'Voltage': '#EC4899', // Pink
-      'Default': '#6B7280', // Gray
-    };
-    return colorMap[group] || colorMap['Default'];
+  // Detect manufacturer while typing
+  useEffect(() => {
+    if (modelNumber.length >= 2) {
+      const detected = MANUFACTURER_PATTERNS.find(m => 
+        m.patterns.some(p => p.test(modelNumber.toUpperCase()))
+      );
+      setDetectedManufacturer(detected || null);
+    } else {
+      setDetectedManufacturer(null);
+    }
+  }, [modelNumber]);
+
+  // Auto-format input (uppercase, handle common substitutions)
+  const formatInput = useCallback((value: string) => {
+    return value.toUpperCase().replace(/[oO]/g, (match, offset, string) => {
+      const prevChar = string[offset - 1];
+      const nextChar = string[offset + 1];
+      if (prevChar && /[0-9]/.test(prevChar)) return '0';
+      if (nextChar && /[0-9]/.test(nextChar)) return '0';
+      return match.toUpperCase();
+    });
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatInput(e.target.value);
+    setModelNumber(formatted);
+    
+    if (error) {
+      setError(null);
+      setErrorType(null);
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && modelNumber.trim()) {
+      e.preventDefault();
+      handleDecode();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      handleClear();
+    }
+  };
+
+  const handleDecode = async () => {
     if (!modelNumber.trim()) {
-      setHasValidationError(true);
-      setError('Please enter a model number');
+      setError('Enter a model number to decode');
+      setErrorType('validation');
+      inputRef.current?.focus();
       return;
     }
 
+    // Store scroll position for stability
+    const scrollY = window.scrollY;
+    
     setIsLoading(true);
     setError(null);
-    setHasValidationError(false);
+    setErrorType(null);
+    setResult(null);
+    const startTime = performance.now();
 
     try {
       const response = await fetch('/api/decode', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ modelNumber: modelNumber.trim() }),
       });
 
+      const endTime = performance.now();
+      setDecodeTime(Math.round(endTime - startTime));
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        if (response.status === 404) {
+          setError('Model format not recognized. Try checking for typos or entering the full model number.');
+          setErrorType('decode');
+        } else {
+          throw new Error(`Server error: ${response.status}`);
+        }
+        return;
       }
 
       const data = await response.json();
       setResult(data);
       
-      // Auto-expand all sections for better UX
+      // Auto-expand key specs sections
       const sections: { [key: string]: boolean } = {};
-      data.segments.forEach((segment: DecodedSegment) => {
-        sections[segment.group] = true;
+      ['Capacity', 'Voltage', 'Product Type', 'Configuration'].forEach(key => {
+        sections[key] = true;
       });
       setExpandedSections(sections);
       
-    } catch (error) {
-      console.error('Error decoding model number:', error);
-      setError('Failed to decode model number. Please try again.');
+      // Restore scroll position after state update
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollY);
+      });
+      
+    } catch (err) {
+      console.error('Decode error:', err);
+      setError('Connection error. Please check your internet and try again.');
+      setErrorType('network');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setModelNumber(value);
-    
-    if (hasValidationError && value.trim()) {
-      setHasValidationError(false);
-      setError(null);
-    }
+  const handleExampleClick = (model: string) => {
+    setModelNumber(model);
+    setResult(null);
+    setError(null);
+    inputRef.current?.focus();
   };
 
   const handleClear = () => {
     setModelNumber('');
     setResult(null);
     setError(null);
-    setHasValidationError(false);
+    setErrorType(null);
+    setDetectedManufacturer(null);
+    setDecodeTime(null);
+    setHoveredSegment(null);
+    inputRef.current?.focus();
   };
 
   const toggleSection = (group: string) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [group]: !prev[group]
-    }));
+    setExpandedSections(prev => ({ ...prev, [group]: !prev[group] }));
   };
 
-  // Group segments by their group
-  const groupedSegments = result?.segments.reduce((acc, segment) => {
-    if (!acc[segment.group]) {
-      acc[segment.group] = [];
-    }
-    acc[segment.group].push(segment);
-    return acc;
-  }, {} as { [key: string]: DecodedSegment[] }) || {};
+  // Get sorted and prioritized specs
+  const getSortedSpecs = useCallback(() => {
+    if (!result) return [];
+    
+    // Sort by priority order
+    const sorted = [...result.segments].sort((a, b) => {
+      const aIndex = SPEC_PRIORITY.indexOf(a.group);
+      const bIndex = SPEC_PRIORITY.indexOf(b.group);
+      // If not in priority list, put at end
+      const aVal = aIndex === -1 ? 999 : aIndex;
+      const bVal = bIndex === -1 ? 999 : bIndex;
+      return aVal - bVal;
+    });
+    
+    return showAllSpecs ? sorted : sorted.slice(0, 4);
+  }, [result, showAllSpecs]);
+
+  // Group segments by category with priority sorting
+  const getGroupedSegments = useCallback(() => {
+    if (!result) return {};
+    
+    const grouped = result.segments.reduce((acc, segment) => {
+      if (!acc[segment.group]) acc[segment.group] = [];
+      acc[segment.group].push(segment);
+      return acc;
+    }, {} as { [key: string]: DecodedSegment[] });
+    
+    // Sort groups by priority
+    const sortedEntries = Object.entries(grouped).sort(([a], [b]) => {
+      const aIndex = SPEC_PRIORITY.indexOf(a);
+      const bIndex = SPEC_PRIORITY.indexOf(b);
+      return (aIndex === -1 ? 999 : aIndex) - (bIndex === -1 ? 999 : bIndex);
+    });
+    
+    return Object.fromEntries(sortedEntries);
+  }, [result]);
+
+  const getGroupColor = (group: string): string => {
+    const colors: { [key: string]: string } = {
+      'Product Type': '#3B82F6',
+      'Model Series': '#10B981',
+      'Configuration': '#F59E0B',
+      'Capacity': '#EF4444',
+      'Efficiency': '#8B5CF6',
+      'Features': '#06B6D4',
+      'Options': '#F97316',
+      'Version': '#84CC16',
+      'Voltage': '#EC4899',
+    };
+    return colors[group] || '#6B7280';
+  };
+
+  // Calculate decode completeness
+  const getDecodeCompleteness = () => {
+    if (!result) return 100;
+    const total = result.segments.length + result.unmatchedSegments.length;
+    if (total === 0) return 100;
+    return Math.round((result.segments.length / total) * 100);
+  };
+
+  // Get position range label for segment
+  const getPositionLabel = (segment: DecodedSegment) => {
+    const start = segment.position;
+    const end = segment.position + segment.characters.length - 1;
+    return start === end ? `Pos ${start}` : `Pos ${start}-${end}`;
+  };
+
+  const sortedSpecs = getSortedSpecs();
+  const groupedSegments = getGroupedSegments();
+  const completeness = getDecodeCompleteness();
+  const isPartialDecode = completeness < 100;
 
   return (
     <div className={styles.container}>
-      {/* Card Container */}
-      <div className={styles.decoderCard}>
-        {/* Header */}
-        <div className={styles.cardHeader}>
-          <div className={styles.headerContent}>
-            <h2 className={styles.cardTitle}>HVAC Model Decoder</h2>
-            <p className={styles.cardSubtitle}>
-              Decode any HVAC model number instantly and get detailed specifications
-            </p>
-          </div>
-          <div className={styles.headerIcon}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M20 5h-6v6h6V5zm-6 8h1.5v1.5H14V13zm1.5 1.5H17V16h-1.5v-1.5zm1.5 1.5v1.5H20V16h-3.5zm0 3H20v1.5h-3.5V19z" fill="currentColor"/>
-            </svg>
-          </div>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={`${styles.inputContainer} ${isInputFocused ? styles.inputFocused : ''} ${hasValidationError ? styles.inputError : ''}`}>
-            <label htmlFor="modelNumber" className={styles.inputLabel}>
-              Model Number
-            </label>
-            <div className={styles.inputWrapper}>
-              <div className={styles.inputIcon}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <polyline points="14,2 14,8 20,8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <polyline points="10,9 9,9 8,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-              <input
-                type="text"
-                id="modelNumber"
-                value={modelNumber}
-                onChange={handleInputChange}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setIsInputFocused(false)}
-                placeholder="e.g., CM-350-TR, HT024-A1C2"
-                className={styles.input}
-                disabled={isLoading}
-              />
-              {modelNumber && (
-                <button
-                  type="button"
-                  onClick={handleClear}
-                  className={styles.clearButton}
-                  aria-label="Clear input"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-              )}
-              <button
-                type="submit"
-                disabled={isLoading || !modelNumber.trim()}
-                className={`${styles.submitButton} ${isLoading ? styles.loading : ''}`}
-              >
-                {isLoading ? (
-                  <div className={styles.loadingSpinner}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                ) : (
-                  <>
-                    <span>Decode</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </>
-                )}
-              </button>
+      {/* Main Decoder Card */}
+      <div className={`${styles.decoderCard} ${result ? styles.hasResult : ''}`}>
+        {/* Input Section */}
+        <div className={styles.inputSection}>
+          <div className={styles.inputHeader}>
+            <div className={styles.inputBadge}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M20 5h-6v6h6V5z" fill="currentColor"/>
+              </svg>
+              <span>MODEL DECODER</span>
             </div>
-            {error && (
-              <div className={styles.errorMessage}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                {error}
+            {detectedManufacturer && (
+              <div className={styles.detectedBrand}>
+                <span className={styles.detectedLabel}>Detected:</span>
+                <span className={styles.detectedName}>{detectedManufacturer.name}</span>
               </div>
             )}
           </div>
-        </form>
+
+          <div className={`${styles.inputWrapper} ${isInputFocused ? styles.focused : ''} ${error ? styles.error : ''}`}>
+            <input
+              ref={inputRef}
+              type="text"
+              value={modelNumber}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+              placeholder="Paste or type model number from nameplate"
+              className={styles.input}
+              disabled={isLoading}
+              autoComplete="off"
+              spellCheck="false"
+            />
+            {modelNumber && !isLoading && (
+              <button onClick={handleClear} className={styles.clearBtn} aria-label="Clear">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </button>
+            )}
+            <button
+              onClick={handleDecode}
+              disabled={isLoading || !modelNumber.trim()}
+              className={`${styles.decodeBtn} ${isLoading ? styles.loading : ''}`}
+            >
+              {isLoading ? (
+                <div className={styles.spinner} />
+              ) : (
+                <>
+                  <span>Decode</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Format hint */}
+          {detectedManufacturer && !result && (
+            <div className={styles.formatHint}>
+              <span className={styles.formatLabel}>Expected format:</span>
+              <code className={styles.formatCode}>{detectedManufacturer.format}</code>
+              <span className={styles.formatExample}>e.g., {detectedManufacturer.example}</span>
+            </div>
+          )}
+
+          {/* Error message */}
+          {error && (
+            <div className={`${styles.errorBox} ${styles[`error${errorType?.charAt(0).toUpperCase()}${errorType?.slice(1)}`]}`}>
+              <div className={styles.errorIcon}>
+                {errorType === 'validation' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/><path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>}
+                {errorType === 'network' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M1 1l22 22M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.58 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                {errorType === 'decode' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+              </div>
+              <div className={styles.errorContent}>
+                <p className={styles.errorText}>{error}</p>
+                {errorType === 'decode' && (
+                  <p className={styles.errorTip}>
+                    <strong>Tip:</strong> Check the nameplate on your unit for the exact model number format.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Empty State - Transitions out when loading or has results */}
+        <div className={`${styles.emptyState} ${(result || isLoading) ? styles.emptyStateHidden : ''}`}>
+          <div className={styles.examplesSection}>
+            <h3 className={styles.sectionTitle}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Try an Example
+            </h3>
+            <div className={styles.exampleGrid}>
+              {EXAMPLE_MODELS.map((ex, i) => (
+                <button key={i} className={styles.exampleCard} onClick={() => handleExampleClick(ex.model)}>
+                  <div className={styles.exampleTop}>
+                    <code className={styles.exampleModel}>{ex.model}</code>
+                    <svg className={styles.exampleArrow} width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  <span className={styles.exampleBrand}>{ex.brand}</span>
+                  <span className={styles.exampleDesc}>{ex.description}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.tipsSection}>
+            <h3 className={styles.sectionTitle}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Common Mistakes
+            </h3>
+            <div className={styles.tipsList}>
+              {COMMON_MISTAKES.map((item, i) => (
+                <div key={i} className={styles.tipItem}>
+                  <span className={styles.tipMistake}>{item.mistake}</span>
+                  <span className={styles.tipText}>{item.tip}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.proTip}>
+            <div className={styles.proTipIcon}>⚡</div>
+            <div className={styles.proTipContent}>
+              <strong>Pro Tip:</strong> Press <kbd>Enter</kbd> to decode instantly
+            </div>
+          </div>
+        </div>
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className={styles.loadingState}>
+            <div className={styles.loadingPulse}>
+              <div className={styles.loadingBar} />
+              <div className={styles.loadingBar} />
+              <div className={styles.loadingBar} />
+            </div>
+            <p className={styles.loadingText}>Analyzing model nomenclature...</p>
+          </div>
+        )}
 
         {/* Results */}
         {result && (
-          <div className={styles.results}>
-            <div className={styles.resultHeader}>
-              <div className={styles.resultInfo}>
-                <h3 className={styles.resultTitle}>Decoded: {result.modelNumber}</h3>
-                <div className={styles.resultMeta}>
-                  <span className={styles.brand}>{result.brand}</span>
-                  {/* <span className={styles.manufacturer}>{result.manufacturer}</span> */}
-                  <div className={`${styles.confidence} ${styles[`confidence${result.confidence.charAt(0).toUpperCase() + result.confidence.slice(1)}`]}`}>
-                    {result.confidence} confidence
-                  </div>
+          <div className={styles.results} ref={resultsRef}>
+            {/* Model Number Hero - Primary Anchor */}
+            <div className={styles.resultHero}>
+              <div className={styles.heroModel}>
+                <h2 className={styles.modelNumberDisplay}>{result.modelNumber}</h2>
+                <div className={styles.heroBrandLine}>
+                  <span className={styles.heroBrand}>{result.brand}</span>
+                  <span className={styles.heroSeparator}>•</span>
+                  <span className={styles.heroSegmentCount}>{result.segments.length} segments decoded</span>
                 </div>
               </div>
-              <button
-                onClick={() => setShowHorizontalView(!showHorizontalView)}
-                className={styles.viewToggle}
-                aria-label={showHorizontalView ? "Switch to list view" : "Switch to horizontal view"}
-              >
-                {showHorizontalView ? (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                ) : (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 3h18v18H3zM9 9h6v6H9z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+              {/* De-emphasized metadata */}
+              <div className={styles.heroMeta}>
+                {decodeTime && (
+                  <span className={styles.metaItem}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                      <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                    {decodeTime}ms
+                  </span>
                 )}
-              </button>
+                <span className={`${styles.metaConfidence} ${styles[`conf${result.confidence}`]}`}>
+                  {result.confidence === 'high' ? '✓' : result.confidence === 'medium' ? '~' : '?'} {result.confidence}
+                </span>
+              </div>
             </div>
 
-            {/* Horizontal Visualization */}
-            {showHorizontalView && (
-              <div className={styles.horizontalView}>
-                <div className={styles.modelVisualization}>
-                  {result.segments.map((segment, index) => (
-                    <div 
-                      key={index} 
-                      className={styles.segmentItem}
-                      style={{ '--segment-color': getGroupColor(segment.group) } as React.CSSProperties}
+            {/* Key Specs - Values Prominent */}
+            <div className={styles.specsSection}>
+              <div className={styles.specsHeader}>
+                <h3 className={styles.specsTitle}>Key Specifications</h3>
+                {result.segments.length > 4 && (
+                  <button 
+                    className={styles.showMoreBtn}
+                    onClick={() => setShowAllSpecs(!showAllSpecs)}
+                  >
+                    {showAllSpecs ? 'Show Primary' : `Show All ${result.segments.length}`}
+                  </button>
+                )}
+              </div>
+              <div className={styles.specsGrid}>
+                {sortedSpecs.map((spec, i) => (
+                  <div 
+                    key={i} 
+                    className={`${styles.specCard} ${i < 4 ? styles.specPrimary : styles.specSecondary}`}
+                    style={{ '--spec-color': getGroupColor(spec.group) } as React.CSSProperties}
+                  >
+                    <div className={styles.specLabel}>
+                      <span className={styles.specIcon}>{SPEC_CONTEXT[spec.group]?.icon || '📌'}</span>
+                      <span className={styles.specGroupName}>{spec.group}</span>
+                    </div>
+                    <div className={styles.specValue}>{spec.meaning}</div>
+                    <code className={styles.specCode}>{spec.characters}</code>
+                    {SPEC_CONTEXT[spec.group] && (
+                      <div className={styles.specWhy}>
+                        <span className={styles.whyLabel}>Why it matters:</span> {SPEC_CONTEXT[spec.group].why}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Visual Breakdown - Simplified with Hover States */}
+            <div className={styles.visualSection}>
+              <div className={styles.visualHeader}>
+                <h3 className={styles.visualTitle}>Model Number Breakdown</h3>
+                <span className={styles.visualHint}>Hover to highlight</span>
+              </div>
+              
+              {/* Full model with character positions */}
+              <div className={styles.modelBreakdown}>
+                <div className={styles.positionRuler}>
+                  {result.modelNumber.split('').map((_, i) => (
+                    <span key={i} className={styles.positionMark}>{i + 1}</span>
+                  ))}
+                </div>
+                <div className={styles.modelChars}>
+                  {result.segments.map((segment, segIndex) => (
+                    <div
+                      key={segIndex}
+                      className={`${styles.segmentGroup} ${hoveredSegment === segIndex ? styles.segmentActive : ''}`}
+                      onMouseEnter={() => setHoveredSegment(segIndex)}
+                      onMouseLeave={() => setHoveredSegment(null)}
+                      style={{ '--seg-color': getGroupColor(segment.group) } as React.CSSProperties}
                     >
-                      <div className={styles.segmentCharacters}>
-                        {segment.characters}
-                      </div>
-                      <div className={styles.segmentLine}></div>
-                      <div className={styles.segmentTooltip}>
-                        <div className={styles.tooltipGroup}>{segment.group}</div>
-                        <div className={styles.tooltipMeaning}>{segment.meaning}</div>
-                      </div>
+                      {segment.characters.split('').map((char, charIndex) => (
+                        <span key={charIndex} className={styles.modelChar}>{char}</span>
+                      ))}
                     </div>
                   ))}
                 </div>
               </div>
-            )}
 
-            {/* Detailed Breakdown */}
-            <div className={styles.breakdown}>
+              {/* Segment Legend */}
+              <div className={styles.segmentLegend}>
+                {result.segments.map((segment, index) => (
+                  <div 
+                    key={index}
+                    className={`${styles.legendItem} ${hoveredSegment === index ? styles.legendActive : ''}`}
+                    onMouseEnter={() => setHoveredSegment(index)}
+                    onMouseLeave={() => setHoveredSegment(null)}
+                    style={{ '--seg-color': getGroupColor(segment.group) } as React.CSSProperties}
+                  >
+                    <span className={styles.legendDot} />
+                    <code className={styles.legendCode}>{segment.characters}</code>
+                    <span className={styles.legendPos}>{getPositionLabel(segment)}</span>
+                    <span className={styles.legendMeaning}>{segment.meaning}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Technical Details with Context */}
+            <div className={styles.detailsSection}>
+              <h3 className={styles.detailsTitle}>Technical Details</h3>
               {Object.entries(groupedSegments).map(([group, segments]) => (
-                <div key={group} className={styles.segmentGroup}>
+                <div key={group} className={styles.detailGroup}>
                   <button
                     onClick={() => toggleSection(group)}
-                    className={styles.groupHeader}
-                    style={{ '--group-color': getGroupColor(group) } as React.CSSProperties}
+                    className={styles.detailHeader}
+                    style={{ '--grp-color': getGroupColor(group) } as React.CSSProperties}
                   >
-                    <div className={styles.groupIcon}></div>
-                    <span className={styles.groupTitle}>{group}</span>
-                    <div className={styles.groupBadge}>{segments.length}</div>
-                    <div className={`${styles.expandIcon} ${expandedSections[group] ? styles.expanded : ''}`}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+                    <div className={styles.detailHeaderLeft}>
+                      <span className={styles.detailIcon}>{SPEC_CONTEXT[group]?.icon || '📌'}</span>
+                      <span className={styles.detailGroupName}>{group}</span>
+                      <span className={styles.detailCount}>{segments.length}</span>
                     </div>
+                    <svg 
+                      className={`${styles.detailChevron} ${expandedSections[group] ? styles.expanded : ''}`}
+                      width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    >
+                      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </button>
-                  
                   {expandedSections[group] && (
-                    <div className={styles.groupContent}>
-                      {segments.map((segment, index) => (
-                        <div key={index} className={styles.segmentDetail}>
-                          <div className={styles.detailHeader}>
-                            <span className={styles.detailCharacters}>{segment.characters}</span>
-                            <span className={styles.detailPosition}>Position {segment.position}</span>
+                    <div className={styles.detailContent}>
+                      {SPEC_CONTEXT[group] && (
+                        <div className={styles.detailContext}>
+                          <strong>Why this matters:</strong> {SPEC_CONTEXT[group].why}
+                        </div>
+                      )}
+                      {segments.map((seg, i) => (
+                        <div key={i} className={styles.detailItem}>
+                          <div className={styles.detailItemMain}>
+                            <span className={styles.detailValue}>{seg.meaning}</span>
+                            <code className={styles.detailCode}>{seg.characters}</code>
                           </div>
-                          <p className={styles.detailMeaning}>{segment.meaning}</p>
+                          <span className={styles.detailPos}>{getPositionLabel(seg)}</span>
                         </div>
                       ))}
                     </div>
@@ -313,28 +642,84 @@ export default function DecoderForm() {
               ))}
             </div>
 
-            {/* Unmatched Segments */}
-            {result.unmatchedSegments.length > 0 && (
-              <div className={styles.unmatchedSection}>
-                <h4 className={styles.unmatchedTitle}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                    <path d="M9 9h6v6H9z" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                  Unmatched Segments
-                </h4>
-                <div className={styles.unmatchedGrid}>
-                  {result.unmatchedSegments.map((segment, index) => (
-                    <div key={index} className={styles.unmatchedItem}>
-                      <span className={styles.unmatchedCharacters}>{segment.characters}</span>
-                      <span className={styles.unmatchedGroup}>{segment.group}</span>
-                    </div>
-                  ))}
+            {/* Partial Decode Guidance - Not an Error */}
+            {isPartialDecode && result.unmatchedSegments.length > 0 && (
+              <div className={styles.partialSection}>
+                <div className={styles.partialHeader}>
+                  <div className={styles.partialIcon}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                      <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  </div>
+                  <div className={styles.partialInfo}>
+                    <span className={styles.partialTitle}>{completeness}% Decoded</span>
+                    <span className={styles.partialSubtitle}>Some segments need manual review</span>
+                  </div>
+                </div>
+                <div className={styles.partialBody}>
+                  <p className={styles.partialMessage}>
+                    The following characters weren't automatically recognized. They may be optional codes, 
+                    regional variants, or newer additions not yet in our database.
+                  </p>
+                  <div className={styles.unmatchedChips}>
+                    {result.unmatchedSegments.map((seg, i) => (
+                      <span key={i} className={styles.unmatchedChip}>
+                        <code>{seg.characters}</code>
+                      </span>
+                    ))}
+                  </div>
+                  <div className={styles.partialActions}>
+                    <span className={styles.partialHint}>
+                      💡 Check manufacturer documentation or contact support for these codes
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
+
+            {/* Action Bar */}
+            <div className={styles.actionBar}>
+              <button onClick={handleClear} className={styles.newDecodeBtn}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+                Decode Another
+              </button>
+              <div className={styles.actionRight}>
+                <button className={styles.actionBtn} title="Copy results">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                </button>
+                <button className={styles.actionBtn} title="Print">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" stroke="currentColor" strokeWidth="2"/>
+                    <rect x="6" y="14" width="12" height="8" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
         )}
+      </div>
+
+      {/* Power User Features */}
+      <div className={`${styles.powerFeatures} ${result ? styles.powerFeaturesCompact : ''}`}>
+        <div className={styles.powerItem}>
+          <kbd>Enter</kbd>
+          <span>Decode</span>
+        </div>
+        <div className={styles.powerItem}>
+          <kbd>Esc</kbd>
+          <span>Clear</span>
+        </div>
+        <div className={styles.featureHint}>
+          <span>Supports 50+ manufacturers</span>
+          <span className={styles.featureDot}>•</span>
+          <span>Real-time detection</span>
+        </div>
       </div>
     </div>
   );
