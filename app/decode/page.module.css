@@ -1,10 +1,138 @@
+/* ============================================
+   UNAUTHENTICATED DECODE PAGE
+   Bridge between home and logged-in app
+   ============================================ */
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    min-height: 100vh;
-    background-color: var(--white);
-    color: var(--darker-gray);
+.pageWrapper {
+  min-height: 100vh;
+  padding-top: 112px; /* Account for fixed navbar (72px) + fixed banner (~40px) */
+  background: linear-gradient(180deg, #F1F5F9 0%, #F8FAFC 50%, #FFFFFF 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  display: flex;
+  flex-direction: column;
 }
+
+/* Guest mode banner - fixed below navbar, always visible */
+.guestBanner {
+  position: fixed;
+  top: 72px; /* Below the fixed navbar */
+  left: 0;
+  right: 0;
+  z-index: 90; /* Below navbar (100) but above content */
+  background: #FFFBEB;
+  border-bottom: 1px solid #FDE68A;
+  padding: 10px 24px;
+}
+
+.guestBannerContent {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  color: #92400E;
+}
+
+.guestBannerContent svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.guestBannerLink {
+  color: #B45309;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+  transition: color 0.15s ease;
+}
+
+.guestBannerLink:hover {
+  color: #92400E;
+  text-decoration: underline;
+}
+
+/* Container - matches authenticated decoder layout */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  animation: fadeIn 0.3s ease-out;
+  flex: 1;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .pageWrapper {
+    padding-top: 104px; /* navbar (64px) + banner (~40px) */
+  }
   
+  .guestBanner {
+    top: 64px;
+    padding: 8px 16px;
+  }
+  
+  .guestBannerContent {
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 0.75rem;
+  }
+  
+  .guestBannerContent span {
+    flex: 0 0 100%;
+    text-align: center;
+  }
+  
+  .guestBannerLink {
+    margin-left: 0;
+  }
+  
+  .container {
+    padding: 24px 16px 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageWrapper {
+    padding-top: 100px; /* navbar (60px) + banner (~40px) */
+  }
+  
+  .guestBanner {
+    top: 60px;
+    padding: 8px 12px;
+  }
+  
+  .container {
+    padding: 16px 12px 32px;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .pageWrapper {
+    background: #FFFFFF;
+  }
+  
+  .guestBanner {
+    border-bottom-width: 2px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    animation: none;
+  }
+}
