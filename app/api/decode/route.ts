@@ -498,7 +498,7 @@ const NSW_WATERFURNACE_SEGMENTS: ModelSegment[] = [
 ];
 
 // NDW model number parsing configuration
-const NDW_WATERFURNACE_SEGEMENTS: ModelSegment[] = [
+const NDW_WATERFURNACE_SEGMENTS: ModelSegment[] = [
   { startPos: 0, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },                                        // Digits 0–2
   { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                            // Digits 3–6
   { startPos: 6, endPos: 7, id: 'operation', group: 'Operation', characters: '' },                                          // Digit 6
@@ -1326,6 +1326,141 @@ async function decodeClimateMasterModel(
       segments: SA_SEGMENTS,
       getConfigName: () => 'SA (ClimateMaster)'
     },
+    {
+      modelTypes: ['NS', 'ND'],
+      segments: ND_NS_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'WaterFurnace'
+    },
+    {
+      modelTypes: ['NV'],
+      segments: NV_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'NV'
+    },
+    {
+      modelTypes: ['3D', 'LS'],
+      segments: SYNERGY_LS_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'WaterFurnace'
+    },
+    {
+      modelTypes: ['NSW'],
+      segments: NSW_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'NSW'
+    },
+    {
+      modelTypes: ['NDW'],
+      segments: NDW_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'NDW'
+    },
+    {
+      modelTypes: ['NL', 'NX'],
+      segments: NL_NX_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'WaterFurnace'
+    },
+    {
+      modelTypes: ['NS', 'ND'],
+      segments: NS_ND_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'WaterFurnace'
+    },
+    {
+      modelTypes: ['EW'],
+      segments: EW_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'EW'
+    },
+    {
+      modelTypes: ['LC_R410A'],
+      segments: LC_R410A_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'LC_R410A'
+    },
+    {
+      modelTypes: ['NC_R410A'],
+      segments: NC_R410A_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'NC_R410A'
+    },
+    {
+      modelTypes: ['V3C'],
+      segments: V3C_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'V3C'
+    },
+    {
+      modelTypes: ['V5C'],
+      segments: V5C_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'V5C'
+    },
+    {
+      modelTypes: ['V7A', 'V5A', 'V3A'],
+      segments: VXA_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'WaterFurnace'
+    },
+    {
+      modelTypes: ['UD'],
+      segments: UD_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'UD'
+    },
+    {
+      modelTypes: ['NB', 'UB'],
+      segments: NB_UB_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'WaterFurnace'
+    },
+    {
+      modelTypes: ['CP', 'CF', 'CL', 'ES', 'EP', 'QV', 'LV', 'MC'],
+      segments: STANDARD_BOSCH_SEGMENTS,
+      getConfigName: () => 'Bosch'
+    },
+    {
+      modelTypes: ['CA'],
+      segments: CA_BOSCH_SEGMENTS,
+      getConfigName: () => 'Bosch'
+    },
+    {
+      modelTypes: ['SM'],
+      segments: SM_BOSCH_SEGMENTS,
+      getConfigName: () => 'SM'
+    },
+    {
+      modelTypes: ['WT'],
+      segments: WT_BOSCH_SEGMENTS,
+      getConfigName: () => 'WT'
+    },
+    {
+      modelTypes: ['BP'],
+      segments: BP_BOSCH_SEGMENTS,
+      getConfigName: () => 'BP'
+    },
+    {
+      modelTypes: ['EC'],
+      segments: EC_BOSCH_SEGMENTS,
+      getConfigName: () => 'EC'
+    },
+    {
+      modelTypes: ['AP', 'EC', 'EM', 'ES', 'EV', 'GO', 'AU', 'HE', 'SE'],
+      segments: STANDARD_FLORIDA_HEAT_PUMP_SEGMENTS,
+      getConfigName: () => 'Florida Heat Pump'
+    },
+    {
+      modelTypes: ['CA', 'CS'],
+      segments: CA_CS_FLORIDA_HEAT_PUMP_SEGMENTS,
+      getConfigName: () => 'Florida Heat Pump'
+    },
+    {
+      modelTypes: ['GS', 'GT'],
+      segments: GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS,
+      getConfigName: () => 'Florida Heat Pump'
+    },
+    {
+      modelTypes: ['VI', 'VP', 'VH', 'VS', 'VT', 'VR'],
+      segments: OLDER_WHALEN_SEGMENTS,
+      getConfigName: () => 'Whalen'
+    },
+    {
+      modelTypes: [' VD', 'VN', 'VI', 'VP', 'VH', 'VS', 'VT'],
+      segments: NEWER_WHALEN_SEGMENTS,
+      getConfigName: () => 'Whalen'
+    },
+    {
+      modelTypes: ['WVI', 'WVP'],
+      segments: WVI_WVP_WHALEN_SEGMENTS,
+      getConfigName: () => 'Whalen'
+    }
   ];
 
   // Select appropriate parsing configuration based on model type
