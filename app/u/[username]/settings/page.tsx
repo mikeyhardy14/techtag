@@ -228,14 +228,7 @@ export default function SettingsPage() {
 
   return (
     <DashboardSidebar>
-      <DashboardHeader
-        title="Settings"
-        actionButton={{
-          label: isSaving ? "SAVING..." : "SAVE CHANGES",
-          icon: "💾",
-          onClick: handleSave
-        }}
-      />
+      <DashboardHeader title="Settings" />
       
       {saveMessage && (
         <div className={`${styles.saveMessage} ${saveMessageType === 'error' ? styles.saveMessageError : ''}`}>

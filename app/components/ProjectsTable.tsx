@@ -30,9 +30,10 @@ interface ProjectsTableProps {
   onViewCommunications: (project: Project) => void;
   onAddCommunication: (project: Project) => void;
   onProjectClick: (project: Project) => void;
+  onCreateProject: () => void;
 }
 
-export default function ProjectsTable({ projects, onUpdate, onViewCommunications, onAddCommunication, onProjectClick }: ProjectsTableProps) {
+export default function ProjectsTable({ projects, onUpdate, onViewCommunications, onAddCommunication, onProjectClick, onCreateProject }: ProjectsTableProps) {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [outcomeFilter, setOutcomeFilter] = useState<string>('all');
 
@@ -134,6 +135,12 @@ export default function ProjectsTable({ projects, onUpdate, onViewCommunications
           <h3 className={styles.title}>Project Overview</h3>
           <p className={styles.subtitle}>Track and manage all your HVAC projects in one place</p>
         </div>
+        <button className={styles.createProjectButton} onClick={onCreateProject}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Create Project
+        </button>
       </div>
 
       {/* Enhanced Filters */}

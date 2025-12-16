@@ -89,14 +89,7 @@ export default function DashboardClient() {
   if (isLoading) {
     return (
       <DashboardSidebar>
-        <DashboardHeader
-          title="Projects"
-          actionButton={{
-            label: "CREATE PROJECT",
-            icon: "➕",
-            onClick: () => setDrawerOpen(true)
-          }}
-        />
+        <DashboardHeader title="Projects" />
         <div className={styles.content}>
           <SkeletonLoader />
         </div>
@@ -106,14 +99,7 @@ export default function DashboardClient() {
 
   return (
     <DashboardSidebar>
-      <DashboardHeader
-        title="Projects"
-        actionButton={{
-          label: "CREATE PROJECT",
-          icon: "➕",
-          onClick: () => setDrawerOpen(true)
-        }}
-      />
+      <DashboardHeader title="Projects" />
       
       <div className={styles.content}>
         {/* KPI Cards */}
@@ -127,6 +113,7 @@ export default function DashboardClient() {
             onViewCommunications={handleViewCommunications}
             onAddCommunication={handleAddCommunication}
             onProjectClick={handleProjectClick}
+            onCreateProject={() => setDrawerOpen(true)}
           />
         </div>
       </div>

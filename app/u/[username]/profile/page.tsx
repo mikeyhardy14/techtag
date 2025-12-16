@@ -1,5 +1,5 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import DashboardSidebar from '@/components/DashboardSidebar/DashboardSidebar';
 import DashboardHeader from '@/components/DashboardHeader/DashboardHeader';
 import { useAuth } from '@/components/AuthProvider/AuthProvider';
@@ -7,14 +7,8 @@ import { useProfile } from '@/components/ProfileProvider/ProfileProvider';
 import styles from './page.module.css';
 
 export default function ProfilePage() {
-  const router = useRouter();
   const { user } = useAuth();
   const { profile, loading } = useProfile();
-
-  const handleEditProfile = () => {
-    const username = profile?.username || user?.email?.split('@')[0];
-    router.push(`/u/${username}/settings`);
-  };
 
   const formatDate = (dateString: string | null | undefined) => {
     if (!dateString) return 'N/A';
@@ -56,12 +50,12 @@ export default function ProfilePage() {
               <p className={styles.emptyDescription}>
                 Your profile hasn't been set up yet. Create one to personalize your experience.
               </p>
-              <button className={styles.setupButton} onClick={handleEditProfile}>
+              <Link href={`/u/${user?.email?.split('@')[0]}/settings`} className={styles.setupButton}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 Set Up Profile
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -74,14 +68,7 @@ export default function ProfilePage() {
 
   return (
     <DashboardSidebar>
-      <DashboardHeader
-        title="Profile"
-        actionButton={{
-          label: "EDIT PROFILE",
-          icon: "✏️",
-          onClick: handleEditProfile,
-        }}
-      />
+      <DashboardHeader title="Profile" />
       
       <div className={styles.content}>
         <div className={styles.profileContainer}>
@@ -134,14 +121,6 @@ export default function ProfilePage() {
                 </div>
               </div>
             </div>
-            
-            <button className={styles.editButton} onClick={handleEditProfile}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Edit Profile
-            </button>
           </div>
 
           {/* Profile Cards */}
