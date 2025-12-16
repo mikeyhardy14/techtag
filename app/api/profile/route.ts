@@ -71,6 +71,9 @@ export async function PUT(request: NextRequest) {
     // Parse request body
     const updates = await request.json();
 
+    // Get current profile to preserve email
+    const { profile: currentProfile } = await serverProfiles.getProfile(user.id);
+
     // Validate username if provided
     if (updates.username) {
       const { available, error: checkError } = await serverProfiles.isUsernameAvailable(
@@ -93,8 +96,11 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    // Update profile
-    const { profile, error } = await serverProfiles.updateProfile(user.id, updates);
+    // Update profile (preserve email)
+    const { profile, error } = await serverProfiles.updateProfile(user.id, {
+      ...updates,
+      email: currentProfile?.email || user.email || '',
+    });
     
     if (error) {
       console.error('Profile update error:', error);
