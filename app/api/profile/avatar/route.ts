@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { profiles } from '@/lib/supabase';
-import { getUserFromRequest } from '@/lib/supabase-server';
+import { getUserFromRequest, serverProfiles } from '@/lib/supabase-server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,14 +43,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Get current profile to delete old avatar
-    const { profile: currentProfile } = await profiles.getProfile(user.id);
+    const { profile: currentProfile } = await serverProfiles.getProfile(user.id);
     
     if (currentProfile?.avatar_url) {
-      await profiles.deleteAvatar(currentProfile.avatar_url);
+      await serverProfiles.deleteAvatar(currentProfile.avatar_url);
     }
 
     // Upload new avatar
-    const { avatarUrl, error: uploadError } = await profiles.uploadAvatar(user.id, file);
+    const { avatarUrl, error: uploadError } = await serverProfiles.uploadAvatar(user.id, file);
     
     if (uploadError || !avatarUrl) {
       console.error('Avatar upload error:', uploadError);
@@ -61,8 +60,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Update profile with new avatar URL
-    const { profile, error: updateError } = await profiles.updateProfile(user.id, {
+    // Update profile with new avatar URL (preserve existing data)
+    const { profile, error: updateError } = await serverProfiles.updateProfile(user.id, {
+      email: currentProfile?.email || user.email || '',
       avatar_url: avatarUrl
     });
     
@@ -100,7 +100,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Get current profile
-    const { profile } = await profiles.getProfile(user.id);
+    const { profile } = await serverProfiles.getProfile(user.id);
     
     if (!profile?.avatar_url) {
       return NextResponse.json(
@@ -110,7 +110,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Delete avatar from storage
-    const { error: deleteError } = await profiles.deleteAvatar(profile.avatar_url);
+    const { error: deleteError } = await serverProfiles.deleteAvatar(profile.avatar_url);
     
     if (deleteError) {
       console.error('Avatar deletion error:', deleteError);
@@ -120,8 +120,9 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Update profile to remove avatar URL
-    const { profile: updatedProfile, error: updateError } = await profiles.updateProfile(user.id, {
+    // Update profile to remove avatar URL (preserve existing data)
+    const { profile: updatedProfile, error: updateError } = await serverProfiles.updateProfile(user.id, {
+      email: profile.email,
       avatar_url: undefined
     });
     

@@ -122,6 +122,53 @@ export const serverProfiles = {
     
     return { error };
   },
+
+  // Upload avatar
+  uploadAvatar: async (userId: string, file: File) => {
+    const supabase = createAdminClient();
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${userId}-${Date.now()}.${fileExt}`;
+    const filePath = `avatars/${fileName}`;
+
+    // Convert File to ArrayBuffer for server-side upload
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const { error: uploadError } = await supabase.storage
+      .from('profiles')
+      .upload(filePath, buffer, {
+        contentType: file.type,
+        cacheControl: '3600',
+        upsert: true
+      });
+
+    if (uploadError) {
+      return { avatarUrl: null, error: uploadError };
+    }
+
+    const { data } = supabase.storage
+      .from('profiles')
+      .getPublicUrl(filePath);
+
+    return { avatarUrl: data.publicUrl, error: null };
+  },
+
+  // Delete avatar
+  deleteAvatar: async (avatarUrl: string) => {
+    const supabase = createAdminClient();
+    // Extract file path from URL
+    const urlParts = avatarUrl.split('/profiles/');
+    if (urlParts.length < 2) {
+      return { error: new Error('Invalid avatar URL') };
+    }
+    const filePath = urlParts[1];
+    
+    const { error } = await supabase.storage
+      .from('profiles')
+      .remove([filePath]);
+    
+    return { error };
+  },
 };
 
 

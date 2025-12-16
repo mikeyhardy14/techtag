@@ -11,8 +11,11 @@ export default function SettingsPage() {
   const { profile, updateProfile, uploadAvatar, deleteAvatar, loading: profileLoading } = useProfile();
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
+  const [saveMessageType, setSaveMessageType] = useState<'success' | 'error'>('success');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const initialFormDataRef = useRef<string>('');
   
   const [formData, setFormData] = useState({
     display_name: '',
@@ -38,7 +41,7 @@ export default function SettingsPage() {
   // Load profile data when available
   useEffect(() => {
     if (profile) {
-      setFormData({
+      const loadedData = {
         display_name: profile.display_name || '',
         username: profile.username || '',
         job_title: profile.job_title || '',
@@ -57,12 +60,23 @@ export default function SettingsPage() {
         profile_visibility: profile.profile_visibility,
         data_sharing: profile.data_sharing,
         analytics: profile.analytics,
-      });
+      };
+      setFormData(loadedData);
+      initialFormDataRef.current = JSON.stringify(loadedData);
+      setHasUnsavedChanges(false);
       if (profile.avatar_url) {
         setAvatarPreview(profile.avatar_url);
       }
     }
   }, [profile]);
+
+  // Track unsaved changes
+  useEffect(() => {
+    if (initialFormDataRef.current) {
+      const currentData = JSON.stringify(formData);
+      setHasUnsavedChanges(currentData !== initialFormDataRef.current);
+    }
+  }, [formData]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
@@ -80,14 +94,21 @@ export default function SettingsPage() {
       const success = await updateProfile(formData);
       
       if (success) {
+        setSaveMessageType('success');
         setSaveMessage('Settings saved successfully!');
+        initialFormDataRef.current = JSON.stringify(formData);
+        setHasUnsavedChanges(false);
         setTimeout(() => setSaveMessage(''), 3000);
       } else {
+        setSaveMessageType('error');
         setSaveMessage('Failed to save settings. Please try again.');
+        setTimeout(() => setSaveMessage(''), 5000);
       }
     } catch (error) {
       console.error('Error saving settings:', error);
+      setSaveMessageType('error');
       setSaveMessage('An error occurred. Please try again.');
+      setTimeout(() => setSaveMessage(''), 5000);
     } finally {
       setIsSaving(false);
     }
@@ -104,13 +125,17 @@ export default function SettingsPage() {
     // Validate file
     const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     if (!validTypes.includes(file.type)) {
+      setSaveMessageType('error');
       setSaveMessage('Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.');
+      setTimeout(() => setSaveMessage(''), 5000);
       return;
     }
 
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
+      setSaveMessageType('error');
       setSaveMessage('File size exceeds 5MB limit.');
+      setTimeout(() => setSaveMessage(''), 5000);
       return;
     }
 
@@ -127,11 +152,14 @@ export default function SettingsPage() {
     setIsSaving(false);
 
     if (success) {
+      setSaveMessageType('success');
       setSaveMessage('Avatar updated successfully!');
       setTimeout(() => setSaveMessage(''), 3000);
     } else {
+      setSaveMessageType('error');
       setSaveMessage('Failed to upload avatar. Please try again.');
       setAvatarPreview(profile?.avatar_url || null);
+      setTimeout(() => setSaveMessage(''), 5000);
     }
   };
 
@@ -143,11 +171,14 @@ export default function SettingsPage() {
     setIsSaving(false);
 
     if (success) {
+      setSaveMessageType('success');
       setAvatarPreview(null);
       setSaveMessage('Avatar deleted successfully!');
       setTimeout(() => setSaveMessage(''), 3000);
     } else {
+      setSaveMessageType('error');
       setSaveMessage('Failed to delete avatar. Please try again.');
+      setTimeout(() => setSaveMessage(''), 5000);
     }
   };
 
@@ -160,7 +191,9 @@ export default function SettingsPage() {
       const token = session?.access_token;
       
       if (!token) {
+        setSaveMessageType('error');
         setSaveMessage('Authentication error. Please log in again.');
+        setTimeout(() => setSaveMessage(''), 5000);
         setIsSaving(false);
         return;
       }
@@ -179,12 +212,16 @@ export default function SettingsPage() {
         // Redirect to home page
         window.location.href = '/';
       } else {
+        setSaveMessageType('error');
         setSaveMessage('Failed to delete account. Please try again.');
+        setTimeout(() => setSaveMessage(''), 5000);
         setIsSaving(false);
       }
     } catch (error) {
       console.error('Error deleting account:', error);
+      setSaveMessageType('error');
       setSaveMessage('An error occurred. Please try again.');
+      setTimeout(() => setSaveMessage(''), 5000);
       setIsSaving(false);
     }
   };
@@ -201,8 +238,35 @@ export default function SettingsPage() {
       />
       
       {saveMessage && (
-        <div className={styles.saveMessage}>
-          {saveMessage}
+        <div className={`${styles.saveMessage} ${saveMessageType === 'error' ? styles.saveMessageError : ''}`}>
+          {saveMessageType === 'success' ? '✓' : '⚠'} {saveMessage}
+        </div>
+      )}
+      
+      {/* Floating Save Button */}
+      {hasUnsavedChanges && (
+        <div className={styles.floatingSaveBar}>
+          <span className={styles.unsavedText}>You have unsaved changes</span>
+          <button 
+            className={styles.floatingSaveButton}
+            onClick={handleSave}
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              <>
+                <span className={styles.spinner}></span>
+                Saving...
+              </>
+            ) : (
+              <>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M17 21v-8H7v8M7 3v5h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Save Changes
+              </>
+            )}
+          </button>
         </div>
       )}
       
@@ -243,15 +307,6 @@ export default function SettingsPage() {
                     onChange={handleAvatarChange}
                     className={styles.avatarInput}
                   />
-                  {avatarPreview && (
-                    <button 
-                      onClick={handleDeleteAvatar}
-                      className={styles.deleteAvatarButton}
-                      disabled={isSaving}
-                    >
-                      Remove
-                    </button>
-                  )}
                 </div>
               </div>
               

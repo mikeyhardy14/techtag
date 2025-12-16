@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider/AuthProvider';
+import { useProfile } from '@/components/ProfileProvider/ProfileProvider';
 import styles from './DashboardSidebar.module.css';
 
 interface SidebarItem {
@@ -18,6 +19,7 @@ interface DashboardSidebarProps {
 
 export default function DashboardSidebar({ children }: DashboardSidebarProps) {
   const { user, signOut } = useAuth();
+  const { profile } = useProfile();
   const router = useRouter();
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -197,12 +199,16 @@ export default function DashboardSidebar({ children }: DashboardSidebarProps) {
           {user && (
             <div className={styles.userInfo}>
               <div className={styles.userAvatar}>
-                {user.email?.charAt(0).toUpperCase()}
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt="Avatar" className={styles.userAvatarImage} />
+                ) : (
+                  (profile?.display_name || user.email)?.charAt(0).toUpperCase()
+                )}
               </div>
               {!isCollapsed && (
                 <div className={styles.userDetails}>
-                  <span className={styles.userName}>{user.email?.split('@')[0]}</span>
-                  <span className={styles.userRole}>Engineer</span>
+                  <span className={styles.userName}>{profile?.display_name || profile?.username || user.email?.split('@')[0]}</span>
+                  <span className={styles.userRole}>{profile?.job_title || 'Engineer'}</span>
                 </div>
               )}
             </div>
@@ -261,11 +267,15 @@ export default function DashboardSidebar({ children }: DashboardSidebarProps) {
               {user && (
                 <div className={styles.userInfo}>
                   <div className={styles.userAvatar}>
-                    {user.email?.charAt(0).toUpperCase()}
+                    {profile?.avatar_url ? (
+                      <img src={profile.avatar_url} alt="Avatar" className={styles.userAvatarImage} />
+                    ) : (
+                      (profile?.display_name || user.email)?.charAt(0).toUpperCase()
+                    )}
                   </div>
                   <div className={styles.userDetails}>
-                    <span className={styles.userName}>{user.email?.split('@')[0]}</span>
-                    <span className={styles.userRole}>Engineer</span>
+                    <span className={styles.userName}>{profile?.display_name || profile?.username || user.email?.split('@')[0]}</span>
+                    <span className={styles.userRole}>{profile?.job_title || 'Engineer'}</span>
                   </div>
                 </div>
               )}
