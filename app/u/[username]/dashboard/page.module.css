@@ -1,22 +1,33 @@
-/* Dashboard Layout */
+/* ============================================
+   DASHBOARD LAYOUT - Narrative Flow
+   High-level status → Focused work → Fast interaction
+   ============================================ */
+
 .content {
-  padding: 32px;
-  background: #F8FAFC;
+  padding: 28px 32px;
+  background: linear-gradient(180deg, #F1F5F9 0%, #F8FAFC 50%, #FFFFFF 100%);
   min-height: calc(100vh - 80px);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
+/* Section spacing creates clear visual rhythm */
+.projectsSection {
+  margin-top: 48px; /* Generous whitespace separates status from work */
+}
+
+/* Loading state */
 .loading {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 60vh;
-  font-size: 1.125rem;
-  color: #6B7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748B;
   background: #FFFFFF;
   border-radius: 16px;
-  border: 1px solid #E5E7EB;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   animation: pulse 2s infinite;
 }
 
@@ -29,25 +40,17 @@
   }
 }
 
-.projectsSection {
-  margin-top: 32px;
-  animation: fadeInUp 0.5s ease-out;
-  animation-delay: 0.2s;
-  animation-fill-mode: both;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .content {
+    padding: 28px 32px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .projectsSection {
+    margin-top: 32px;
   }
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
   .content {
     padding: 20px 16px;
@@ -60,8 +63,8 @@
 
   .loading {
     min-height: 50vh;
-    font-size: 1rem;
-    margin: 16px 0;
+    font-size: 0.8125rem;
+    margin: 12px 0;
   }
 }
 
@@ -77,8 +80,8 @@
 
   .loading {
     min-height: 40vh;
-    font-size: 0.95rem;
-    margin: 12px 0;
+    font-size: 0.75rem;
+    margin: 8px 0;
   }
 }
 
