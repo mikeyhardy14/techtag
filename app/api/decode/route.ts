@@ -1391,6 +1391,76 @@ async function decodeClimateMasterModel(
       segments: VXA_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'WaterFurnace'
     },
+    {
+      modelTypes: ['UD'],
+      segments: UD_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'UD'
+    },
+    {
+      modelTypes: ['NB', 'UB'],
+      segments: NB_UB_WATERFURNACE_SEGMENTS,
+      getConfigName: () => 'WaterFurnace'
+    },
+    {
+      modelTypes: ['CP', 'CF', 'CL', 'ES', 'EP', 'QV', 'LV', 'MC'],
+      segments: STANDARD_BOSCH_SEGMENTS,
+      getConfigName: () => 'Bosch'
+    },
+    {
+      modelTypes: ['CA'],
+      segments: CA_BOSCH_SEGMENTS,
+      getConfigName: () => 'Bosch'
+    },
+    {
+      modelTypes: ['SM'],
+      segments: SM_BOSCH_SEGMENTS,
+      getConfigName: () => 'SM'
+    },
+    {
+      modelTypes: ['WT'],
+      segments: WT_BOSCH_SEGMENTS,
+      getConfigName: () => 'WT'
+    },
+    {
+      modelTypes: ['BP'],
+      segments: BP_BOSCH_SEGMENTS,
+      getConfigName: () => 'BP'
+    },
+    {
+      modelTypes: ['EC'],
+      segments: EC_BOSCH_SEGMENTS,
+      getConfigName: () => 'EC'
+    },
+    {
+      modelTypes: ['AP', 'EC', 'EM', 'ES', 'EV', 'GO', 'AU', 'HE', 'SE'],
+      segments: STANDARD_FLORIDA_HEAT_PUMP_SEGMENTS,
+      getConfigName: () => 'Florida Heat Pump'
+    },
+    {
+      modelTypes: ['CA', 'CS'],
+      segments: CA_CS_FLORIDA_HEAT_PUMP_SEGMENTS,
+      getConfigName: () => 'Florida Heat Pump'
+    },
+    {
+      modelTypes: ['GS', 'GT'],
+      segments: GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS,
+      getConfigName: () => 'Florida Heat Pump'
+    },
+    {
+      modelTypes: ['VI', 'VP', 'VH', 'VS', 'VT', 'VR'],
+      segments: OLDER_WHALEN_SEGMENTS,
+      getConfigName: () => 'Whalen'
+    },
+    {
+      modelTypes: [' VD', 'VN', 'VI', 'VP', 'VH', 'VS', 'VT'],
+      segments: NEWER_WHALEN_SEGMENTS,
+      getConfigName: () => 'Whalen'
+    },
+    {
+      modelTypes: ['WVI', 'WVP'],
+      segments: WVI_WVP_WHALEN_SEGMENTS,
+      getConfigName: () => 'Whalen'
+    }
   ];
 
   // Select appropriate parsing configuration based on model type
