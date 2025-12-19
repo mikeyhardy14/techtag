@@ -936,7 +936,7 @@ const GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS: ModelSegment[] = [
   { startPos: 8, endPos: 9, id: 'hot_water_options', group: 'Hot Water Options', characters: '' },                          // Digit 8
   { startPos: 9, endPos: 10, id: 'blower_options', group: 'Blower Options', characters: '' },                               // Digit 9
   { startPos: 10, endPos: 11, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                      // Digit 10
-  { startPos: 11, endPos: 12, id: 'sound_kit', group: 'Sound Kit', characters: '' },                                        // Digit 11 Unsure if this is supposed to be sound kit or sound kit option
+  { startPos: 11, endPos: 12, id: 'sound_kit_options', group: 'Sound Kit', characters: '' },                                // Digit 11 
   { startPos: 12, endPos: 13, id: 'cabinet_options', group: 'Cabinet Options', characters: '' },                            // Digit 12
   { startPos: 13, endPos: 14, id: 'non_standard_options', group: 'Non Standard Options', characters: '' },                  // Digit 13
   { startPos: 14, endPos: 15, id: 'non_standard_options_details', group: 'Non Standard Options Details', characters: '' },  // Digit 14
@@ -1603,7 +1603,7 @@ function calculateClimateMasterConfidence(
   }
 
   // High confidence: 80%+ segments matched and model number is proper length
-  if (matchPercentage >= 0.8 && modelNumber.length >= minLength) return 'high';
+  if (matchPercentage >= 0.95 && modelNumber.length >= minLength) return 'high';
 
   // Medium confidence: 60%+ segments matched
   if (matchPercentage >= 0.6 && matchedSegments >= 4) return 'medium';
