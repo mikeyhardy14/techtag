@@ -151,7 +151,7 @@ export default function Navbar() {
                 Sign In
               </Link>
               <Link href="/signup" className={styles.signupBtn}>
-                Sign Up
+                Save Your Decodes
               </Link>
             </div>
           )}
