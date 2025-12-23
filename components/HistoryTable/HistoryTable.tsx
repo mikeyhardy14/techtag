@@ -1,120 +1,135 @@
-
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useAuth } from '@/components/AuthProvider/AuthProvider';
 import styles from './HistoryTable.module.css';
-
-interface HistoryEntry {
-  id: string;
-  modelNumber: string;
-  brand: string;
-  type: string;
-  decodedAt: string;
-  status: 'success' | 'partial' | 'failed';
-  details: string;
-}
-
-// Sample data for demonstration
-const sampleHistory: HistoryEntry[] = [
-  {
-    id: '1',
-    modelNumber: 'CVG120A1B2',
-    brand: 'Carrier',
-    type: 'Chiller',
-    decodedAt: '2024-01-15 14:30',
-    status: 'success',
-    details: 'Complete decode with all specifications'
-  },
-  {
-    id: '2',
-    modelNumber: 'RTAA1206AXG',
-    brand: 'Trane',
-    type: 'Rooftop Unit',
-    decodedAt: '2024-01-15 13:15',
-    status: 'success',
-    details: 'Full model breakdown available'
-  },
-  {
-    id: '3',
-    modelNumber: 'YMC2S0A3H',
-    brand: 'York',
-    type: 'Heat Pump',
-    decodedAt: '2024-01-15 11:45',
-    status: 'partial',
-    details: 'Some specifications unavailable'
-  },
-  {
-    id: '4',
-    modelNumber: 'WP24A48-1',
-    brand: 'Westinghouse',
-    type: 'Package Unit',
-    decodedAt: '2024-01-15 10:20',
-    status: 'failed',
-    details: 'Model not found in database'
-  },
-  {
-    id: '5',
-    modelNumber: 'DXAA1204BCD',
-    brand: 'Daikin',
-    type: 'VRF System',
-    decodedAt: '2024-01-14 16:30',
-    status: 'success',
-    details: 'Complete decode with efficiency ratings'
-  },
-  {
-    id: '6',
-    modelNumber: 'GCE24H4A',
-    brand: 'Goodman',
-    type: 'Condensing Unit',
-    decodedAt: '2024-01-14 15:10',
-    status: 'success',
-    details: 'All specifications decoded'
-  },
-  {
-    id: '7',
-    modelNumber: 'RGE75A2B',
-    brand: 'Rheem',
-    type: 'Furnace',
-    decodedAt: '2024-01-14 14:45',
-    status: 'partial',
-    details: 'Efficiency data incomplete'
-  },
-  {
-    id: '8',
-    modelNumber: 'AHS36C1XA',
-    brand: 'American Standard',
-    type: 'Air Handler',
-    decodedAt: '2024-01-14 13:20',
-    status: 'success',
-    details: 'Full component breakdown'
-  }
-];
+import { DecodeHistoryEntry } from '@/types/history';
 
 export default function HistoryTable() {
+  const { session } = useAuth();
+  const [history, setHistory] = useState<DecodeHistoryEntry[]>([]);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'date' | 'brand' | 'status'>('date');
 
-  const filteredHistory = sampleHistory.filter(entry => {
-    const matchesSearch = entry.modelNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         entry.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         entry.type.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || entry.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
-
-  const sortedHistory = [...filteredHistory].sort((a, b) => {
-    switch (sortBy) {
-      case 'date':
-        return new Date(b.decodedAt).getTime() - new Date(a.decodedAt).getTime();
-      case 'brand':
-        return a.brand.localeCompare(b.brand);
-      case 'status':
-        return a.status.localeCompare(b.status);
-      default:
-        return 0;
+  // Fetch all history once on mount
+  const fetchHistory = useCallback(async () => {
+    if (!session?.access_token) {
+      setInitialLoading(false);
+      return;
     }
-  });
+
+    try {
+      setError(null);
+
+      const response = await fetch('/api/history', {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch history');
+      }
+
+      const data = await response.json();
+      setHistory(data.history || []);
+    } catch (err) {
+      console.error('Error fetching history:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch history');
+    } finally {
+      setInitialLoading(false);
+    }
+  }, [session?.access_token]);
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
+
+  const handleDelete = async (id: string) => {
+    if (!session?.access_token) return;
+    
+    if (!confirm('Are you sure you want to delete this entry?')) return;
+
+    try {
+      const response = await fetch(`/api/history?id=${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete entry');
+      }
+
+      // Remove from local state
+      setHistory(prev => prev.filter(entry => entry.id !== id));
+    } catch (err) {
+      console.error('Error deleting entry:', err);
+      alert('Failed to delete entry');
+    }
+  };
+
+  const handleClearAll = async () => {
+    if (!session?.access_token) return;
+    
+    if (!confirm('Are you sure you want to clear all history? This cannot be undone.')) return;
+
+    try {
+      const response = await fetch('/api/history?clearAll=true', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to clear history');
+      }
+
+      setHistory([]);
+    } catch (err) {
+      console.error('Error clearing history:', err);
+      alert('Failed to clear history');
+    }
+  };
+
+  // Client-side filtering and sorting (instant, no loading state)
+  const filteredAndSortedHistory = useMemo(() => {
+    let filtered = history;
+
+    // Apply search filter
+    if (searchTerm) {
+      const search = searchTerm.toLowerCase();
+      filtered = filtered.filter(entry =>
+        entry.model_number.toLowerCase().includes(search) ||
+        entry.brand.toLowerCase().includes(search) ||
+        (entry.equipment_type && entry.equipment_type.toLowerCase().includes(search))
+      );
+    }
+
+    // Apply status filter
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(entry => entry.status === statusFilter);
+    }
+
+    // Apply sorting
+    return [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'date':
+          return new Date(b.decoded_at).getTime() - new Date(a.decoded_at).getTime();
+        case 'brand':
+          return a.brand.localeCompare(b.brand);
+        case 'status':
+          return a.status.localeCompare(b.status);
+        default:
+          return 0;
+      }
+    });
+  }, [history, searchTerm, statusFilter, sortBy]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -129,6 +144,51 @@ export default function HistoryTable() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  if (!session) {
+    return (
+      <div className={styles.historyTable}>
+        <div className={styles.emptyState}>
+          <p>Please log in to view your decode history.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (initialLoading) {
+    return (
+      <div className={styles.historyTable}>
+        <div className={styles.loading}>
+          <div className={styles.spinner}></div>
+          <p>Loading history...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.historyTable}>
+        <div className={styles.emptyState}>
+          <p>Error: {error}</p>
+          <button onClick={fetchHistory} className={styles.clearFilters}>
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.historyTable}>
       <div className={styles.tableHeader}>
@@ -136,7 +196,7 @@ export default function HistoryTable() {
         <div className={styles.controls}>
           <input
             type="text"
-            placeholder="Search models, brands, or types..."
+            placeholder="Search models, brands..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={styles.searchInput}
@@ -160,8 +220,19 @@ export default function HistoryTable() {
             <option value="brand">Sort by Brand</option>
             <option value="status">Sort by Status</option>
           </select>
+          {history.length > 0 && (
+            <button onClick={handleClearAll} className={styles.clearAllButton}>
+              Clear All
+            </button>
+          )}
         </div>
       </div>
+
+      {history.length > 0 && (
+        <div className={styles.totalCount}>
+          Showing {filteredAndSortedHistory.length} of {history.length} entries
+        </div>
+      )}
 
       <div className={styles.tableContainer}>
         <table className={styles.table}>
@@ -172,26 +243,34 @@ export default function HistoryTable() {
               <th>Type</th>
               <th>Decoded At</th>
               <th>Status</th>
-              <th>Details</th>
+              <th>Confidence</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {sortedHistory.map((entry) => (
+            {filteredAndSortedHistory.map((entry) => (
               <tr key={entry.id} className={styles.tableRow}>
-                <td className={styles.modelNumber}>{entry.modelNumber}</td>
+                <td className={styles.modelNumber}>{entry.model_number}</td>
                 <td className={styles.brand}>{entry.brand}</td>
-                <td className={styles.type}>{entry.type}</td>
-                <td className={styles.date}>{entry.decodedAt}</td>
+                <td className={styles.type}>{entry.equipment_type || '-'}</td>
+                <td className={styles.date}>{formatDate(entry.decoded_at)}</td>
                 <td className={styles.status}>
                   <span className={`${styles.statusBadge} ${styles[entry.status]}`}>
                     {getStatusIcon(entry.status)} {entry.status}
                   </span>
                 </td>
-                <td className={styles.details}>{entry.details}</td>
+                <td className={styles.confidence}>
+                  <span className={`${styles.confidenceBadge} ${styles[entry.confidence || 'low']}`}>
+                    {entry.confidence || '-'}
+                  </span>
+                </td>
                 <td className={styles.actions}>
-                  <button className={styles.actionButton}>View</button>
-                  <button className={styles.actionButton}>Re-decode</button>
+                  <button 
+                    className={styles.actionButton}
+                    onClick={() => handleDelete(entry.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -199,18 +278,24 @@ export default function HistoryTable() {
         </table>
       </div>
 
-      {sortedHistory.length === 0 && (
+      {filteredAndSortedHistory.length === 0 && (
         <div className={styles.emptyState}>
-          <p>No history entries found matching your criteria.</p>
-          <button 
-            onClick={() => {
-              setSearchTerm('');
-              setStatusFilter('all');
-            }}
-            className={styles.clearFilters}
-          >
-            Clear Filters
-          </button>
+          {searchTerm || statusFilter !== 'all' ? (
+            <>
+              <p>No history entries found matching your criteria.</p>
+              <button 
+                onClick={() => {
+                  setSearchTerm('');
+                  setStatusFilter('all');
+                }}
+                className={styles.clearFilters}
+              >
+                Clear Filters
+              </button>
+            </>
+          ) : (
+            <p>No decode history yet. Start decoding model numbers to see your history here.</p>
+          )}
         </div>
       )}
     </div>

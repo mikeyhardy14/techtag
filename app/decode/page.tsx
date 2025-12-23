@@ -1,8 +1,21 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import DecoderForm from '@/components/DecoderForm/DecoderForm';
 import Footer from '@/components/Footer/Footer';
 import styles from './page.module.css';
+
+function DecodeContent() {
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get('q') || '';
+
+  return (
+    <section className={styles.container}>
+      <DecoderForm initialQuery={initialQuery} />
+    </section>
+  );
+}
 
 export default function DecodePage() {
   return (
@@ -21,9 +34,13 @@ export default function DecodePage() {
         </div>
       </div>
       
-      <section className={styles.container}>
-        <DecoderForm />
-      </section>
+      <Suspense fallback={
+        <section className={styles.container}>
+          <DecoderForm />
+        </section>
+      }>
+        <DecodeContent />
+      </Suspense>
       
       <Footer />
     </div>

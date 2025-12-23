@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useAuth } from '@/components/AuthProvider/AuthProvider';
 import styles from './DecoderForm.module.css';
 
 interface DecodedSegment {
@@ -57,6 +58,10 @@ const COMMON_MISTAKES = [
   { mistake: 'Missing dashes', tip: 'Some brands use dashes (CM-350-TR), others don\'t' },
   { mistake: 'Partial numbers', tip: 'Enter the complete model number from the unit nameplate' },
 ];
+
+interface DecoderFormProps {
+  initialQuery?: string;
+}
 
 // Why this matters context for each spec group
 const SPEC_CONTEXT: { [key: string]: { icon: string; why: string } } = {
@@ -116,8 +121,9 @@ const SPEC_PRIORITY = [
   'Version',
 ];
 
-export default function DecoderForm() {
-  const [modelNumber, setModelNumber] = useState('');
+export default function DecoderForm({ initialQuery = '' }: DecoderFormProps) {
+  const { session } = useAuth();
+  const [modelNumber, setModelNumber] = useState(initialQuery);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DecodedResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -192,9 +198,15 @@ export default function DecoderForm() {
     const startTime = performance.now();
 
     try {
+      // Build headers - include auth token if user is logged in to save history
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+
       const response = await fetch('/api/decode', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ modelNumber: modelNumber.trim() }),
       });
 

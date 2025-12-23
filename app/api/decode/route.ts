@@ -1,4 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+// Helper to get user from Authorization header (optional - for saving history)
+async function getOptionalUserFromRequest(request: Request) {
+  const authHeader = request.headers.get('Authorization');
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return { user: null, supabase: null };
+  }
+
+  const token = authHeader.replace('Bearer ', '');
+  
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  
+  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    global: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  });
+
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  return { user, supabase };
+}
 
 interface DatabaseRequest {
   id: string;
@@ -540,6 +567,56 @@ export async function POST(request: NextRequest) {
 
     // Decode the model number using appropriate parsing configuration
     const decodedResult = await decodeClimateMasterModel(cleanModelNumber, brand, manufacturer, modelType);
+
+    // Try to save history for authenticated users (non-blocking)
+    try {
+      const { user, supabase } = await getOptionalUserFromRequest(request);
+      
+      if (user && supabase) {
+        // Determine status based on decode result
+        let status: 'success' | 'partial' | 'failed' = 'failed';
+        if (decodedResult.segments.length > 0 && decodedResult.unmatchedSegments.length === 0) {
+          status = 'success';
+        } else if (decodedResult.segments.length > 0) {
+          status = 'partial';
+        }
+
+        // Determine equipment type from first segment if available
+        let equipmentType: string | null = null;
+        const modelTypeSegment = decodedResult.segments.find(s => 
+          s.group.toLowerCase().includes('model') || 
+          s.group.toLowerCase().includes('series') ||
+          s.group.toLowerCase().includes('type')
+        );
+        if (modelTypeSegment) {
+          equipmentType = modelTypeSegment.meaning;
+        }
+
+        // Generate details summary
+        const details = status === 'success' 
+          ? `Complete decode with ${decodedResult.segments.length} segments`
+          : status === 'partial'
+          ? `Partial decode: ${decodedResult.unmatchedSegments.length} unmatched segments`
+          : 'Unable to decode model number';
+
+        // Save to history
+        await supabase.from('decode_history').insert({
+          user_id: user.id,
+          model_number: decodedResult.modelNumber,
+          brand: decodedResult.brand,
+          manufacturer: decodedResult.manufacturer,
+          equipment_type: equipmentType,
+          status,
+          confidence: decodedResult.confidence,
+          segments: decodedResult.segments,
+          unmatched_segments: decodedResult.unmatchedSegments,
+          details
+        });
+      }
+    } catch (historyError) {
+      // Don't fail the decode if history save fails
+      console.error('Failed to save decode history:', historyError);
+    }
 
     return NextResponse.json(decodedResult);
 

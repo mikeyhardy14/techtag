@@ -125,6 +125,183 @@
   background: #E2E8F0;
 }
 
+/* Search Dropdown */
+.searchDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.04),
+    0 10px 24px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+  animation: dropdownSlide 0.15s ease-out;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.searchResultsSection {
+  padding: 6px;
+}
+
+.searchResultItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+.searchResultItem:hover {
+  background: #F8FAFC;
+}
+
+.searchResultIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #F1F5F9;
+  border-radius: 8px;
+  color: #64748B;
+  flex-shrink: 0;
+}
+
+.searchResultText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.searchResultTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1E293B;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.searchResultSubtitle {
+  font-size: 0.75rem;
+  color: #94A3B8;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.searchDropdownDivider {
+  height: 1px;
+  background: #F1F5F9;
+  margin: 0;
+}
+
+.noResultsMessage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  color: #94A3B8;
+  font-size: 0.8125rem;
+}
+
+.noResultsMessage svg {
+  flex-shrink: 0;
+}
+
+.noResultsMessage span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.decoderLookupButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  width: 100%;
+  background: linear-gradient(135deg, #F0F9FF 0%, #F8FAFC 100%);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+.decoderLookupButton:hover {
+  background: linear-gradient(135deg, #E0F2FE 0%, #F1F5F9 100%);
+}
+
+.decoderIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
+  border-radius: 8px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.decoderLookupText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.decoderLookupTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1E293B;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.decoderLookupSubtitle {
+  font-size: 0.75rem;
+  color: #64748B;
+  font-weight: 400;
+}
+
+.decoderArrow {
+  color: #94A3B8;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.decoderLookupButton:hover .decoderArrow {
+  transform: translateX(2px);
+  color: #3B82F6;
+}
+
 /* Header Right - Actions */
 .headerRight {
   flex: 1;
