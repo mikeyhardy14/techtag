@@ -134,9 +134,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, client, model, status, outcome, submittalFile } = body;
 
-    if (!name || !client || !model) {
+    if (!name || !client) {
       return NextResponse.json(
-        { error: 'Name, client, and model are required' },
+        { error: 'Name and client are required' },
         { status: 400 }
       );
     }
