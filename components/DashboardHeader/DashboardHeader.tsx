@@ -128,7 +128,8 @@ export default function DashboardHeader({ title, actionButton, onSearch, onProje
   };
 
   const handleDecoderLookup = () => {
-    router.push(`/decode?q=${encodeURIComponent(searchQuery)}`);
+    const username = user?.email?.split('@')[0] || 'user';
+    router.push(`/u/${username}/decode?q=${encodeURIComponent(searchQuery)}`);
     setShowDropdown(false);
     setSearchQuery('');
   };
