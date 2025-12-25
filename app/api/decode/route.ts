@@ -936,7 +936,7 @@ const GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS: ModelSegment[] = [
   { startPos: 8, endPos: 9, id: 'hot_water_options', group: 'Hot Water Options', characters: '' },                          // Digit 8
   { startPos: 9, endPos: 10, id: 'blower_options', group: 'Blower Options', characters: '' },                               // Digit 9
   { startPos: 10, endPos: 11, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                      // Digit 10
-  { startPos: 11, endPos: 12, id: 'sound_kit_options', group: 'Sound Kit', characters: '' },                                // Digit 11 
+  { startPos: 11, endPos: 12, id: 'sound_kit', group: 'Sound Kit', characters: '' },                                        // Digit 11 Unsure if this is supposed to be sound kit or sound kit option
   { startPos: 12, endPos: 13, id: 'cabinet_options', group: 'Cabinet Options', characters: '' },                            // Digit 12
   { startPos: 13, endPos: 14, id: 'non_standard_options', group: 'Non Standard Options', characters: '' },                  // Digit 13
   { startPos: 14, endPos: 15, id: 'non_standard_options_details', group: 'Non Standard Options Details', characters: '' },  // Digit 14
@@ -1107,19 +1107,41 @@ export async function POST(request: NextRequest) {
         getModelType: (_modelNumber: string, prefix: string) => prefix
       },
       {
-        // Might Work - NEeds to be tested and rewritten into several Handleres
         brand: 'Daikin',
         manufacturer: 'daikin',
-        prefixes: ['WCA', 'WHA', 'RWA', 'WSC', 'WSD', 'WSM', 'WSN', 'WSS', 'WST', 'WSL', 'WSR', 'WGC', 'WGD', 'WMHC', 'WMHW', 'WCC'],
+        prefixes: ['WWCA', 'WWHA', 'WRWA', 'WWSC', 'WWSD', 'WWSM', 'WWSN', 'WWSS', 'WWST', 'WWSL', 'WWSR', 'WWGC', 'WWGD', 'WWMHC', 'WWMHW', 'WWWCC'],
         getModelType: (modelNumber: string, prefix: string) => modelNumber.substring(1, 4)
       },
       {
         brand: 'McQuay',
-        manufacturer: 'McQuay',
-        // TODO:Needs to be updated 
-        prefixes: ['WFDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'WCCH', 'CCH', 'CCW', 'CRH', 'CRW', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS', 'MWH'],
-        getModelType: (_modelNumber: string, prefix: string) => prefix
+        manufacturer: 'mcquay',
+        prefixes: ['FDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'CCH', 'CCH', 'CCW', 'CRH', 'CRW', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS', 'MWH'],
+        getModelType: (modelNumber: string, prefix: string) => modelNumber.substring(1, 4)
       },
+      {
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        prefixes: ['ND', 'NS', 'NV', 'S3D', 'LS', 'NSW', 'NDW', 'NL', 'NX', 'NSSS', 'NDDS', 'EW', 'LC', 'NC', 'V3C', 'V5C', 'V7A', 'V5A', 'V3A', 'UD', 'NB', 'UB'],
+        getModelType: (modelNumber: string, prefix: string) => prefix
+      },
+      {
+        brand: 'Bosch',
+        manufacturer: 'bosch',
+        prefixes: ['CP', 'CF', 'CL', 'ES', 'EP', 'QV', 'LVB', 'LVA', 'LM', 'CAB', 'CAA', 'SM', 'WT', 'BP', 'ECLC', 'ECA', 'MCB', 'MCA'],
+        getModelType: (modelNumber: string, prefix: string) => prefix
+      },
+      {
+        brand: 'Florida Heat Pump',
+        manufacturer: 'florida_heat_pump',
+        prefixes: ['AP', 'EC', 'EM', 'ES', 'EV', 'GO', 'AU', 'HE', 'SE', 'CA', 'CS', 'GS', 'GT'],
+        getModelType: (modelNumber: string, prefix: string) => prefix
+      },
+      {
+        brand: 'Whalen',
+        manufacturer: 'whalen',
+        prefixes: ['VI21', 'VP21', 'VH21', 'VS21', 'VT21', 'VR21', 'VD24', 'VN24', 'VI24', 'VP24', 'VH24', 'VS24', 'VT24', 'WVI', 'WVP'],
+        getModelType: (modelNumber: string, prefix: string) => prefix
+      }
     ];
 
     // Determine model type, brand, and manufacturer based on prefix
@@ -1223,10 +1245,6 @@ async function queryDatabase(segmentType: string, manufacture: string, character
     }
 
     const results = await response.json();
-    console.log('DEBUG - Segment Type:', segmentType);
-    console.log('DEBUG - Manufacture:', manufacture);
-    console.log('DEBUG - Characters:', characters); 
-    console.log('DEBUG - Results:', results);
 
     // Debug logging to see what Supabase returns
     // Execute Supabase query for segment lookup
@@ -1257,273 +1275,218 @@ async function decodeClimateMasterModel(
   // Define segment configurations for different model types
   const segmentConfigs = [
     {
-      // Works
       modelTypes: ['GEH', 'GEV', 'EXV', 'EXH'],
       segments: GEH_GEV_SEGMENTS,
       getConfigName: (modelType: string) =>
         modelType === 'EXV' || modelType === 'EXH' ? `${modelType} (Trane)` : 'GEH/GEV (Trane)'
     },
     {
-      // Works - GETK00911A0AS00H0011C10390B0
       modelTypes: ['GET'],
       segments: GET_SEGMENTS,
       getConfigName: () => 'GET (Crane)'
     },
     {
-      // Works - GWSC036A3RBZZZA0AA0000000
       modelTypes: ['GWS'],
       segments: GWS_SEGMENTS,
       getConfigName: () => 'GWS (Trane)'
     },
     {
-      // Works
       modelTypes: ['GSK', 'GSJ'],
       segments: GSK_SEGMENTS,
       getConfigName: (modelType: string) => `${modelType} (Trane)`
     },
     {
-      // Works
       modelTypes: ['VSH', 'VSV'],
       segments: VSH_VSV_SEGMENTS,
       getConfigName: (modelType: string) => `${modelType} (Trane)`
     },
     {
-      /*
-      BUGS: - W addition needs to be able to be handled for all.
-            - Database needs to be cleaned up to handle this
-            - Misspelled characters in DB
-       */
       modelTypes: ['WCA', 'WHA', 'WRA'],
       segments: WCA_WHA_WRA_SEGMENTS,
       getConfigName: () => 'WCA (Daikin)'
     },
-    { 
-      // Doesn't work - Completely Broken - Doesn't exist in DB
-      // 2. Might work but needs to be tested and rewritten into several handleres
+    {
       modelTypes: ['WSC', 'WSD', 'WSM', 'WSN', 'WSS', 'WST', 'WSL'],
       segments: WSC_WSD_WSM_WSN_WSS_WST_WSLV_SEGMENTS,
       getConfigName: () => 'WCA (Daikin)'
     },
     {
-      // Doesn't work - Completely Broken - Doesn't exist in DB
-      // 2. Might work but needs to be tested and rewritten into several handleres
       modelTypes: ['WSR'],
       segments: WSR_SEGMENTS,
       getConfigName: () => 'WSR (Daikin)'
     },
     {
-      // Doesn't work - Completely Broken - Doesn't exist in DB
-      // 2. Might work but needs to be tested and rewritten into several handleres
       modelTypes: ['WGC', 'WGD'],
       segments: WGC_WGD_SEGMENTS,
       getConfigName: () => 'WGC (Daikin)'
     },
     {
-      // Doesn't work
       modelTypes: ['MHC', 'MHW'],
       segments: MHC_MHW_SEGMENTS,
       getConfigName: () => 'MHC (Daikin)'
     },
     {
-      // Doesn't work
       modelTypes: ['WCC',],
       segments: WCC_SEGMENTS,
       getConfigName: () => 'WCC (Daikin)'
     },
     {
-      /*
-      BUGS: - W addition needs to be able to be handled for all.
-            - Database needs to be cleaned up to handle this
-       */
-      modelTypes: ['WFDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS'],
+      modelTypes: ['FDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS'],
       segments: MCQUAY_STANDARD_SEGMENTS,
       getConfigName: () => 'McQuay'
     },
     {
-      /*
-      BUGS: - W addition needs to be able to be handled for all.
-            - Database needs to be cleaned up to handle this
-       */
-      modelTypes: ['WCCH', 'CCW', 'CRH', 'CRW'],
+      modelTypes: ['CCH', 'CCW', 'CRH', 'CRW'],
       segments: CCH_CCW_CRH_CRW_SEGMENTS,
       getConfigName: () => 'McQuay'
     },
     {
-      // Doesn't work
       modelTypes: ['MWH'],
       segments: MWH_SEGMENTS,
       getConfigName: () => 'McQuay'
     },
     {
-      // Works
       modelTypes: ['SA'],
       segments: SA_SEGMENTS,
       getConfigName: () => 'SA (ClimateMaster)'
     },
     {
-      // Doesn't work
       modelTypes: ['NS', 'ND'],
       segments: ND_NS_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'WaterFurnace'
     },
     {
-      // Doesn't work
       modelTypes: ['NV'],
       segments: NV_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'NV'
     },
     {
-      // Doesn't work
       modelTypes: ['3D', 'LS'],
       segments: SYNERGY_LS_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'WaterFurnace'
     },
     {
-      // Doesn't work
       modelTypes: ['NSW'],
       segments: NSW_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'NSW'
     },
     {
-      // Doesn't work
       modelTypes: ['NDW'],
       segments: NDW_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'NDW'
     },
     {
-      // Doesn't work
       modelTypes: ['NL', 'NX'],
       segments: NL_NX_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'WaterFurnace'
     },
     {
-      // Doesn't work
       modelTypes: ['NS', 'ND'],
       segments: NS_ND_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'WaterFurnace'
     },
     {
-      // Doesn't work
       modelTypes: ['EW'],
       segments: EW_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'EW'
     },
     {
-      // Doesn't work
       modelTypes: ['LC_R410A'],
       segments: LC_R410A_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'LC_R410A'
     },
     {
-      // Doesn't work
       modelTypes: ['NC_R410A'],
       segments: NC_R410A_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'NC_R410A'
     },
     {
-      // Doesn't work
       modelTypes: ['V3C'],
       segments: V3C_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'V3C'
     },
     {
-      // Doesn't work
       modelTypes: ['V5C'],
       segments: V5C_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'V5C'
     },
     {
-      // Doesn't work
       modelTypes: ['V7A', 'V5A', 'V3A'],
       segments: VXA_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'WaterFurnace'
     },
     {
-      // Doesn't work
       modelTypes: ['UD'],
       segments: UD_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'UD'
     },
     {
-      // Doesn't work
       modelTypes: ['NB', 'UB'],
       segments: NB_UB_WATERFURNACE_SEGMENTS,
       getConfigName: () => 'WaterFurnace'
     },
     {
-      // Doesn't work
       modelTypes: ['CP', 'CF', 'CL', 'ES', 'EP', 'QV', 'LV', 'MC'],
       segments: STANDARD_BOSCH_SEGMENTS,
       getConfigName: () => 'Bosch'
     },
     {
-      // Doesn't work
       modelTypes: ['CA'],
       segments: CA_BOSCH_SEGMENTS,
       getConfigName: () => 'Bosch'
     },
     {
-      // Doesn't work
       modelTypes: ['SM'],
       segments: SM_BOSCH_SEGMENTS,
       getConfigName: () => 'SM'
     },
     {
-      // Doesn't work
       modelTypes: ['WT'],
       segments: WT_BOSCH_SEGMENTS,
       getConfigName: () => 'WT'
     },
     {
-      // Doesn't work
       modelTypes: ['BP'],
       segments: BP_BOSCH_SEGMENTS,
       getConfigName: () => 'BP'
     },
     {
-      // Doesn't work
       modelTypes: ['EC'],
       segments: EC_BOSCH_SEGMENTS,
       getConfigName: () => 'EC'
     },
     {
-      // Doesn't work
       modelTypes: ['AP', 'EC', 'EM', 'ES', 'EV', 'GO', 'AU', 'HE', 'SE'],
       segments: STANDARD_FLORIDA_HEAT_PUMP_SEGMENTS,
       getConfigName: () => 'Florida Heat Pump'
     },
     {
-      // Doesn't work
       modelTypes: ['CA', 'CS'],
       segments: CA_CS_FLORIDA_HEAT_PUMP_SEGMENTS,
       getConfigName: () => 'Florida Heat Pump'
     },
     {
-      // Doesn't work
       modelTypes: ['GS', 'GT'],
       segments: GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS,
       getConfigName: () => 'Florida Heat Pump'
     },
     {
-      // Doesn't work
       modelTypes: ['VI', 'VP', 'VH', 'VS', 'VT', 'VR'],
       segments: OLDER_WHALEN_SEGMENTS,
       getConfigName: () => 'Whalen'
     },
     {
-      // Doesn't work
       modelTypes: [' VD', 'VN', 'VI', 'VP', 'VH', 'VS', 'VT'],
       segments: NEWER_WHALEN_SEGMENTS,
       getConfigName: () => 'Whalen'
     },
     {
-      // Doesn't work
       modelTypes: ['WVI', 'WVP'],
       segments: WVI_WVP_WHALEN_SEGMENTS,
       getConfigName: () => 'Whalen'
     }
   ];
-  
+
   // Select appropriate parsing configuration based on model type
   let segmentConfig: ModelSegment[] = CLIMATEMASTER_SEGMENTS;
   let configName: string = 'HT (ClimateMaster)';
@@ -1664,7 +1627,7 @@ function calculateClimateMasterConfidence(
   }
 
   // High confidence: 80%+ segments matched and model number is proper length
-  if (matchPercentage >= 0.95 && modelNumber.length >= minLength) return 'high';
+  if (matchPercentage >= 0.8 && modelNumber.length >= minLength) return 'high';
 
   // Medium confidence: 60%+ segments matched
   if (matchPercentage >= 0.6 && matchedSegments >= 4) return 'medium';
