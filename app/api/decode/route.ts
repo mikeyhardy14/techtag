@@ -36,6 +36,7 @@ interface ModelSegment {
   id: string;
   group: string;
   characters: string;
+  alternativeManufacturer?: string;
 }
 
 // ClimateMaster model number parsing configuration (legacy)
@@ -427,11 +428,11 @@ const SA_SEGMENTS: ModelSegment[] = [
   { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },               // Digits 4–6
   { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },               // Digit 7
   { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                 // Digit 8
-  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },               // Digit 9
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' ,alternativeManufacturer: 'climatemaster_sa'},               // Digit 9
   { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                // Digit 10
-  { startPos: 10, endPos: 11, id: 'future_2', group: 'Future', characters: '' },               // Digit 11
-  { startPos: 11, endPos: 12, id: 'future_3', group: 'Future', characters: '' },               // Digit 12
-  { startPos: 12, endPos: 13, id: 'future_4', group: 'Future', characters: '' },               // Digit 13
+  { startPos: 10, endPos: 11, id: 'future', group: 'Future', characters: '' },               // Digit 11
+  { startPos: 11, endPos: 12, id: 'future', group: 'Future', characters: '' },               // Digit 12
+  { startPos: 12, endPos: 13, id: 'future', group: 'Future', characters: '' },               // Digit 13
   { startPos: 13, endPos: 14, id: 'blower_motor', group: 'Blower Motor', characters: '' },     // Digit 14
   { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }              // Digit 15
 ];
@@ -1110,7 +1111,7 @@ export async function POST(request: NextRequest) {
         // Might Work - NEeds to be tested and rewritten into several Handleres
         brand: 'Daikin',
         manufacturer: 'daikin',
-        prefixes: ['WCA', 'WHA', 'RWA', 'WSC', 'WSD', 'WSM', 'WSN', 'WSS', 'WST', 'WSL', 'WSR', 'WGC', 'WGD', 'WMHC', 'WMHW', 'WCC'],
+        prefixes: ['WWCA', 'WWHA', 'WRWA', 'WWSC', 'WSD', 'WSM', 'WSN', 'WSS', 'WST', 'WSL', 'WSR', 'WGC', 'WGD', 'WMHC', 'WMHW', 'WCC'],
         getModelType: (modelNumber: string, prefix: string) => modelNumber.substring(1, 4)
       },
       {
@@ -1138,6 +1139,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    console.log('DEBUG - Brand:', brand);
+    console.log('DEBUG - Manufacturer:', manufacturer);
+    console.log('DEBUG - Model Type:', modelType);
     // Decode the model number using appropriate parsing configuration
     const decodedResult = await decodeClimateMasterModel(cleanModelNumber, brand, manufacturer, modelType);
 
@@ -1344,7 +1348,7 @@ async function decodeClimateMasterModel(
       BUGS: - W addition needs to be able to be handled for all.
             - Database needs to be cleaned up to handle this
        */
-      modelTypes: ['WCCH', 'CCW', 'CRH', 'CRW'],
+      modelTypes: ['CCH', 'CCW', 'CRH', 'CRW'],
       segments: CCH_CCW_CRH_CRW_SEGMENTS,
       getConfigName: () => 'McQuay'
     },
@@ -1592,8 +1596,9 @@ async function decodeClimateMasterModel(
       continue;
     }
 
+    const alternativeManufacturer: string = segment.alternativeManufacturer || manufacturer;
     // Query database for this segment (with fallback for EXV/EXH models)
-    const meaning = await queryDatabaseWithFallback(segment.id, manufacturer, characters, modelType);
+    const meaning = await queryDatabaseWithFallback(segment.id, alternativeManufacturer, characters, modelType);
 
     if (meaning) {
       segments.push({
