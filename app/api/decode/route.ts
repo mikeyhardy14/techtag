@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-interface DatabaseRequest {
-  id: string;
-  manufacture: string;
-  description: string;
-}
-
 interface DecodedSegment {
   position: string;
   characters: string;
@@ -38,6 +32,110 @@ interface ModelSegment {
   characters: string;
   alternativeManufacturer?: string;
 }
+
+// ============================================================================
+// TRIE-BASED DECODER LOOKUP SYSTEM
+// ============================================================================
+
+interface DecoderRule {
+  id: string;
+  brand: string;
+  manufacturer: string;
+  segments: ModelSegment[];
+  configName: string;
+  conditions?: {
+    minLength?: number;
+    maxLength?: number;
+    pattern?: RegExp;
+  };
+}
+
+interface TrieNode {
+  children: Map<string, TrieNode>;
+  rules: DecoderRule[];
+}
+
+// Create a new trie node
+function createTrieNode(): TrieNode {
+  return {
+    children: new Map(),
+    rules: []
+  };
+}
+
+// Insert a decoder rule into the trie
+function insertRule(root: TrieNode, prefix: string, rule: DecoderRule): void {
+  let node = root;
+  for (const char of prefix.toUpperCase()) {
+    if (!node.children.has(char)) {
+      node.children.set(char, createTrieNode());
+    }
+    node = node.children.get(char)!;
+  }
+  node.rules.push(rule);
+}
+
+// Find the best matching decoder rule for a model number
+function findDecoderRule(root: TrieNode, modelNumber: string): DecoderRule | null {
+  const upperModel = modelNumber.toUpperCase();
+  let node = root;
+  let bestMatch: DecoderRule | null = null;
+  let currentRules: DecoderRule[] = [];
+
+  // Walk through the trie character-by-character
+  for (let i = 0; i < upperModel.length; i++) {
+    const char = upperModel[i];
+    
+    // Collect any rules at this node before moving deeper
+    if (node.rules.length > 0) {
+      currentRules = [...node.rules];
+    }
+    
+    // Try to continue down the trie
+    if (node.children.has(char)) {
+      node = node.children.get(char)!;
+    } else {
+      break;
+    }
+  }
+  
+  // Check the final node for rules
+  if (node.rules.length > 0) {
+    currentRules = [...node.rules];
+  }
+
+  // Evaluate conditions to find the best matching rule
+  for (const rule of currentRules) {
+    if (rule.conditions) {
+      const { minLength, maxLength, pattern } = rule.conditions;
+      
+      if (minLength && modelNumber.length < minLength) continue;
+      if (maxLength && modelNumber.length > maxLength) continue;
+      if (pattern && !pattern.test(modelNumber)) continue;
+    }
+    
+    // If we get here, the rule matches - prefer rules with more specific conditions
+    if (!bestMatch || (rule.conditions && !bestMatch.conditions)) {
+      bestMatch = rule;
+    } else if (rule.conditions && bestMatch.conditions) {
+      // Prefer rules with more specific length requirements
+      const ruleSpecificity = (rule.conditions.minLength ? 1 : 0) + 
+                              (rule.conditions.maxLength ? 1 : 0) + 
+                              (rule.conditions.pattern ? 2 : 0);
+      const bestSpecificity = (bestMatch.conditions.minLength ? 1 : 0) + 
+                              (bestMatch.conditions.maxLength ? 1 : 0) + 
+                              (bestMatch.conditions.pattern ? 2 : 0);
+      if (ruleSpecificity > bestSpecificity) {
+        bestMatch = rule;
+      }
+    }
+  }
+
+  return bestMatch;
+}
+
+// Global decoder trie - built once at module load
+let decoderTrie: TrieNode | null = null;
 
 // ClimateMaster model number parsing configuration (legacy)
 const CLIMATEMASTER_SEGMENTS: ModelSegment[] = [
@@ -1036,7 +1134,365 @@ const WVI_WVP_WHALEN_SEGMENTS: ModelSegment[] = [
   { startPos: 29, endPos: 30, id: 'coil_height', group: 'Coil Height', characters: '' }                           // Digit 29
 ];
 
-// Supabase configuration
+// ============================================================================
+// TRIE BUILDER - Initializes the decoder trie with all rules
+// ============================================================================
+
+function buildDecoderTrie(): TrieNode {
+  const root = createTrieNode();
+
+  // Define all decoder rules with their prefixes, conditions, and segment configurations
+  const decoderDefinitions: Array<{
+    prefixes: string[];
+    brand: string;
+    manufacturer: string;
+    segments: ModelSegment[];
+    configName: string;
+    conditions?: DecoderRule['conditions'];
+  }> = [
+    // ClimateMaster
+    {
+      prefixes: ['SA'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: SA_SEGMENTS,
+      configName: 'SA (ClimateMaster)'
+    },
+    {
+      prefixes: ['HT'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: CLIMATEMASTER_SEGMENTS,
+      configName: 'HT (ClimateMaster)'
+    },
+
+    // Trane
+    {
+      prefixes: ['GEH', 'GEV'],
+      brand: 'Trane',
+      manufacturer: 'trane',
+      segments: GEH_GEV_SEGMENTS,
+      configName: 'GEH/GEV (Trane)'
+    },
+    {
+      prefixes: ['EXV', 'EXH'],
+      brand: 'Trane',
+      manufacturer: 'trane',
+      segments: EXW_SEGMENTS,
+      configName: 'EXV/EXH (Trane)'
+    },
+    {
+      prefixes: ['GET'],
+      brand: 'Trane',
+      manufacturer: 'trane',
+      segments: GET_SEGMENTS,
+      configName: 'GET (Crane)'
+    },
+    {
+      prefixes: ['GWS'],
+      brand: 'Trane',
+      manufacturer: 'trane',
+      segments: GWS_SEGMENTS,
+      configName: 'GWS (Trane)'
+    },
+    {
+      prefixes: ['GSK', 'GSJ'],
+      brand: 'Trane',
+      manufacturer: 'trane',
+      segments: GSK_SEGMENTS,
+      configName: 'GSK/GSJ (Trane)'
+    },
+    {
+      prefixes: ['VSH', 'VSV'],
+      brand: 'Trane',
+      manufacturer: 'trane',
+      segments: VSH_VSV_SEGMENTS,
+      configName: 'VSH/VSV (Trane)'
+    },
+
+    // Daikin
+    {
+      prefixes: ['WWCA', 'WWHA', 'WRWA'],
+      brand: 'Daikin',
+      manufacturer: 'daikin',
+      segments: WCA_WHA_WRA_SEGMENTS,
+      configName: 'WCA/WHA/WRA (Daikin)'
+    },
+    {
+      prefixes: ['WSC', 'WSD', 'WSM', 'WSN', 'WSS', 'WST', 'WSLV'],
+      brand: 'Daikin',
+      manufacturer: 'daikin',
+      segments: WSC_WSD_WSM_WSN_WSS_WST_WSLV_SEGMENTS,
+      configName: 'WSx (Daikin)'
+    },
+    {
+      prefixes: ['WSR'],
+      brand: 'Daikin',
+      manufacturer: 'daikin',
+      segments: WSR_SEGMENTS,
+      configName: 'WSR (Daikin)'
+    },
+    {
+      prefixes: ['WGC', 'WGD'],
+      brand: 'Daikin',
+      manufacturer: 'daikin',
+      segments: WGC_WGD_SEGMENTS,
+      configName: 'WGC/WGD (Daikin)'
+    },
+    {
+      prefixes: ['WMHC', 'WMHW'],
+      brand: 'Daikin',
+      manufacturer: 'daikin',
+      segments: MHC_MHW_SEGMENTS,
+      configName: 'MHC/MHW (Daikin)'
+    },
+    {
+      prefixes: ['WCC'],
+      brand: 'Daikin',
+      manufacturer: 'daikin',
+      segments: WCC_SEGMENTS,
+      configName: 'WCC (Daikin)'
+    },
+
+    // McQuay
+    {
+      prefixes: ['WFDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS'],
+      brand: 'McQuay',
+      manufacturer: 'mcquay',
+      segments: MCQUAY_STANDARD_SEGMENTS,
+      configName: 'McQuay Standard'
+    },
+    {
+      prefixes: ['WCCH', 'CCH', 'CCW', 'CRH', 'CRW'],
+      brand: 'McQuay',
+      manufacturer: 'mcquay',
+      segments: CCH_CCW_CRH_CRW_SEGMENTS,
+      configName: 'McQuay CCH/CCW/CRH/CRW'
+    },
+    {
+      prefixes: ['MWH'],
+      brand: 'McQuay',
+      manufacturer: 'mcquay',
+      segments: MWH_SEGMENTS,
+      configName: 'McQuay MWH'
+    },
+
+    // WaterFurnace
+    {
+      prefixes: ['NDV', 'NSV'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: ND_NS_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace ND/NS'
+    },
+    {
+      prefixes: ['NVV', 'NVH'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: NV_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace NV'
+    },
+    {
+      prefixes: ['3DV', '3DH', 'LSV', 'LSH'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: SYNERGY_LS_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace Synergy/LS'
+    },
+    {
+      prefixes: ['NSW'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: NSW_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace NSW'
+    },
+    {
+      prefixes: ['NDW'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: NDW_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace NDW'
+    },
+    {
+      prefixes: ['NL', 'NX'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: NL_NX_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace NL/NX'
+    },
+    {
+      prefixes: ['EW'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: EW_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace EW'
+    },
+    {
+      prefixes: ['LCV', 'LCH'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: LC_R410A_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace LC R410A'
+    },
+    {
+      prefixes: ['NCV', 'NCH'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: NC_R410A_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace NC R410A'
+    },
+    {
+      prefixes: ['V3C'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: V3C_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace V3C'
+    },
+    {
+      prefixes: ['V5C'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: V5C_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace V5C'
+    },
+    {
+      prefixes: ['V7A', 'V5A', 'V3A'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: VXA_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace VxA'
+    },
+    {
+      prefixes: ['UDV', 'UDH'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: UD_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace UD'
+    },
+    {
+      prefixes: ['NBV', 'NBH', 'UBV', 'UBH'],
+      brand: 'WaterFurnace',
+      manufacturer: 'waterfurnace',
+      segments: NB_UB_WATERFURNACE_SEGMENTS,
+      configName: 'WaterFurnace NB/UB'
+    },
+
+    // Bosch
+    {
+      prefixes: ['CP', 'CF', 'CL', 'ES', 'EP', 'QV', 'LV', 'MC'],
+      brand: 'Bosch',
+      manufacturer: 'bosch',
+      segments: STANDARD_BOSCH_SEGMENTS,
+      configName: 'Bosch Standard'
+    },
+    {
+      prefixes: ['CA'],
+      brand: 'Bosch',
+      manufacturer: 'bosch',
+      segments: CA_BOSCH_SEGMENTS,
+      configName: 'Bosch CA'
+    },
+    {
+      prefixes: ['SM'],
+      brand: 'Bosch',
+      manufacturer: 'bosch',
+      segments: SM_BOSCH_SEGMENTS,
+      configName: 'Bosch SM'
+    },
+    {
+      prefixes: ['WT'],
+      brand: 'Bosch',
+      manufacturer: 'bosch',
+      segments: WT_BOSCH_SEGMENTS,
+      configName: 'Bosch WT'
+    },
+    {
+      prefixes: ['BP'],
+      brand: 'Bosch',
+      manufacturer: 'bosch',
+      segments: BP_BOSCH_SEGMENTS,
+      configName: 'Bosch BP'
+    },
+    {
+      prefixes: ['EC'],
+      brand: 'Bosch',
+      manufacturer: 'bosch',
+      segments: EC_BOSCH_SEGMENTS,
+      configName: 'Bosch EC'
+    },
+
+    // Florida Heat Pump
+    {
+      prefixes: ['AP', 'EM', 'EV', 'GO', 'AU', 'HE', 'SE'],
+      brand: 'Florida Heat Pump',
+      manufacturer: 'florida_heat_pump',
+      segments: STANDARD_FLORIDA_HEAT_PUMP_SEGMENTS,
+      configName: 'Florida Heat Pump Standard'
+    },
+    {
+      prefixes: ['GS', 'GT'],
+      brand: 'Florida Heat Pump',
+      manufacturer: 'florida_heat_pump',
+      segments: GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS,
+      configName: 'Florida Heat Pump GS/GT'
+    },
+
+    // Whalen - Older models (R410A)
+    {
+      prefixes: ['VI', 'VP', 'VH', 'VS', 'VT', 'VR'],
+      brand: 'Whalen',
+      manufacturer: 'whalen',
+      segments: OLDER_WHALEN_SEGMENTS,
+      configName: 'Whalen (Older)'
+    },
+    // Whalen - Newer models (R454B)
+    {
+      prefixes: ['VD', 'VN'],
+      brand: 'Whalen',
+      manufacturer: 'whalen',
+      segments: NEWER_WHALEN_SEGMENTS,
+      configName: 'Whalen (Newer R454B)'
+    },
+    {
+      prefixes: ['WVI', 'WVP'],
+      brand: 'Whalen',
+      manufacturer: 'whalen',
+      segments: WVI_WVP_WHALEN_SEGMENTS,
+      configName: 'Whalen WVI/WVP'
+    }
+  ];
+
+  // Insert all rules into the trie
+  for (const def of decoderDefinitions) {
+    for (const prefix of def.prefixes) {
+      const rule: DecoderRule = {
+        id: `${def.manufacturer}_${prefix.toLowerCase()}`,
+        brand: def.brand,
+        manufacturer: def.manufacturer,
+        segments: def.segments,
+        configName: def.configName,
+        conditions: def.conditions
+      };
+      insertRule(root, prefix, rule);
+    }
+  }
+
+  return root;
+}
+
+// Get or initialize the decoder trie (singleton pattern)
+function getDecoderTrie(): TrieNode {
+  if (!decoderTrie) {
+    decoderTrie = buildDecoderTrie();
+    console.log('Decoder trie initialized');
+  }
+  return decoderTrie;
+}
+
+// ============================================================================
+// SUPABASE CONFIGURATION
+// ============================================================================
+
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -1093,57 +1549,35 @@ export async function POST(request: NextRequest) {
 
     const cleanModelNumber = modelNumber.trim().toUpperCase();
 
-    // Define brand configurations with their prefixes
-    const brandConfigs = [
-      {
-        brand: 'ClimateMaster',
-        manufacturer: 'climatemaster',
-        prefixes: ['SA', 'HT'],
-        getModelType: (_modelNumber: string, prefix: string) => prefix
-      },
-      {
-        brand: 'Trane',
-        manufacturer: 'trane',
-        prefixes: ['GEH', 'GEV', 'EXV', 'EXH', 'VSH', 'VSV', 'GET', 'GWS', 'GSK', 'GSJ'],
-        getModelType: (_modelNumber: string, prefix: string) => prefix
-      },
-      {
-        // Might Work - NEeds to be tested and rewritten into several Handleres
-        brand: 'Daikin',
-        manufacturer: 'daikin',
-        prefixes: ['WWCA', 'WWHA', 'WRWA', 'WWSC', 'WSD', 'WSM', 'WSN', 'WSS', 'WST', 'WSL', 'WSR', 'WGC', 'WGD', 'WMHC', 'WMHW', 'WCC'],
-        getModelType: (modelNumber: string, prefix: string) => modelNumber.substring(1, 4)
-      },
-      {
-        brand: 'McQuay',
-        manufacturer: 'McQuay',
-        // TODO:Needs to be updated 
-        prefixes: ['WFDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'WCCH', 'CCH', 'CCW', 'CRH', 'CRW', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS', 'MWH'],
-        getModelType: (_modelNumber: string, prefix: string) => prefix
-      },
-    ];
+    // Use trie-based lookup to find the appropriate decoder rule
+    const trie = getDecoderTrie();
+    const decoderRule = findDecoderRule(trie, cleanModelNumber);
 
-    // Determine model type, brand, and manufacturer based on prefix
-    let brand: string = 'Unknown';
-    let manufacturer: string = 'unknown';
-    let modelType: string = cleanModelNumber.substring(0, 2);
-
-    // Find matching brand configuration
-    for (const config of brandConfigs) {
-      const matchingPrefix = config.prefixes.find(prefix => cleanModelNumber.startsWith(prefix));
-      if (matchingPrefix) {
-        brand = config.brand;
-        manufacturer = config.manufacturer;
-        modelType = config.getModelType(cleanModelNumber, matchingPrefix);
-        break;
-      }
+    if (!decoderRule) {
+      console.log('DEBUG - No decoder rule found for:', cleanModelNumber);
+      return NextResponse.json({
+        modelNumber: cleanModelNumber,
+        brand: 'Unknown',
+        manufacturer: 'unknown',
+        segments: [],
+        confidence: 'low' as const,
+        unmatchedSegments: [{
+          position: '1-' + cleanModelNumber.length,
+          characters: cleanModelNumber,
+          group: 'Unknown',
+          id: 'unknown',
+          attempted: 'No matching decoder rule found'
+        }]
+      });
     }
 
-    console.log('DEBUG - Brand:', brand);
-    console.log('DEBUG - Manufacturer:', manufacturer);
-    console.log('DEBUG - Model Type:', modelType);
-    // Decode the model number using appropriate parsing configuration
-    const decodedResult = await decodeClimateMasterModel(cleanModelNumber, brand, manufacturer, modelType);
+    console.log('DEBUG - Matched decoder rule:', decoderRule.id);
+    console.log('DEBUG - Brand:', decoderRule.brand);
+    console.log('DEBUG - Manufacturer:', decoderRule.manufacturer);
+    console.log('DEBUG - Config:', decoderRule.configName);
+
+    // Decode the model number using the matched rule
+    const decodedResult = await decodeModelWithRule(cleanModelNumber, decoderRule);
 
     return NextResponse.json(decodedResult);
 
@@ -1179,25 +1613,6 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// Query the Supabase "techtag" table for EXV/EXH models with fallback logic
-async function queryDatabaseWithFallback(segmentType: string, manufacturer: string, characters: string, modelType: string): Promise<string | null> {
-  // For EXV/EXH models, try trane_exh first, then fallback to trane
-  if (modelType === 'EXV' || modelType === 'EXH') {
-    // First try with trane_exh
-    let result = await queryDatabase(segmentType, `${manufacturer}_${modelType.toLowerCase()}`, characters);
-    if (result) {
-      return result;
-    }
-
-    // If no result, fallback to trane
-    result = await queryDatabase(segmentType, manufacturer, characters);
-    return result;
-  }
-
-  // For all other models, use the original manufacturer
-  return await queryDatabase(segmentType, manufacturer, characters);
 }
 
 // Query the Supabase "techtag" table for a specific segment
@@ -1248,361 +1663,76 @@ async function queryDatabase(segmentType: string, manufacture: string, character
   }
 }
 
-// Decode model number using character position parsing
-async function decodeClimateMasterModel(
+// ============================================================================
+// MODEL DECODING - Uses the matched decoder rule to parse the model number
+// ============================================================================
+
+// Decode model number using the matched decoder rule
+async function decodeModelWithRule(
   modelNumber: string,
-  brand: string,
-  manufacturer: string,
-  modelType: string
+  rule: DecoderRule
 ): Promise<DecodedResult> {
   const segments: DecodedSegment[] = [];
   const unmatchedSegments: UnmatchedSegment[] = [];
+  const segmentConfig = rule.segments;
 
-  // Define segment configurations for different model types
-  const segmentConfigs = [
-    {
-      // Works
-      modelTypes: ['GEH', 'GEV', 'EXV', 'EXH'],
-      segments: GEH_GEV_SEGMENTS,
-      getConfigName: (modelType: string) =>
-        modelType === 'EXV' || modelType === 'EXH' ? `${modelType} (Trane)` : 'GEH/GEV (Trane)'
-    },
-    {
-      // Works - GETK00911A0AS00H0011C10390B0
-      modelTypes: ['GET'],
-      segments: GET_SEGMENTS,
-      getConfigName: () => 'GET (Crane)'
-    },
-    {
-      // Works - GWSC036A3RBZZZA0AA0000000
-      modelTypes: ['GWS'],
-      segments: GWS_SEGMENTS,
-      getConfigName: () => 'GWS (Trane)'
-    },
-    {
-      // Works
-      modelTypes: ['GSK', 'GSJ'],
-      segments: GSK_SEGMENTS,
-      getConfigName: (modelType: string) => `${modelType} (Trane)`
-    },
-    {
-      // Works
-      modelTypes: ['VSH', 'VSV'],
-      segments: VSH_VSV_SEGMENTS,
-      getConfigName: (modelType: string) => `${modelType} (Trane)`
-    },
-    {
-      /*
-      BUGS: - W addition needs to be able to be handled for all.
-            - Database needs to be cleaned up to handle this
-            - Misspelled characters in DB
-       */
-      modelTypes: ['WCA', 'WHA', 'WRA'],
-      segments: WCA_WHA_WRA_SEGMENTS,
-      getConfigName: () => 'WCA (Daikin)'
-    },
-    { 
-      // Doesn't work - Completely Broken - Doesn't exist in DB
-      // 2. Might work but needs to be tested and rewritten into several handleres
-      modelTypes: ['WSC', 'WSD', 'WSM', 'WSN', 'WSS', 'WST', 'WSL'],
-      segments: WSC_WSD_WSM_WSN_WSS_WST_WSLV_SEGMENTS,
-      getConfigName: () => 'WCA (Daikin)'
-    },
-    {
-      // Doesn't work - Completely Broken - Doesn't exist in DB
-      // 2. Might work but needs to be tested and rewritten into several handleres
-      modelTypes: ['WSR'],
-      segments: WSR_SEGMENTS,
-      getConfigName: () => 'WSR (Daikin)'
-    },
-    {
-      // Doesn't work - Completely Broken - Doesn't exist in DB
-      // 2. Might work but needs to be tested and rewritten into several handleres
-      modelTypes: ['WGC', 'WGD'],
-      segments: WGC_WGD_SEGMENTS,
-      getConfigName: () => 'WGC (Daikin)'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['MHC', 'MHW'],
-      segments: MHC_MHW_SEGMENTS,
-      getConfigName: () => 'MHC (Daikin)'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['WCC',],
-      segments: WCC_SEGMENTS,
-      getConfigName: () => 'WCC (Daikin)'
-    },
-    {
-      /*
-      BUGS: - W addition needs to be able to be handled for all.
-            - Database needs to be cleaned up to handle this
-       */
-      modelTypes: ['WFDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS'],
-      segments: MCQUAY_STANDARD_SEGMENTS,
-      getConfigName: () => 'McQuay'
-    },
-    {
-      /*
-      BUGS: - W addition needs to be able to be handled for all.
-            - Database needs to be cleaned up to handle this
-       */
-      modelTypes: ['CCH', 'CCW', 'CRH', 'CRW'],
-      segments: CCH_CCW_CRH_CRW_SEGMENTS,
-      getConfigName: () => 'McQuay'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['MWH'],
-      segments: MWH_SEGMENTS,
-      getConfigName: () => 'McQuay'
-    },
-    {
-      // Works
-      modelTypes: ['SA'],
-      segments: SA_SEGMENTS,
-      getConfigName: () => 'SA (ClimateMaster)'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['NS', 'ND'],
-      segments: ND_NS_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'WaterFurnace'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['NV'],
-      segments: NV_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'NV'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['3D', 'LS'],
-      segments: SYNERGY_LS_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'WaterFurnace'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['NSW'],
-      segments: NSW_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'NSW'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['NDW'],
-      segments: NDW_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'NDW'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['NL', 'NX'],
-      segments: NL_NX_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'WaterFurnace'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['NS', 'ND'],
-      segments: NS_ND_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'WaterFurnace'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['EW'],
-      segments: EW_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'EW'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['LC_R410A'],
-      segments: LC_R410A_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'LC_R410A'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['NC_R410A'],
-      segments: NC_R410A_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'NC_R410A'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['V3C'],
-      segments: V3C_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'V3C'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['V5C'],
-      segments: V5C_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'V5C'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['V7A', 'V5A', 'V3A'],
-      segments: VXA_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'WaterFurnace'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['UD'],
-      segments: UD_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'UD'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['NB', 'UB'],
-      segments: NB_UB_WATERFURNACE_SEGMENTS,
-      getConfigName: () => 'WaterFurnace'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['CP', 'CF', 'CL', 'ES', 'EP', 'QV', 'LV', 'MC'],
-      segments: STANDARD_BOSCH_SEGMENTS,
-      getConfigName: () => 'Bosch'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['CA'],
-      segments: CA_BOSCH_SEGMENTS,
-      getConfigName: () => 'Bosch'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['SM'],
-      segments: SM_BOSCH_SEGMENTS,
-      getConfigName: () => 'SM'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['WT'],
-      segments: WT_BOSCH_SEGMENTS,
-      getConfigName: () => 'WT'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['BP'],
-      segments: BP_BOSCH_SEGMENTS,
-      getConfigName: () => 'BP'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['EC'],
-      segments: EC_BOSCH_SEGMENTS,
-      getConfigName: () => 'EC'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['AP', 'EC', 'EM', 'ES', 'EV', 'GO', 'AU', 'HE', 'SE'],
-      segments: STANDARD_FLORIDA_HEAT_PUMP_SEGMENTS,
-      getConfigName: () => 'Florida Heat Pump'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['CA', 'CS'],
-      segments: CA_CS_FLORIDA_HEAT_PUMP_SEGMENTS,
-      getConfigName: () => 'Florida Heat Pump'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['GS', 'GT'],
-      segments: GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS,
-      getConfigName: () => 'Florida Heat Pump'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['VI', 'VP', 'VH', 'VS', 'VT', 'VR'],
-      segments: OLDER_WHALEN_SEGMENTS,
-      getConfigName: () => 'Whalen'
-    },
-    {
-      // Doesn't work
-      modelTypes: [' VD', 'VN', 'VI', 'VP', 'VH', 'VS', 'VT'],
-      segments: NEWER_WHALEN_SEGMENTS,
-      getConfigName: () => 'Whalen'
-    },
-    {
-      // Doesn't work
-      modelTypes: ['WVI', 'WVP'],
-      segments: WVI_WVP_WHALEN_SEGMENTS,
-      getConfigName: () => 'Whalen'
-    }
-  ];
-  
-  // Select appropriate parsing configuration based on model type
-  let segmentConfig: ModelSegment[] = CLIMATEMASTER_SEGMENTS;
-  let configName: string = 'HT (ClimateMaster)';
-
-  // Find matching segment configuration
-  for (const config of segmentConfigs) {
-    if (config.modelTypes.includes(modelType)) {
-      segmentConfig = config.segments;
-      configName = config.getConfigName(modelType);
-      break;
-    }
-  }
-
-  // Using selected parsing configuration
-
-  // Parse each segment according to the selected specification
+  // Parse each segment according to the rule's specification
   for (const segment of segmentConfig) {
     // Extract characters for this segment
     const characters = modelNumber.substring(segment.startPos, segment.endPos);
-
-    // Parse segment characters from model number
 
     // Skip if we don't have enough characters
     if (characters.length === 0) {
       continue;
     }
 
-    // Handle 'not_applicable' and 'open_digit' segments without database query
-    if (segment.id === 'not_applicable') {
-      segments.push({
-        position: `${segment.startPos + 1}-${segment.endPos}`, // 1-based position for display
-        characters,
-        meaning: 'Not Applicable',
-        group: segment.group
-      });
+    // Handle special segment types without database query
+    const specialSegmentHandlers: Record<string, string> = {
+      'not_applicable': 'Not Applicable',
+      'open_digit': 'Open Digit',
+      'open_digit_1': 'Open Digit',
+      'open_digit_2': 'Open Digit',
+      'open_digit_3': 'Open Digit',
+      'open_digit_4': 'Open Digit',
+      'not_used': 'Not Used',
+      'standard': 'Standard',
+      'dash': '-',
+      'open': 'Open',
+      'empty': '',
+      'future': 'Future Use',
+      'future_use': 'Future Use',
+      'future_use_21_22': 'Future Use',
+      'future_use_33': 'Future Use',
+      'future_option': 'Future Option'
+    };
+
+    if (segment.id in specialSegmentHandlers) {
+      const meaning = specialSegmentHandlers[segment.id];
+      if (meaning) {  // Only add if there's a meaningful value
+        segments.push({
+          position: `${segment.startPos + 1}-${segment.endPos}`,
+          characters,
+          meaning,
+          group: segment.group
+        });
+      }
       continue;
     }
 
-    if (segment.id === 'open_digit' || segment.id === 'open_digit_2') {
-      segments.push({
-        position: `${segment.startPos + 1}-${segment.endPos}`, // 1-based position for display
-        characters,
-        meaning: 'Open Digit',
-        group: segment.group
-      });
-      continue;
-    }
-
-    if (segment.id === 'not_used') {
-      segments.push({
-        position: `${segment.startPos + 1}-${segment.endPos}`, // 1-based position for display
-        characters,
-        meaning: 'Not Used',
-        group: segment.group
-      });
-      continue;
-    }
-
-    if (segment.id === 'standard') {
-      segments.push({
-        position: `${segment.startPos + 1}-${segment.endPos}`, // 1-based position for display
-        characters,
-        meaning: 'Standard',
-        group: segment.group
-      });
-      continue;
-    }
-
-    const alternativeManufacturer: string = segment.alternativeManufacturer || manufacturer;
-    // Query database for this segment (with fallback for EXV/EXH models)
-    const meaning = await queryDatabaseWithFallback(segment.id, alternativeManufacturer, characters, modelType);
+    // Determine the manufacturer to query (may have alternative)
+    const manufacturerToQuery = segment.alternativeManufacturer || rule.manufacturer;
+    
+    // Query database for this segment
+    const meaning = await queryDatabaseForSegment(
+      segment.id,
+      manufacturerToQuery,
+      characters,
+      rule.id
+    );
 
     if (meaning) {
       segments.push({
-        position: `${segment.startPos + 1}-${segment.endPos}`, // 1-based position for display
+        position: `${segment.startPos + 1}-${segment.endPos}`,
         characters,
         meaning,
         group: segment.group
@@ -1620,59 +1750,94 @@ async function decodeClimateMasterModel(
   }
 
   // Handle any extra characters beyond the expected length
-  const expectedLength = segmentConfig[segmentConfig.length - 1].endPos;
-  if (modelNumber.length > expectedLength) {
-    const extraCharacters = modelNumber.substring(expectedLength);
-    unmatchedSegments.push({
-      position: `${expectedLength + 1}-${modelNumber.length}`,
-      characters: extraCharacters,
-      group: 'Extra Characters',
-      id: 'extra',
-      attempted: 'Beyond expected model number length'
-    });
+  if (segmentConfig.length > 0) {
+    const expectedLength = segmentConfig[segmentConfig.length - 1].endPos;
+    if (modelNumber.length > expectedLength) {
+      const extraCharacters = modelNumber.substring(expectedLength);
+      unmatchedSegments.push({
+        position: `${expectedLength + 1}-${modelNumber.length}`,
+        characters: extraCharacters,
+        group: 'Extra Characters',
+        id: 'extra',
+        attempted: 'Beyond expected model number length'
+      });
+    }
   }
 
   // Calculate confidence based on successful database lookups
-  const confidence = calculateClimateMasterConfidence(segments, unmatchedSegments, modelNumber, segmentConfig);
+  const confidence = calculateConfidence(segments, unmatchedSegments, modelNumber, segmentConfig);
 
   return {
     modelNumber,
-    brand,
-    manufacturer,
+    brand: rule.brand,
+    manufacturer: rule.manufacturer,
     segments,
     confidence,
     unmatchedSegments
   };
 }
 
-function calculateClimateMasterConfidence(
+// Query database for a segment with smart fallback logic
+async function queryDatabaseForSegment(
+  segmentType: string,
+  manufacturer: string,
+  characters: string,
+  ruleId: string
+): Promise<string | null> {
+  // Try primary manufacturer first
+  let result = await queryDatabase(segmentType, manufacturer, characters);
+  if (result) return result;
+
+  // For Trane EXV/EXH models, try specific manufacturer variant first, then generic trane
+  if (ruleId.includes('trane_ex')) {
+    const variant = ruleId.includes('exv') ? 'trane_exv' : 'trane_exh';
+    result = await queryDatabase(segmentType, variant, characters);
+    if (result) return result;
+    
+    result = await queryDatabase(segmentType, 'trane', characters);
+    if (result) return result;
+  }
+
+  // For ClimateMaster SA models, try specific variant
+  if (ruleId.includes('climatemaster_sa')) {
+    result = await queryDatabase(segmentType, 'climatemaster_sa', characters);
+    if (result) return result;
+  }
+
+  return null;
+}
+
+// Calculate confidence based on successful database lookups
+function calculateConfidence(
   segments: DecodedSegment[],
   unmatchedSegments: UnmatchedSegment[],
   modelNumber: string,
   segmentConfig: ModelSegment[]
 ): 'high' | 'medium' | 'low' {
+  if (segmentConfig.length === 0) return 'low';
+  
   const totalSegments = segmentConfig.length;
   const matchedSegments = segments.length;
   const matchPercentage = matchedSegments / totalSegments;
 
-  // For longer models, adjust minimum length requirement based on expected length
-  const isVeryLongModel = segmentConfig === GEH_GEV_SEGMENTS || segmentConfig === GET_SEGMENTS || segmentConfig === GWS_SEGMENTS || segmentConfig === GSK_SEGMENTS;
-  const isMediumModel = segmentConfig === VSH_VSV_SEGMENTS;
-  let minLength: number;
-
-  if (isVeryLongModel) {
-    minLength = 20; // Very long models (35+ digits)
-  } else if (isMediumModel) {
-    minLength = 15; // Medium models (19 digits)
-  } else {
-    minLength = 10; // Legacy models
+  // Calculate expected length from the segment config
+  const expectedLength = segmentConfig[segmentConfig.length - 1].endPos;
+  
+  // Determine minimum acceptable length (allow some tolerance)
+  const minLength = Math.max(10, Math.floor(expectedLength * 0.6));
+  
+  // Check if model number length is reasonable
+  const lengthIsReasonable = modelNumber.length >= minLength;
+  
+  // High confidence: 90%+ segments matched and model number is proper length
+  if (matchPercentage >= 0.9 && lengthIsReasonable && unmatchedSegments.length <= 2) {
+    return 'high';
   }
 
-  // High confidence: 80%+ segments matched and model number is proper length
-  if (matchPercentage >= 0.95 && modelNumber.length >= minLength) return 'high';
-
   // Medium confidence: 60%+ segments matched
-  if (matchPercentage >= 0.6 && matchedSegments >= 4) return 'medium';
+  if (matchPercentage >= 0.6 && matchedSegments >= 4) {
+    return 'medium';
+  }
 
   // Low confidence: everything else
   return 'low';
