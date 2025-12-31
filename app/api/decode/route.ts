@@ -366,7 +366,7 @@ const WSC_WSD_WSM_WSN_WSS_WST_WSLV_SEGMENTS: ModelSegment[] = [
   { startPos: 33, endPos: 34, id: 'extended_warranty', group: 'Extended Warranty', characters: '' }
 ];
 
-const WSR_SEGMENTS: ModelSegment[] = [
+const WSRC_SEGMENTS: ModelSegment[] = [
   { startPos: 0, endPos: 1, id: 'product_category', group: 'Product Category', characters: '' },
   { startPos: 1, endPos: 4, id: 'model_type', group: 'Model Type', characters: '' },
   { startPos: 4, endPos: 5, id: 'design_series', group: 'Design Series', characters: '' },
@@ -1212,7 +1212,7 @@ function buildDecoderTrie(): TrieNode {
 
     // Daikin
     {
-      prefixes: ['WWCA', 'WWHA', 'WRWA'],
+      prefixes: ['WWCA', 'WWHA', 'WWRA'],
       brand: 'Daikin',
       manufacturer: 'daikin',
       segments: WCA_WHA_WRA_SEGMENTS,
@@ -1226,10 +1226,10 @@ function buildDecoderTrie(): TrieNode {
       configName: 'WSx (Daikin)'
     },
     {
-      prefixes: ['WSR'],
+      prefixes: ['WSRC'],
       brand: 'Daikin',
       manufacturer: 'daikin',
-      segments: WSR_SEGMENTS,
+      segments: WSRC_SEGMENTS,
       configName: 'WSR (Daikin)'
     },
     {
@@ -1270,6 +1270,7 @@ function buildDecoderTrie(): TrieNode {
       configName: 'McQuay CCH/CCW/CRH/CRW'
     },
     {
+      // Here is where I am
       prefixes: ['MWH'],
       brand: 'McQuay',
       manufacturer: 'mcquay',
