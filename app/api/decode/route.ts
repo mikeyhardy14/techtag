@@ -1270,7 +1270,6 @@ function buildDecoderTrie(): TrieNode {
       configName: 'McQuay CCH/CCW/CRH/CRW'
     },
     {
-      // Here is where I am
       prefixes: ['MWH'],
       brand: 'McQuay',
       manufacturer: 'mcquay',
@@ -1294,7 +1293,7 @@ function buildDecoderTrie(): TrieNode {
       configName: 'WaterFurnace NV'
     },
     {
-      prefixes: ['3DV', '3DH', 'LSV', 'LSH'],
+      prefixes: ['SDV', 'sDH', 'LSV', 'LSH'],
       brand: 'WaterFurnace',
       manufacturer: 'waterfurnace',
       segments: SYNERGY_LS_WATERFURNACE_SEGMENTS,
@@ -1423,6 +1422,8 @@ function buildDecoderTrie(): TrieNode {
     },
 
     // Florida Heat Pump
+    
+    // Skip Florida Heat Pump for now
     {
       prefixes: ['AP', 'EM', 'EV', 'GO', 'AU', 'HE', 'SE'],
       brand: 'Florida Heat Pump',
