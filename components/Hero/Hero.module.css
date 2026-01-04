@@ -96,10 +96,10 @@
 
 /* Title - Clean, matches decoder header style */
 .title {
-  font-size: clamp(1.75rem, 5vw, 3.25rem);
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
   font-weight: 700;
   color: #FFFFFF;
-  line-height: 1.2;
+  line-height: 1.15;
   letter-spacing: -0.02em;
   margin: 0 0 16px 0;
 }
@@ -213,60 +213,47 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .hero {
-    min-height: 100vh;
-    padding: 80px 0 60px;
+    min-height: 90vh;
+    padding: 100px 0 60px;
   }
-
-  .content {
-    padding: 0 20px;
-  }
-
+  
   .badge {
     font-size: 0.6875rem;
-    padding: 6px 12px;
+    padding: 5px 12px;
     margin-bottom: 20px;
   }
-
+  
   .title {
-    margin-bottom: 16px;
-    line-height: 1.25;
+    margin-bottom: 12px;
   }
-
+  
   .subtitle {
     font-size: 1rem;
-    line-height: 1.5;
-    margin-bottom: 32px;
-    padding: 0;
-    max-width: 100%;
+    margin-bottom: 28px;
+    padding: 0 16px;
   }
-
+  
   .actions {
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 36px;
+    gap: 10px;
+    margin-bottom: 32px;
   }
-
+  
   .primaryButton {
     width: 100%;
-    max-width: 100%;
+    max-width: 260px;
     justify-content: center;
-    padding: 16px 24px;
-    font-size: 1rem;
+    padding: 14px 24px;
   }
-
+  
   .secondaryButton {
-    width: 100%;
-    max-width: 100%;
-    justify-content: center;
-    padding: 14px 20px;
-    font-size: 0.9375rem;
+    padding: 12px 16px;
   }
-
+  
   .trustBar {
-    gap: 20px;
-    padding: 0 8px;
+    gap: 16px;
   }
-
+  
   .trustItem {
     font-size: 0.6875rem;
   }
@@ -274,131 +261,17 @@
 
 @media (max-width: 480px) {
   .hero {
-    min-height: 100vh;
-    padding: 60px 0 40px;
+    min-height: 85vh;
+    padding: 80px 0 48px;
   }
-
+  
   .content {
     padding: 0 16px;
-    max-width: 100%;
   }
-
-  .badge {
-    font-size: 0.625rem;
-    padding: 5px 10px;
-    gap: 6px;
-    margin-bottom: 16px;
-  }
-
-  .badgeDot {
-    width: 5px;
-    height: 5px;
-  }
-
-  .title {
-    font-size: clamp(1.5rem, 8vw, 2rem);
-    line-height: 1.3;
-    margin-bottom: 12px;
-  }
-
-  .subtitle {
-    font-size: 0.9375rem;
-    line-height: 1.5;
-    margin-bottom: 28px;
-  }
-
-  .actions {
-    gap: 10px;
-    margin-bottom: 32px;
-  }
-
-  .primaryButton {
-    padding: 14px 20px;
-    font-size: 0.9375rem;
-  }
-
-  .secondaryButton {
-    padding: 12px 18px;
-    font-size: 0.875rem;
-  }
-
+  
   .trustBar {
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .trustItem {
-    font-size: 0.625rem;
-    gap: 5px;
-  }
-
-  .trustItem svg {
-    width: 12px;
-    height: 12px;
-  }
-}
-
-/* Extra small screens */
-@media (max-width: 375px) {
-  .hero {
-    padding: 50px 0 40px;
-  }
-
-  .content {
-    padding: 0 12px;
-  }
-
-  .title {
-    font-size: clamp(1.375rem, 9vw, 1.75rem);
-  }
-
-  .subtitle {
-    font-size: 0.875rem;
-    margin-bottom: 24px;
-  }
-
-  .primaryButton,
-  .secondaryButton {
-    font-size: 0.875rem;
-  }
-}
-
-/* Landscape mobile optimization */
-@media (max-width: 768px) and (max-height: 500px) and (orientation: landscape) {
-  .hero {
-    min-height: auto;
-    padding: 40px 0;
-  }
-
-  .content {
-    padding: 20px;
-  }
-
-  .title {
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    margin-bottom: 12px;
-  }
-
-  .subtitle {
-    font-size: 0.875rem;
-    margin-bottom: 20px;
-  }
-
-  .actions {
-    flex-direction: row;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-
-  .primaryButton,
-  .secondaryButton {
-    width: auto;
-    padding: 12px 20px;
-    font-size: 0.875rem;
-  }
-
-  .trustBar {
-    gap: 16px;
+    flex-direction: column;
+    gap: 8px;
   }
 }
 
