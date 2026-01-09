@@ -26,16 +26,17 @@ export default function DashboardSidebar({ children }: DashboardSidebarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const sidebarItems: SidebarItem[] = [
-    {
-      id: 'dashboard',
-      label: 'Dashboard',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" fill="currentColor"/>
-        </svg>
-      ),
-      path: `/u/${user?.email?.split('@')[0]}/dashboard`,
-    },
+    // Dashboard item - hidden for now, may be re-enabled later
+    // {
+    //   id: 'dashboard',
+    //   label: 'Dashboard',
+    //   icon: (
+    //     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    //       <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" fill="currentColor"/>
+    //     </svg>
+    //   ),
+    //   path: `/u/${user?.email?.split('@')[0]}/dashboard`,
+    // },
     {
       id: 'profile',
       label: 'Profile',
@@ -67,16 +68,17 @@ export default function DashboardSidebar({ children }: DashboardSidebarProps) {
       ),
       path: `/u/${user?.email?.split('@')[0]}/history`,
     },
-    {
-      id: 'analytics',
-      label: 'Analytics',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z" fill="currentColor"/>
-        </svg>
-      ),
-      path: `/u/${user?.email?.split('@')[0]}/analytics`,
-    },
+    // Analytics item - hidden for now, may be re-enabled later
+    // {
+    //   id: 'analytics',
+    //   label: 'Analytics',
+    //   icon: (
+    //     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    //       <path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z" fill="currentColor"/>
+    //     </svg>
+    //   ),
+    //   path: `/u/${user?.email?.split('@')[0]}/analytics`,
+    // },
     {
       id: 'settings',
       label: 'Settings',

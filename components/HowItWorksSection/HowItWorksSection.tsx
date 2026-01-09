@@ -7,112 +7,124 @@ interface Step {
   id: number;
   title: string;
   description: string;
-  image: string;
-  alt: string;
+  icon: React.ReactNode;
+  details: string[];
 }
 
 const steps: Step[] = [
   {
     id: 1,
-    title: 'Enter Model Number',
-    description: 'Simply type or paste your HVAC model number into our decoder field. We support thousands of different manufacturers and model formats.',
-    image: '/images/step1-input.jpg',
-    alt: 'Step 1: Enter model number'
+    title: 'Enter Your Model Number',
+    description: 'Input any HVAC model number from the equipment nameplate. Our system recognizes formats from major manufacturers including Carrier, Trane, Lennox, and more.',
+    icon: (
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="2"/>
+        <path d="M7 8h10M7 12h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    ),
+    details: ['Paste from clipboard', 'Auto-format detection', 'Multi-brand support']
   },
   {
     id: 2,
-    title: 'AI Analysis',
-    description: 'Our advanced AI system analyzes the model number using our comprehensive database of HVAC nomenclature patterns and manufacturer specifications.',
-    image: '/images/step2-process.jpg',
-    alt: 'Step 2: AI processes data'
+    title: 'Intelligent Pattern Matching',
+    description: 'Our decoder analyzes the nomenclature structure, matching each character position against manufacturer-specific encoding patterns.',
+    icon: (
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M20 5h-6v6h6V5zm-6 8h1.5v1.5H14V13zm1.5 1.5H17V16h-1.5v-1.5zm1.5 1.5v1.5H20V16h-3.5zm0 3H20v1.5h-3.5V19z" fill="currentColor"/>
+      </svg>
+    ),
+    details: ['Position-based decoding', 'Confidence scoring', 'Pattern recognition']
   },
   {
     id: 3,
-    title: 'Get Results',
-    description: 'Receive a detailed breakdown including capacity, efficiency ratings, features, and technical specifications in under a second.',
-    image: '/images/step3-results.jpg',
-    alt: 'Step 3: Get detailed results'
+    title: 'Complete Specifications',
+    description: 'Receive a comprehensive breakdown of your equipment including capacity, voltage, efficiency ratings, configuration, and feature codes.',
+    icon: (
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2"/>
+      </svg>
+    ),
+    details: ['Technical specs', 'Visual breakdown', 'Saved to history']
   }
 ];
 
 export default function HowItWorksSection() {
-  const [selectedStep, setSelectedStep] = useState<number>(1);
-  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [activeStep, setActiveStep] = useState<number>(1);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
 
-  const currentStep = steps.find(step => step.id === selectedStep) || steps[0];
-
-  // Auto-advance functionality
+  // Auto-advance through steps
   useEffect(() => {
-    if (!isHovered) {
-      const interval = setInterval(() => {
-        setSelectedStep(prev => {
-          const nextStep = prev >= steps.length ? 1 : prev + 1;
-          return nextStep;
-        });
-      }, 4000); // Change every 4 seconds
+    if (isPaused) return;
+    
+    const interval = setInterval(() => {
+      setActiveStep(prev => prev >= steps.length ? 1 : prev + 1);
+    }, 5000);
 
-      return () => clearInterval(interval);
-    }
-  }, [isHovered]);
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
   return (
     <section className={styles.section}>
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>
-          <div className={styles.titleBubble}>
-            How It Works
-          </div>
-          <h2 className={styles.subtitle}>
-            Get your HVAC model decoded in just three simple steps
-          </h2>
+          <span className={styles.eyebrow}>How It Works</span>
+          <h2 className={styles.title}>Decode any model number in seconds</h2>
+          <p className={styles.subtitle}>
+            Three simple steps to unlock the complete specifications of your HVAC equipment
+          </p>
         </div>
 
-        {/* Main Content */}
-        <div className={styles.content}>
-          {/* Left Side - Timeline */}
-          <div 
-            className={styles.timelineContainer}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <div className={styles.timeline}>
-              <div className={styles.timelineLine}></div>
-              {steps.map((step, index) => (
-                <div key={step.id} className={styles.timelineItem}>
-                  <div 
-                    className={`${styles.stepCircle} ${selectedStep === step.id ? styles.stepCircleActive : ''}`}
-                    onClick={() => setSelectedStep(step.id)}
-                  >
-                    {step.id}
-                  </div>
-                  <div className={`${styles.stepContent} ${selectedStep === step.id ? styles.stepContentActive : ''}`}>
-                    <h3 
-                      className={`${styles.stepTitle} ${selectedStep === step.id ? styles.stepTitleActive : ''}`}
-                      onClick={() => setSelectedStep(step.id)}
-                    >
-                      {step.title}
-                    </h3>
-                    <div className={`${styles.stepDescription} ${selectedStep === step.id ? styles.stepDescriptionExpanded : ''}`}>
-                      <p>{step.description}</p>
-                    </div>
-                  </div>
+        {/* Steps Grid */}
+        <div 
+          className={styles.stepsGrid}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {steps.map((step) => (
+            <div 
+              key={step.id}
+              className={`${styles.stepCard} ${activeStep === step.id ? styles.stepCardActive : ''}`}
+              onClick={() => setActiveStep(step.id)}
+            >
+              {/* Step Number Badge */}
+              <div className={styles.stepBadge}>
+                <span className={styles.stepNumber}>{step.id}</span>
+              </div>
+
+              {/* Icon */}
+              <div className={styles.stepIcon}>
+                {step.icon}
+              </div>
+
+              {/* Content */}
+              <h3 className={styles.stepTitle}>{step.title}</h3>
+              <p className={styles.stepDescription}>{step.description}</p>
+
+              {/* Details List */}
+              <ul className={styles.stepDetails}>
+                {step.details.map((detail, i) => (
+                  <li key={i}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+
+              {/* Progress Indicator for Active Step */}
+              {activeStep === step.id && !isPaused && (
+                <div className={styles.progressBar}>
+                  <div className={styles.progressFill}></div>
                 </div>
-              ))}
+              )}
             </div>
-          </div>
-
-          {/* Right Side - Image */}
-          <div className={styles.imageContainer}>
-            <img 
-              src={currentStep.image}
-              alt={currentStep.alt}
-              className={styles.stepImage}
-              key={currentStep.id} // Force re-render for smooth transition
-            />
-          </div>
+          ))}
         </div>
+
       </div>
     </section>
   );
-} 
+}

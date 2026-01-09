@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -29,15 +30,22 @@ export default function LoginPage() {
       }
 
       if (data.user) {
+        // Set redirecting state to hide the page during navigation
+        setIsRedirecting(true);
         // Create username from email for URL
         const username = email.split("@")[0];
-        router.push(`/u/${username}/dashboard`);
+        router.push(`/u/${username}/decode`);
       }
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred");
       setIsSubmitting(false);
     }
   };
+
+  // Show nothing while redirecting to prevent navbar flash
+  if (isRedirecting) {
+    return null;
+  }
 
   return (
     <div className={styles.container}>

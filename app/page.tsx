@@ -5,23 +5,19 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider/AuthProvider';
 import Hero from '@/components/Hero/Hero';
 import HowItWorksSection from '@/components/HowItWorksSection/HowItWorksSection';
+import Footer from '@/components/Footer/Footer';
 
 export default function HomePage() {
   const router = useRouter();
   const { user, loading } = useAuth();
 
   useEffect(() => {
-    // If user is authenticated, redirect to their dashboard
+    // If user is authenticated, redirect to the decoder
     if (!loading && user) {
       const username = user.email?.split('@')[0] || 'user';
-      router.push(`/u/${username}/dashboard`);
+      router.push(`/u/${username}/decode`);
     }
   }, [user, loading, router]);
-
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Form submission logic will be added later
-  };
 
   // Show loading state while checking authentication
   if (loading) {
@@ -51,7 +47,7 @@ export default function HomePage() {
         <Hero />
 
         {/* About Us Section */}
-        <section className="about-section">
+        {/* <section className="about-section">
           <div className="container">
             <div className="section-header">
               <h2 className="section-title">About TechTag</h2>
@@ -73,7 +69,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* How It Works Section */}
         <HowItWorksSection />
@@ -82,224 +78,109 @@ export default function HomePage() {
         <section className="services-section">
           <div className="container">
             <div className="section-header">
-              <h2 className="section-title">Our Services</h2>
+              <span className="section-eyebrow">Platform Capabilities</span>
+              <h2 className="section-title">Built for HVAC Professionals</h2>
               <p className="section-description">
-                Comprehensive HVAC solutions for professionals and businesses
+                Streamline your workflow with intelligent nomenclature decoding and comprehensive equipment insights
               </p>
             </div>
             
             <div className="services-grid">
-              <div className="service-card">
-                <div className="service-icon">🔍</div>
-                <h3 className="service-title">Model Number Decoding</h3>
+              {/* Featured Service */}
+              <div className="service-card service-card-featured">
+                <div className="service-badge">Core Feature</div>
+                <div className="service-icon-wrapper service-icon-primary">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M20 5h-6v6h6V5zm-6 8h1.5v1.5H14V13zm1.5 1.5H17V16h-1.5v-1.5zm1.5 1.5v1.5H20V16h-3.5zm0 3H20v1.5h-3.5V19z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <h3 className="service-title">Intelligent Model Decoder</h3>
                 <p className="service-description">
-                  Instant breakdown of any HVAC model number with detailed specifications, 
-                  capacity ratings, and technical features.
+                  Instantly decode any HVAC model number with AI-powered analysis. Extract specifications, capacity ratings, refrigerant types, and technical features from nomenclature patterns across all major manufacturers.
+                </p>
+                <ul className="service-features">
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/></svg>
+                    Multi-brand recognition
+                  </li>
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/></svg>
+                    Detailed spec breakdown
+                  </li>
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/></svg>
+                    Confidence scoring
+                  </li>
+                </ul>
+              </div>
+
+              <div className="service-card">
+                <div className="service-icon-wrapper">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0013 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <h3 className="service-title">Decode History</h3>
+                <p className="service-description">
+                  Every decode is automatically saved to your secure history. Search, filter, and reference past lookups instantly—no need to re-enter model numbers.
                 </p>
               </div>
 
               <div className="service-card">
-                <div className="service-icon">📊</div>
-                <h3 className="service-title">Batch Processing</h3>
+                <div className="service-icon-wrapper">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <h3 className="service-title">Manufacturer Coverage</h3>
                 <p className="service-description">
-                  Upload multiple model numbers at once for bulk processing. 
-                  Perfect for contractors and facility managers.
+                  Comprehensive support for industry-leading brands including Carrier, Trane, Lennox, Goodman, Rheem, York, Daikin, and dozens more manufacturers.
                 </p>
               </div>
 
               <div className="service-card">
-                <div className="service-icon">🏢</div>
-                <h3 className="service-title">Enterprise Solutions</h3>
+                <div className="service-icon-wrapper">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <h3 className="service-title">Secure & Private</h3>
                 <p className="service-description">
-                  Custom API integration and enterprise-grade solutions for 
-                  large organizations and software developers.
+                  Enterprise-grade security with encrypted data storage. Your equipment data and decode history remain confidential and protected.
                 </p>
               </div>
 
               <div className="service-card">
-                <div className="service-icon">📚</div>
-                <h3 className="service-title">Database Access</h3>
+                <div className="service-icon-wrapper">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <h3 className="service-title">Customizable Profile</h3>
                 <p className="service-description">
-                  Access our comprehensive database of HVAC nomenclature patterns 
-                  and manufacturer specifications.
+                  Personalize your experience with custom settings, notification preferences, and workspace configurations tailored to your workflow.
                 </p>
               </div>
 
-              <div className="service-card">
-                <div className="service-icon">🎓</div>
-                <h3 className="service-title">Training & Support</h3>
+              <div className="service-card service-card-cta">
+                <div className="service-icon-wrapper service-icon-accent">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <h3 className="service-title">API Access</h3>
                 <p className="service-description">
-                  Professional training sessions and dedicated support for 
-                  teams looking to maximize their HVAC knowledge.
+                  Integrate TechTag directly into your existing systems. RESTful API with comprehensive documentation for seamless automation.
                 </p>
-              </div>
-
-              <div className="service-card">
-                <div className="service-icon">📱</div>
-                <h3 className="service-title">Mobile App</h3>
-                <p className="service-description">
-                  Decode model numbers on-the-go with our mobile application. 
-                  Available for iOS and Android devices.
-                </p>
+                <span className="service-coming-soon">Coming Soon</span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Contact Us Section */}
-        <section className="contact-section">
-          <div className="container">
-            <div className="section-header">
-              <h2 className="section-title">Get In Touch</h2>
-              <p className="section-description">
-                Ready to get started? Have questions? We'd love to hear from you.
-              </p>
-            </div>
-            
-            <div className="contact-content">
-              <div className="contact-info">
-                <div className="contact-item">
-                  <div className="contact-icon">📧</div>
-                  <div className="contact-details">
-                    <h3>Email</h3>
-                    <p>support@techtag.com</p>
-                  </div>
-                </div>
-                
-                <div className="contact-item">
-                  <div className="contact-icon">📞</div>
-                  <div className="contact-details">
-                    <h3>Phone</h3>
-                    <p>1-800-TECHTAG</p>
-                  </div>
-                </div>
-                
-                <div className="contact-item">
-                  <div className="contact-icon">🏢</div>
-                  <div className="contact-details">
-                    <h3>Office</h3>
-                    <p>
-                      123 Tech Street<br />
-                      Silicon Valley, CA 94000
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="contact-form-container">
-                <form className="contact-form" onSubmit={handleFormSubmit}>
-                  <div className="form-group">
-                    <label htmlFor="name">Name</label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      placeholder="Your full name"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      placeholder="your.email@company.com"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label htmlFor="subject">Subject</label>
-                    <input
-                      type="text"
-                      id="subject"
-                      name="subject"
-                      required
-                      placeholder="How can we help?"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label htmlFor="message">Message</label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={5}
-                      required
-                      placeholder="Tell us more about your needs..."
-                    />
-                  </div>
-                  
-                  <button type="submit" className="submit-button">
-                    <span>Send Message</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M2 21l21-9L2 3v7l15 2-15 2v7z" fill="currentColor"/>
-                    </svg>
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
-      {/* Footer */}
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-section">
-              <div className="footer-brand">
-                <h4>TechTag</h4>
-                <p>
-                  The industry's leading HVAC nomenclature decoder. 
-                  Fast, accurate, and reliable model number breakdowns.
-                </p>
-              </div>
-            </div>
-            
-            <div className="footer-section">
-              <h4>Quick Links</h4>
-              <ul className="footer-links">
-                <li><a href="/decode">Decode Now</a></li>
-                <li><a href="/history">History</a></li>
-                <li><a href="/subscribe">Pricing</a></li>
-                <li><a href="/login">Sign In</a></li>
-              </ul>
-            </div>
-            
-            <div className="footer-section">
-              <h4>Support</h4>
-              <ul className="footer-links">
-                <li>support@techtag.com</li>
-                <li>1-800-TECHTAG</li>
-                <li><a href="#faq">FAQ</a></li>
-                <li><a href="#docs">Documentation</a></li>
-              </ul>
-            </div>
-
-            <div className="footer-section">
-              <h4>Company</h4>
-              <ul className="footer-links">
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#careers">Careers</a></li>
-                <li><a href="#privacy">Privacy Policy</a></li>
-                <li><a href="#terms">Terms of Service</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="footer-bottom">
-            <p>&copy; {new Date().getFullYear()} TechTag. All rights reserved.</p>
-            <div className="footer-badges">
-              <span className="badge">Industry Leading</span>
-              <span className="badge">ISO Certified</span>
-              <span className="badge">24/7 Support</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       <style jsx>{`
         .main-content {
@@ -317,11 +198,6 @@ export default function HomePage() {
         .services-section {
           padding: 120px 0;
           background: var(--surface);
-        }
-
-        .contact-section {
-          padding: 120px 0;
-          background: var(--gray-50);
         }
 
         .section-header {
@@ -392,21 +268,36 @@ export default function HomePage() {
         }
 
         /* Services Section */
+        .section-eyebrow {
+          display: inline-block;
+          font-size: 0.85rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: var(--tech-blue);
+          margin-bottom: 16px;
+          padding: 8px 16px;
+          background: rgba(59, 130, 246, 0.1);
+          border-radius: var(--radius-lg);
+        }
+
         .services-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-          gap: 32px;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px;
         }
 
         .service-card {
           background: var(--surface);
-          padding: 40px 32px;
-          border-radius: var(--radius-2xl);
+          padding: 32px 28px;
+          border-radius: var(--radius-xl);
           border: 1px solid var(--border);
-          text-align: center;
-          transition: all var(--transition-normal);
+          text-align: left;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           overflow: hidden;
+          display: flex;
+          flex-direction: column;
         }
 
         .service-card::before {
@@ -415,33 +306,105 @@ export default function HomePage() {
           top: 0;
           left: 0;
           right: 0;
-          height: 4px;
-          background: linear-gradient(135deg, var(--tech-blue) 0%, var(--tech-indigo) 100%);
+          height: 3px;
+          background: linear-gradient(90deg, var(--tech-blue) 0%, var(--tech-indigo) 100%);
           transform: scaleX(0);
-          transition: transform var(--transition-normal);
+          transform-origin: left;
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .service-card:hover {
-          transform: translateY(-8px);
-          box-shadow: var(--shadow-xl);
-          border-color: var(--tech-blue);
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+          border-color: rgba(59, 130, 246, 0.3);
         }
 
         .service-card:hover::before {
           transform: scaleX(1);
         }
 
-        .service-icon {
-          font-size: 3.5rem;
-          margin-bottom: 24px;
-          line-height: 1;
+        .service-card-featured {
+          grid-column: span 1;
+          grid-row: span 2;
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(99, 102, 241, 0.03) 100%);
+          border-color: rgba(59, 130, 246, 0.2);
+          padding: 40px 32px;
+        }
+
+        .service-card-featured::before {
+          height: 4px;
+          transform: scaleX(1);
+          background: linear-gradient(90deg, var(--tech-blue) 0%, #8B5CF6 50%, var(--tech-indigo) 100%);
+        }
+
+        .service-card-featured .service-title {
+          font-size: 1.5rem;
+        }
+
+        .service-card-featured .service-description {
+          font-size: 1.05rem;
+          line-height: 1.7;
+        }
+
+        .service-card-cta {
+          background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+          border-style: dashed;
+        }
+
+        .service-badge {
+          display: inline-block;
+          font-size: 0.7rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: white;
+          padding: 6px 12px;
+          background: linear-gradient(135deg, var(--tech-blue) 0%, var(--tech-indigo) 100%);
+          border-radius: var(--radius-md);
+          margin-bottom: 20px;
+        }
+
+        .service-icon-wrapper {
+          width: 56px;
+          height: 56px;
+          background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-50) 100%);
+          border-radius: var(--radius-lg);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 20px;
+          color: var(--text-secondary);
+          transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-icon-wrapper {
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
+          color: var(--tech-blue);
+        }
+
+        .service-icon-primary {
+          width: 64px;
+          height: 64px;
+          background: linear-gradient(135deg, var(--tech-blue) 0%, var(--tech-indigo) 100%);
+          color: white;
+        }
+
+        .service-card-featured:hover .service-icon-primary {
+          background: linear-gradient(135deg, var(--tech-blue) 0%, #8B5CF6 100%);
+          color: white;
+          transform: scale(1.05);
+        }
+
+        .service-icon-accent {
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
+          color: var(--tech-blue);
         }
 
         .service-title {
-          font-size: 1.5rem;
+          font-size: 1.2rem;
           font-weight: 600;
           color: var(--text-primary);
-          margin-bottom: 16px;
+          margin-bottom: 12px;
           line-height: 1.3;
         }
 
@@ -449,240 +412,59 @@ export default function HomePage() {
           color: var(--text-secondary);
           line-height: 1.6;
           margin: 0;
+          font-size: 0.95rem;
+          flex-grow: 1;
         }
 
-        /* Contact Section */
-        .contact-content {
-          display: grid;
-          grid-template-columns: 1fr 1.2fr;
-          gap: 80px;
-          align-items: start;
-        }
-
-        .contact-info {
+        .service-features {
+          list-style: none;
+          padding: 0;
+          margin: 24px 0 0 0;
           display: flex;
           flex-direction: column;
-          gap: 32px;
+          gap: 12px;
         }
 
-        .contact-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 20px;
-          padding: 24px;
-          background: var(--surface);
-          border-radius: var(--radius-lg);
-          border: 1px solid var(--border);
-          transition: all var(--transition-normal);
-        }
-
-        .contact-item:hover {
-          border-color: var(--tech-blue);
-          box-shadow: var(--shadow-md);
-        }
-
-        .contact-icon {
-          font-size: 2rem;
-          width: 60px;
-          height: 60px;
-          background: linear-gradient(135deg, var(--tech-blue) 0%, var(--tech-indigo) 100%);
-          border-radius: var(--radius-lg);
+        .service-features li {
           display: flex;
           align-items: center;
-          justify-content: center;
+          gap: 10px;
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+          font-weight: 500;
+        }
+
+        .service-features li svg {
+          color: var(--tech-blue);
           flex-shrink: 0;
         }
 
-        .contact-details h3 {
-          font-size: 1.25rem;
+        .service-coming-soon {
+          display: inline-block;
+          margin-top: 20px;
+          font-size: 0.8rem;
           font-weight: 600;
-          color: var(--text-primary);
-          margin: 0 0 8px 0;
-        }
-
-        .contact-details p {
-          color: var(--text-secondary);
-          margin: 0;
-          line-height: 1.5;
-        }
-
-        /* Contact Form */
-        .contact-form-container {
-          background: var(--surface);
-          padding: 48px;
-          border-radius: var(--radius-2xl);
-          border: 1px solid var(--border);
-          box-shadow: var(--shadow-lg);
-        }
-
-        .contact-form {
-          display: flex;
-          flex-direction: column;
-          gap: 24px;
-        }
-
-        .form-group {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .form-group label {
-          font-weight: 600;
-          color: var(--text-primary);
-          font-size: 0.95rem;
-        }
-
-        .form-group input,
-        .form-group textarea {
-          padding: 16px 20px;
-          border: 2px solid var(--border);
-          border-radius: var(--radius-lg);
-          font-size: 1rem;
-          font-family: inherit;
-          background: var(--surface);
-          color: var(--text-primary);
-          transition: all var(--transition-normal);
-          resize: vertical;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-          outline: none;
-          border-color: var(--tech-blue);
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
           color: var(--text-muted);
-        }
-
-        .submit-button {
-          background: linear-gradient(135deg, var(--tech-blue) 0%, var(--tech-indigo) 100%);
-          color: white;
-          border: none;
-          padding: 20px 32px;
-          border-radius: var(--radius-lg);
-          font-size: 1.1rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all var(--transition-normal);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          margin-top: 16px;
-        }
-
-        .submit-button:hover {
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-xl);
-          background: linear-gradient(135deg, var(--tech-blue-hover) 0%, var(--tech-blue) 100%);
-        }
-
-        .submit-button:active {
-          transform: translateY(0);
-        }
-
-        /* Footer */
-        .footer {
-          background: var(--gray-900);
-          color: white;
-          padding: 80px 0 0 0;
-        }
-
-        .footer-content {
-          display: grid;
-          grid-template-columns: 2fr repeat(3, 1fr);
-          gap: 48px;
-          margin-bottom: 48px;
-        }
-
-        .footer-section h4 {
-          font-size: 1.25rem;
-          font-weight: 600;
-          margin-bottom: 24px;
-          color: white;
-        }
-
-        .footer-brand p {
-          color: var(--gray-400);
-          line-height: 1.6;
-          margin: 0;
-        }
-
-        .footer-links {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .footer-links a {
-          color: var(--gray-400);
-          text-decoration: none;
-          transition: color var(--transition-normal);
-        }
-
-        .footer-links a:hover {
-          color: var(--tech-blue);
-        }
-
-        .footer-links li:not(:has(a)) {
-          color: var(--gray-400);
-        }
-
-        .footer-bottom {
-          border-top: 1px solid var(--gray-700);
-          padding: 32px 0;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 24px;
-        }
-
-        .footer-bottom p {
-          color: var(--gray-400);
-          margin: 0;
-        }
-
-        .footer-badges {
-          display: flex;
-          gap: 16px;
-          flex-wrap: wrap;
-        }
-
-        .badge {
-          background: var(--gray-800);
-          color: var(--gray-300);
-          padding: 8px 16px;
-          border-radius: var(--radius-lg);
-          font-size: 0.85rem;
-          font-weight: 500;
-          border: 1px solid var(--gray-700);
+          padding: 6px 14px;
+          background: var(--gray-200);
+          border-radius: var(--radius-md);
         }
 
         /* Responsive Design */
-        @media (max-width: 1024px) {
-          .contact-content {
-            grid-template-columns: 1fr;
-            gap: 60px;
+        @media (max-width: 1200px) {
+          .services-grid {
+            grid-template-columns: repeat(2, 1fr);
           }
 
-          .footer-content {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 40px;
+          .service-card-featured {
+            grid-column: span 2;
+            grid-row: span 1;
           }
         }
 
         @media (max-width: 768px) {
           .about-section,
-          .services-section,
-          .contact-section {
+          .services-section {
             padding: 80px 0;
           }
 
@@ -696,51 +478,52 @@ export default function HomePage() {
 
           .services-grid {
             grid-template-columns: 1fr;
-            gap: 24px;
+            gap: 20px;
+          }
+
+          .service-card-featured {
+            grid-column: span 1;
+            grid-row: span 1;
+            padding: 32px 24px;
+          }
+
+          .service-card-featured .service-title {
+            font-size: 1.3rem;
+          }
+
+          .service-card-featured .service-description {
+            font-size: 1rem;
           }
 
           .service-card {
-            padding: 32px 24px;
+            padding: 28px 24px;
           }
 
-          .contact-form-container {
-            padding: 32px 24px;
-          }
-
-          .contact-info {
-            gap: 24px;
-          }
-
-          .footer-content {
-            grid-template-columns: 1fr;
-            gap: 32px;
-            text-align: center;
-          }
-
-          .footer-bottom {
-            flex-direction: column;
-            text-align: center;
+          .service-icon-primary {
+            width: 56px;
+            height: 56px;
           }
         }
 
         @media (max-width: 480px) {
-          .services-grid {
-            grid-template-columns: 1fr;
-          }
-
           .service-card {
             padding: 24px 20px;
           }
 
-          .contact-form-container {
-            padding: 24px 20px;
+          .service-card-featured {
+            padding: 28px 20px;
           }
 
-          .submit-button {
-            padding: 16px 24px;
+          .service-features {
+            gap: 10px;
+          }
+
+          .service-features li {
+            font-size: 0.85rem;
           }
         }
       `}</style>
     </>
   );
 }
+

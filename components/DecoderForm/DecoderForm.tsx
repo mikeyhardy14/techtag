@@ -48,9 +48,9 @@ const MANUFACTURER_PATTERNS: ManufacturerPattern[] = [
 
 const EXAMPLE_MODELS = [
   { model: 'HTH024A1C00ALK', brand: 'ClimateMaster', description: 'Water Source Heat Pump' },
-  { model: 'HT024-A1C2', brand: 'ClimateMaster', description: 'Horizontal Unit' },
-  { model: '24ACC636A003', brand: 'Carrier', description: 'Infinity Series AC' },
-  { model: 'GSXC180601', brand: 'Goodman', description: '18 SEER Condenser' },
+  { model: 'GEHE01547A3FB0LFG03125140000000000B', brand: 'Trane', description: 'Horizontal Unit' },
+  // { model: '24ACC636A003', brand: 'Carrier', description: 'Infinity Series AC' },
+  // { model: 'GSXC180601', brand: 'Goodman', description: '18 SEER Condenser' },
 ];
 
 const COMMON_MISTAKES = [
@@ -308,15 +308,91 @@ export default function DecoderForm({ initialQuery = '' }: DecoderFormProps) {
 
   const getGroupColor = (group: string): string => {
     const colors: { [key: string]: string } = {
+      // Core identification
       'Product Type': '#3B82F6',
+      'Model Type': '#3B82F6',
       'Model Series': '#10B981',
       'Configuration': '#F59E0B',
+      'Airflow Configuration': '#F59E0B',
+      
+      // Capacity & sizing
       'Capacity': '#EF4444',
+      'Nominal Capacity': '#EF4444',
+      'Unit Size': '#EF4444',
+      
+      // Efficiency & performance
       'Efficiency': '#8B5CF6',
+      'SEER Rating': '#8B5CF6',
+      
+      // Electrical
+      'Voltage': '#EC4899',
+      'Electric Heat': '#DB2777',
+      'Disconnect/Circuit Breaker': '#BE185D',
+      'Convenience Outlet': '#9D174D',
+      'ON/OFF Switch': '#831843',
+      
+      // Controls & sensors
+      'Controls': '#06B6D4',
+      'Refrigeration Controls': '#0891B2',
+      'System Monitoring Controls': '#0E7490',
+      'Communications Options': '#155E75',
+      'Tstat Location': '#164E63',
+      'Fault Sensors': '#083344',
+      'Temperature Sensor': '#0D9488',
+      'Smoke Detector': '#14B8A6',
+      
+      // Air handling
+      'Supply Air': '#22C55E',
+      'Supply-Air Arrangement': '#22C55E',
+      'Return Air': '#16A34A',
+      'Return-Air Arrangement': '#16A34A',
+      'Fresh Air Selection': '#15803D',
+      'Outside Air Option': '#166534',
+      'Blower Configuration': '#4ADE80',
+      'Supply Fan/Drive Type/Motor': '#86EFAC',
+      
+      // Heat & refrigeration
+      'Heat Exchanger': '#F97316',
+      'Heat Exchanger Options': '#EA580C',
+      'Refrigeration Sequence': '#C2410C',
+      'Freeze Protection': '#7C2D12',
+      
+      // Design & sequence
+      'Design Sequence': '#A855F7',
+      'Development Sequence': '#9333EA',
+      'Minor Design Sequence': '#7E22CE',
+      'Service Sequence': '#6B21A8',
+      'Revision Level': '#581C87',
+      
+      // Physical features
+      'Filter Type': '#64748B',
+      'Drain Pan': '#475569',
+      'Acoustic Arrangement': '#334155',
+      'Cabinet Insulation': '#1E293B',
+      'Insulation': '#0F172A',
+      'Paint Color': '#78716C',
+      'Factory Configuration': '#57534E',
+      
+      // Water & piping
+      'Water Circuit Options': '#0EA5E9',
+      'Piping Arrangement': '#0284C7',
+      'Riser Type': '#0369A1',
+      'Supply Riser': '#075985',
+      'Return Riser': '#0C4A6E',
+      'Condensate Riser': '#082F49',
+      'Riser Length': '#164E63',
+      
+      // Mounting & access
+      'Unit Mounted Disconnect': '#84CC16',
+      'Through the Base Provisions': '#65A30D',
+      'Hinged Service Access and Filters': '#4D7C0F',
+      
+      // Generic
       'Features': '#06B6D4',
       'Options': '#F97316',
       'Version': '#84CC16',
-      'Voltage': '#EC4899',
+      'Open Digit': '#94A3B8',
+      'Does Not Apply': '#CBD5E1',
     };
     return colors[group] || '#6B7280';
   };
@@ -525,7 +601,7 @@ export default function DecoderForm({ initialQuery = '' }: DecoderFormProps) {
             </div>
 
             {/* Key Specs - Values Prominent */}
-            <div className={styles.specsSection}>
+            {/* <div className={styles.specsSection}>
               <div className={styles.specsHeader}>
                 <h3 className={styles.specsTitle}>Key Specifications</h3>
                 {result.segments.length > 4 && (
@@ -558,7 +634,7 @@ export default function DecoderForm({ initialQuery = '' }: DecoderFormProps) {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* Visual Breakdown - Simplified with Hover States */}
             <div className={styles.visualSection}>
@@ -605,6 +681,7 @@ export default function DecoderForm({ initialQuery = '' }: DecoderFormProps) {
                     <code className={styles.legendCode}>{segment.characters}</code>
                     <span className={styles.legendPos}>{getPositionLabel(segment)}</span>
                     <span className={styles.legendMeaning}>{segment.meaning}</span>
+                    <span className={styles.legendGroup}>{segment.group}</span>
                   </div>
                 ))}
               </div>

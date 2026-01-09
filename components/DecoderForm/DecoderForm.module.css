@@ -803,6 +803,9 @@
   padding: 24px 32px;
   background: #F8FAFC;
   border-bottom: 1px solid #E2E8F0;
+  position: sticky;
+  top: 0;
+  z-index: 25;
 }
 
 .visualHeader {
@@ -834,6 +837,7 @@
   padding: 16px 20px;
   margin-bottom: 16px;
   overflow-x: auto;
+  scroll-behavior: smooth;
 }
 
 .positionRuler {
@@ -937,6 +941,19 @@
   font-size: 0.8125rem;
   color: #64748B;
   flex: 1;
+}
+
+.legendGroup {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--seg-color);
+  background: color-mix(in srgb, var(--seg-color) 10%, transparent);
+  padding: 3px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 /* ============================================
