@@ -1,0 +1,524 @@
+.contactPage {
+  min-height: 100vh;
+  background: var(--background);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Hero Section */
+.heroSection {
+  position: relative;
+  padding: 120px 0 80px;
+  overflow: hidden;
+}
+
+.heroBackground {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.heroGradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.15), transparent);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.heroEyebrow {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--tech-blue);
+  margin-bottom: 20px;
+  padding: 8px 20px;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 100px;
+}
+
+.heroTitle {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 20px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.heroDescription {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Main Section */
+.mainSection {
+  padding: 80px 0 120px;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 80px;
+  align-items: start;
+}
+
+/* Info Column */
+.infoColumn {
+  position: sticky;
+  top: 100px;
+}
+
+.infoHeader {
+  margin-bottom: 32px;
+}
+
+.infoHeader h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+
+.infoHeader p {
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.contactCards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.contactCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.contactCard:hover {
+  border-color: var(--tech-blue);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--tech-blue) 0%, var(--tech-indigo) 100%);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.cardContent h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.cardContent p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+}
+
+.cardLink {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--tech-blue);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.cardLink:hover {
+  color: var(--tech-indigo);
+}
+
+.cardAddress {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Enterprise CTA */
+.enterpriseCta {
+  padding: 28px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.ctaBadge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: white;
+  padding: 5px 10px;
+  background: linear-gradient(135deg, var(--tech-blue) 0%, var(--tech-indigo) 100%);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+
+.enterpriseCta h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+}
+
+.enterpriseCta p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0 0 20px;
+  line-height: 1.6;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--tech-blue);
+  text-decoration: none;
+  padding: 12px 20px;
+  background: white;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--tech-blue);
+  transition: all 0.2s;
+}
+
+.ctaButton:hover {
+  background: var(--tech-blue);
+  color: white;
+}
+
+/* Form Column */
+.formColumn {
+  position: relative;
+}
+
+.formContainer {
+  background: var(--surface);
+  padding: 48px;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.08);
+}
+
+.formHeader {
+  margin-bottom: 32px;
+}
+
+.formHeader h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+}
+
+.formHeader p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: var(--background);
+  color: var(--text-primary);
+  transition: all 0.2s;
+  resize: vertical;
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: var(--tech-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.formGroup input::placeholder,
+.formGroup textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.formGroup select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 48px;
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, var(--tech-blue) 0%, var(--tech-indigo) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(59, 130, 246, 0.4);
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Success State */
+.successState {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.successIcon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin: 0 auto 24px;
+}
+
+.successState h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+
+.successState p {
+  color: var(--text-secondary);
+  margin: 0 0 32px;
+  line-height: 1.6;
+}
+
+.resetButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  background: var(--gray-100);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.resetButton:hover {
+  background: var(--gray-200);
+}
+
+/* FAQ Section */
+.faqSection {
+  padding: 80px 0 120px;
+  background: var(--gray-50);
+}
+
+.faqHeader {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.faqHeader h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+
+.faqHeader p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.faqItem {
+  padding: 28px;
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+}
+
+.faqItem h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+
+.faqItem p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .infoColumn {
+    position: relative;
+    top: 0;
+  }
+
+  .contactCards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 80px 0 60px;
+  }
+
+  .mainSection {
+    padding: 60px 0 80px;
+  }
+
+  .contactCards {
+    grid-template-columns: 1fr;
+  }
+
+  .formContainer {
+    padding: 32px 24px;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .faqGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .formContainer {
+    padding: 24px 20px;
+  }
+
+  .enterpriseCta {
+    padding: 24px 20px;
+  }
+}
+

@@ -451,6 +451,10 @@
   font-weight: 600;
   color: #1E293B;
   letter-spacing: 0.03em;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .exampleBrand {
