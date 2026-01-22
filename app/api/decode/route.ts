@@ -4,16 +4,16 @@ import { createClient } from '@supabase/supabase-js';
 // Helper to get user from Authorization header (optional - for saving history)
 async function getOptionalUserFromRequest(request: Request) {
   const authHeader = request.headers.get('Authorization');
-  
+
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return { user: null, supabase: null };
   }
 
   const token = authHeader.replace('Bearer ', '');
-  
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-  
+
   const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     global: {
       headers: {
@@ -23,7 +23,7 @@ async function getOptionalUserFromRequest(request: Request) {
   });
 
   const { data: { user } } = await supabase.auth.getUser();
-  
+
   return { user, supabase };
 }
 
@@ -112,12 +112,12 @@ function findDecoderRule(root: TrieNode, modelNumber: string): DecoderRule | nul
   // Walk through the trie character-by-character
   for (let i = 0; i < upperModel.length; i++) {
     const char = upperModel[i];
-    
+
     // Collect any rules at this node before moving deeper
     if (node.rules.length > 0) {
       currentRules = [...node.rules];
     }
-    
+
     // Try to continue down the trie
     if (node.children.has(char)) {
       node = node.children.get(char)!;
@@ -125,7 +125,7 @@ function findDecoderRule(root: TrieNode, modelNumber: string): DecoderRule | nul
       break;
     }
   }
-  
+
   // Check the final node for rules
   if (node.rules.length > 0) {
     currentRules = [...node.rules];
@@ -135,23 +135,23 @@ function findDecoderRule(root: TrieNode, modelNumber: string): DecoderRule | nul
   for (const rule of currentRules) {
     if (rule.conditions) {
       const { minLength, maxLength, pattern } = rule.conditions;
-      
+
       if (minLength && modelNumber.length < minLength) continue;
       if (maxLength && modelNumber.length > maxLength) continue;
       if (pattern && !pattern.test(modelNumber)) continue;
     }
-    
+
     // If we get here, the rule matches - prefer rules with more specific conditions
     if (!bestMatch || (rule.conditions && !bestMatch.conditions)) {
       bestMatch = rule;
     } else if (rule.conditions && bestMatch.conditions) {
       // Prefer rules with more specific length requirements
-      const ruleSpecificity = (rule.conditions.minLength ? 1 : 0) + 
-                              (rule.conditions.maxLength ? 1 : 0) + 
-                              (rule.conditions.pattern ? 2 : 0);
-      const bestSpecificity = (bestMatch.conditions.minLength ? 1 : 0) + 
-                              (bestMatch.conditions.maxLength ? 1 : 0) + 
-                              (bestMatch.conditions.pattern ? 2 : 0);
+      const ruleSpecificity = (rule.conditions.minLength ? 1 : 0) +
+        (rule.conditions.maxLength ? 1 : 0) +
+        (rule.conditions.pattern ? 2 : 0);
+      const bestSpecificity = (bestMatch.conditions.minLength ? 1 : 0) +
+        (bestMatch.conditions.maxLength ? 1 : 0) +
+        (bestMatch.conditions.pattern ? 2 : 0);
       if (ruleSpecificity > bestSpecificity) {
         bestMatch = rule;
       }
@@ -553,7 +553,7 @@ const SA_SEGMENTS: ModelSegment[] = [
   { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },               // Digits 4–6
   { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },               // Digit 7
   { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                 // Digit 8
-  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' ,alternativeManufacturer: 'climatemaster_sa'},               // Digit 9
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '', alternativeManufacturer: 'climatemaster_sa' },               // Digit 9
   { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                // Digit 10
   { startPos: 10, endPos: 11, id: 'future', group: 'Future', characters: '' },               // Digit 11
   { startPos: 11, endPos: 12, id: 'future', group: 'Future', characters: '' },               // Digit 12
@@ -1104,7 +1104,7 @@ const OLDER_WHALEN_SEGMENTS: ModelSegment[] = [
 
 // WHALEN 2024 model number parsing configuration // needs to be renamed
 const NEWER_WHALEN_SEGMENTS: ModelSegment[] = [
-    { startPos: 0, endPos: 1, id: 'product_family', group: 'Product Family', characters: '' },                                // Digit 0
+  { startPos: 0, endPos: 1, id: 'product_family', group: 'Product Family', characters: '' },                                // Digit 0
   { startPos: 1, endPos: 2, id: 'product_type', group: 'Product Type', characters: '' },                                  // Digit 1
   { startPos: 2, endPos: 3, id: 'system_configuration', group: 'System Configuration', characters: '' },                        // Digit 2
   { startPos: 3, endPos: 6, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                          // Digits 3–6
@@ -1143,21 +1143,21 @@ const WVI_WVP_WHALEN_SEGMENTS: ModelSegment[] = [
   { startPos: 8, endPos: 9, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 8
   { startPos: 9, endPos: 10, id: 'compressor', group: 'Compressor', characters: '' },                                                  // Digit 9
   { startPos: 10, endPos: 11, id: 'distributor_options', group: 'Distributor Options', characters: '' },                               // Digit 10
-  { startPos: 11, endPos: 12, id: 'minor_revision', group: 'Minor Revision', characters: ''},                                    // Digit 11
+  { startPos: 11, endPos: 12, id: 'minor_revision', group: 'Minor Revision', characters: '' },                                    // Digit 11
   { startPos: 12, endPos: 13, id: 'control_voltage', group: 'Control Voltage', characters: '' },                          // Digit 12
   { startPos: 13, endPos: 14, id: 'control_type', group: 'Cabinet Type', characters: '' },          // Digit 13
   { startPos: 14, endPos: 15, id: 'sound_attenuation', group: 'Sound Attenuation', characters: '' },                                // Digit 14
-  { startPos: 15, endPos: 16, id: 'coil_and_chasis_protection', group: 'Coil and Chasis Protection', characters: ''}, // Digit 15
+  { startPos: 15, endPos: 16, id: 'coil_and_chasis_protection', group: 'Coil and Chasis Protection', characters: '' }, // Digit 15
   { startPos: 16, endPos: 17, id: 'hot_water_coil', group: 'Hot Water Coil', characters: '' },
   { startPos: 17, endPos: 18, id: 'control_valve', group: 'Control Valve', characters: '' },                                // Digit 17
   { startPos: 18, endPos: 19, id: 'flow_control', group: 'Flow Control', characters: '' },                // Digit 18
-  { startPos: 19, endPos: 23, id: 'water_flow', group: 'Water Flow', characters: ''}, // Digits 19-23
-  { startPos: 23, endPos: 24, id: 'strainer', group: 'Strainer', characters: ''}, // Digit 23
-  { startPos: 24, endPos: 25, id: 'water_connections', group: 'Water Connections', characters: ''}, // Digit 24
-  { startPos: 25, endPos: 26, id: 'water_side_access_ports', group: 'Water Side Access Ports', characters: ''}, // Digit 25
-  { startPos: 26, endPos: 27, id: 'coax_type', group: 'Coax Type', characters: ''}, // Digit 26
-  { startPos: 27, endPos: 28, id: 'chassis_plug', group: 'Chassis Plug', characters: ''}, // Digit 27
-  { startPos : 28, endPos: 29, id: 'air_and_fluid_sensor', group: 'Air and Fluid Sensor', characters: ''}, // Digit 28
+  { startPos: 19, endPos: 23, id: 'water_flow', group: 'Water Flow', characters: '' }, // Digits 19-23
+  { startPos: 23, endPos: 24, id: 'strainer', group: 'Strainer', characters: '' }, // Digit 23
+  { startPos: 24, endPos: 25, id: 'water_connections', group: 'Water Connections', characters: '' }, // Digit 24
+  { startPos: 25, endPos: 26, id: 'water_side_access_ports', group: 'Water Side Access Ports', characters: '' }, // Digit 25
+  { startPos: 26, endPos: 27, id: 'coax_type', group: 'Coax Type', characters: '' }, // Digit 26
+  { startPos: 27, endPos: 28, id: 'chassis_plug', group: 'Chassis Plug', characters: '' }, // Digit 27
+  { startPos: 28, endPos: 29, id: 'air_and_fluid_sensor', group: 'Air and Fluid Sensor', characters: '' }, // Digit 28
   { startPos: 29, endPos: 30, id: 'coil_height', group: 'Coil Height', characters: '' }                           // Digit 29
 ];
 
@@ -1177,319 +1177,462 @@ function buildDecoderTrie(): TrieNode {
     configName: string;
     conditions?: DecoderRule['conditions'];
   }> = [
-    // ClimateMaster
-    {
-      prefixes: ['SA'],
-      brand: 'ClimateMaster',
-      manufacturer: 'climatemaster',
-      segments: SA_SEGMENTS,
-      configName: 'SA (ClimateMaster)'
-    },
-    {
-      prefixes: ['HT'],
-      brand: 'ClimateMaster',
-      manufacturer: 'climatemaster',
-      segments: CLIMATEMASTER_SEGMENTS,
-      configName: 'HT (ClimateMaster)'
-    },
+      // ClimateMaster
+      {
+        prefixes: ['SA'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: SA_SEGMENTS,
+        configName: 'SA (ClimateMaster)'
+      },
+      {
+        prefixes: ['HT'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS,
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['SR', 'SC', 'SE', 'SZ', 'SY'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['SW'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['SB'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['20'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['SM'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['SG'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['SD'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['ST'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['TRT'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['TC'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['TL'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['SH'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['TSM'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['TRC'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['TMW'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['TMW'], // We're talking large TMW
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)',
+        conditions: {
+          // 10th item is a number
+          pattern: /^[A-Z]{2}-[0-9]{3}-[A-Z]{2}$/,
+        },
+      },
+      {
+        prefixes: ['817'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)',
+      },
+      {
+        prefixes: ['TRL'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['TRL'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      {
+        prefixes: ['TE'],
+        brand: 'ClimateMaster',
+        manufacturer: 'climatemaster',
+        segments: CLIMATEMASTER_SEGMENTS, // needs to be renamed
+        configName: 'HT (ClimateMaster)'
+      },
+      // Trane
+      {
+        prefixes: ['GEH', 'GEV'],
+        brand: 'Trane',
+        manufacturer: 'trane',
+        segments: GEH_GEV_SEGMENTS,
+        configName: 'GEH/GEV (Trane)'
+      },
+      {
+        prefixes: ['EXV', 'EXH'],
+        brand: 'Trane',
+        manufacturer: 'trane',
+        segments: EXW_SEGMENTS,
+        configName: 'EXV/EXH (Trane)'
+      },
+      {
+        prefixes: ['GET'],
+        brand: 'Trane',
+        manufacturer: 'trane',
+        segments: GET_SEGMENTS,
+        configName: 'GET (Crane)'
+      },
+      {
+        prefixes: ['GWS'],
+        brand: 'Trane',
+        manufacturer: 'trane',
+        segments: GWS_SEGMENTS,
+        configName: 'GWS (Trane)'
+      },
+      {
+        prefixes: ['GSK', 'GSJ'],
+        brand: 'Trane',
+        manufacturer: 'trane',
+        segments: GSK_SEGMENTS,
+        configName: 'GSK/GSJ (Trane)'
+      },
+      {
+        prefixes: ['VSH', 'VSV'],
+        brand: 'Trane',
+        manufacturer: 'trane',
+        segments: VSH_VSV_SEGMENTS,
+        configName: 'VSH/VSV (Trane)'
+      },
 
-    // Trane
-    {
-      prefixes: ['GEH', 'GEV'],
-      brand: 'Trane',
-      manufacturer: 'trane',
-      segments: GEH_GEV_SEGMENTS,
-      configName: 'GEH/GEV (Trane)'
-    },
-    {
-      prefixes: ['EXV', 'EXH'],
-      brand: 'Trane',
-      manufacturer: 'trane',
-      segments: EXW_SEGMENTS,
-      configName: 'EXV/EXH (Trane)'
-    },
-    {
-      prefixes: ['GET'],
-      brand: 'Trane',
-      manufacturer: 'trane',
-      segments: GET_SEGMENTS,
-      configName: 'GET (Crane)'
-    },
-    {
-      prefixes: ['GWS'],
-      brand: 'Trane',
-      manufacturer: 'trane',
-      segments: GWS_SEGMENTS,
-      configName: 'GWS (Trane)'
-    },
-    {
-      prefixes: ['GSK', 'GSJ'],
-      brand: 'Trane',
-      manufacturer: 'trane',
-      segments: GSK_SEGMENTS,
-      configName: 'GSK/GSJ (Trane)'
-    },
-    {
-      prefixes: ['VSH', 'VSV'],
-      brand: 'Trane',
-      manufacturer: 'trane',
-      segments: VSH_VSV_SEGMENTS,
-      configName: 'VSH/VSV (Trane)'
-    },
+      // Daikin
+      {
+        prefixes: ['WWCA', 'WWHA', 'WWRA'],
+        brand: 'Daikin',
+        manufacturer: 'daikin',
+        segments: WCA_WHA_WRA_SEGMENTS,
+        configName: 'WCA/WHA/WRA (Daikin)'
+      },
+      {
+        prefixes: ['WSC', 'WSD', 'WSM', 'WSN', 'WSS', 'WST', 'WSLV'],
+        brand: 'Daikin',
+        manufacturer: 'daikin',
+        segments: WSC_WSD_WSM_WSN_WSS_WST_WSLV_SEGMENTS,
+        configName: 'WSx (Daikin)'
+      },
+      {
+        prefixes: ['WSRC'],
+        brand: 'Daikin',
+        manufacturer: 'daikin',
+        segments: WSRC_SEGMENTS,
+        configName: 'WSR (Daikin)'
+      },
+      {
+        prefixes: ['WGC', 'WGD'],
+        brand: 'Daikin',
+        manufacturer: 'daikin',
+        segments: WGC_WGD_SEGMENTS,
+        configName: 'WGC/WGD (Daikin)'
+      },
+      {
+        prefixes: ['WMHC', 'WMHW'],
+        brand: 'Daikin',
+        manufacturer: 'daikin',
+        segments: MHC_MHW_SEGMENTS,
+        configName: 'MHC/MHW (Daikin)'
+      },
+      {
+        prefixes: ['WCC'],
+        brand: 'Daikin',
+        manufacturer: 'daikin',
+        segments: WCC_SEGMENTS,
+        configName: 'WCC (Daikin)'
+      },
 
-    // Daikin
-    {
-      prefixes: ['WWCA', 'WWHA', 'WWRA'],
-      brand: 'Daikin',
-      manufacturer: 'daikin',
-      segments: WCA_WHA_WRA_SEGMENTS,
-      configName: 'WCA/WHA/WRA (Daikin)'
-    },
-    {
-      prefixes: ['WSC', 'WSD', 'WSM', 'WSN', 'WSS', 'WST', 'WSLV'],
-      brand: 'Daikin',
-      manufacturer: 'daikin',
-      segments: WSC_WSD_WSM_WSN_WSS_WST_WSLV_SEGMENTS,
-      configName: 'WSx (Daikin)'
-    },
-    {
-      prefixes: ['WSRC'],
-      brand: 'Daikin',
-      manufacturer: 'daikin',
-      segments: WSRC_SEGMENTS,
-      configName: 'WSR (Daikin)'
-    },
-    {
-      prefixes: ['WGC', 'WGD'],
-      brand: 'Daikin',
-      manufacturer: 'daikin',
-      segments: WGC_WGD_SEGMENTS,
-      configName: 'WGC/WGD (Daikin)'
-    },
-    {
-      prefixes: ['WMHC', 'WMHW'],
-      brand: 'Daikin',
-      manufacturer: 'daikin',
-      segments: MHC_MHW_SEGMENTS,
-      configName: 'MHC/MHW (Daikin)'
-    },
-    {
-      prefixes: ['WCC'],
-      brand: 'Daikin',
-      manufacturer: 'daikin',
-      segments: WCC_SEGMENTS,
-      configName: 'WCC (Daikin)'
-    },
+      // McQuay
+      {
+        prefixes: ['WFDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS'],
+        brand: 'McQuay',
+        manufacturer: 'mcquay',
+        segments: MCQUAY_STANDARD_SEGMENTS,
+        configName: 'McQuay Standard'
+      },
+      {
+        prefixes: ['WCCH', 'CCH', 'CCW', 'CRH', 'CRW'],
+        brand: 'McQuay',
+        manufacturer: 'mcquay',
+        segments: CCH_CCW_CRH_CRW_SEGMENTS,
+        configName: 'McQuay CCH/CCW/CRH/CRW'
+      },
+      {
+        prefixes: ['MWH'],
+        brand: 'McQuay',
+        manufacturer: 'mcquay',
+        segments: MWH_SEGMENTS,
+        configName: 'McQuay MWH'
+      },
 
-    // McQuay
-    {
-      prefixes: ['WFDD', 'FDE', 'FDL', 'FDS', 'FME', 'FMS', 'LDD', 'LDE', 'LDL', 'LDS', 'LME', 'LMH', 'LML', 'LMS'],
-      brand: 'McQuay',
-      manufacturer: 'mcquay',
-      segments: MCQUAY_STANDARD_SEGMENTS,
-      configName: 'McQuay Standard'
-    },
-    {
-      prefixes: ['WCCH', 'CCH', 'CCW', 'CRH', 'CRW'],
-      brand: 'McQuay',
-      manufacturer: 'mcquay',
-      segments: CCH_CCW_CRH_CRW_SEGMENTS,
-      configName: 'McQuay CCH/CCW/CRH/CRW'
-    },
-    {
-      prefixes: ['MWH'],
-      brand: 'McQuay',
-      manufacturer: 'mcquay',
-      segments: MWH_SEGMENTS,
-      configName: 'McQuay MWH'
-    },
+      // WaterFurnace
+      {
+        prefixes: ['NDV', 'NSV'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: ND_NS_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace ND/NS'
+      },
+      {
+        prefixes: ['NVV', 'NVH'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: NV_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace NV'
+      },
+      {
+        prefixes: ['SDV', 'sDH', 'LSV', 'LSH'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: SYNERGY_LS_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace Synergy/LS'
+      },
+      {
+        prefixes: ['NSW'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: NSW_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace NSW'
+      },
+      {
+        prefixes: ['NDW'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: NDW_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace NDW'
+      },
+      {
+        prefixes: ['NL', 'NX'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: NL_NX_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace NL/NX'
+      },
+      {
+        prefixes: ['EW'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: EW_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace EW'
+      },
+      {
+        prefixes: ['LCV', 'LCH'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: LC_R410A_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace LC R410A'
+      },
+      {
+        prefixes: ['NCV', 'NCH'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: NC_R410A_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace NC R410A'
+      },
+      {
+        prefixes: ['V3C'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: V3C_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace V3C'
+      },
+      {
+        prefixes: ['V5C'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: V5C_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace V5C'
+      },
+      {
+        prefixes: ['V7A', 'V5A', 'V3A'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: VXA_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace VxA'
+      },
+      {
+        prefixes: ['UDV', 'UDH'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: UD_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace UD'
+      },
+      {
+        prefixes: ['NBV', 'NBH', 'UBV', 'UBH'],
+        brand: 'WaterFurnace',
+        manufacturer: 'waterfurnace',
+        segments: NB_UB_WATERFURNACE_SEGMENTS,
+        configName: 'WaterFurnace NB/UB'
+      },
 
-    // WaterFurnace
-    {
-      prefixes: ['NDV', 'NSV'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: ND_NS_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace ND/NS'
-    },
-    {
-      prefixes: ['NVV', 'NVH'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: NV_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace NV'
-    },
-    {
-      prefixes: ['SDV', 'sDH', 'LSV', 'LSH'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: SYNERGY_LS_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace Synergy/LS'
-    },
-    {
-      prefixes: ['NSW'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: NSW_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace NSW'
-    },
-    {
-      prefixes: ['NDW'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: NDW_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace NDW'
-    },
-    {
-      prefixes: ['NL', 'NX'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: NL_NX_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace NL/NX'
-    },
-    {
-      prefixes: ['EW'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: EW_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace EW'
-    },
-    {
-      prefixes: ['LCV', 'LCH'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: LC_R410A_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace LC R410A'
-    },
-    {
-      prefixes: ['NCV', 'NCH'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: NC_R410A_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace NC R410A'
-    },
-    {
-      prefixes: ['V3C'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: V3C_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace V3C'
-    },
-    {
-      prefixes: ['V5C'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: V5C_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace V5C'
-    },
-    {
-      prefixes: ['V7A', 'V5A', 'V3A'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: VXA_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace VxA'
-    },
-    {
-      prefixes: ['UDV', 'UDH'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: UD_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace UD'
-    },
-    {
-      prefixes: ['NBV', 'NBH', 'UBV', 'UBH'],
-      brand: 'WaterFurnace',
-      manufacturer: 'waterfurnace',
-      segments: NB_UB_WATERFURNACE_SEGMENTS,
-      configName: 'WaterFurnace NB/UB'
-    },
+      // Bosch
+      {
+        prefixes: ['CP', 'CF', 'CL', 'ES', 'EP', 'QV', 'LV', 'MC'],
+        brand: 'Bosch',
+        manufacturer: 'bosch',
+        segments: STANDARD_BOSCH_SEGMENTS,
+        configName: 'Bosch Standard'
+      },
+      {
+        prefixes: ['CA'],
+        brand: 'Bosch',
+        manufacturer: 'bosch',
+        segments: CA_BOSCH_SEGMENTS,
+        configName: 'Bosch CA'
+      },
+      {
+        prefixes: ['SM'],
+        brand: 'Bosch',
+        manufacturer: 'bosch',
+        segments: SM_BOSCH_SEGMENTS,
+        configName: 'Bosch SM'
+      },
+      {
+        prefixes: ['WT'],
+        brand: 'Bosch',
+        manufacturer: 'bosch',
+        segments: WT_BOSCH_SEGMENTS,
+        configName: 'Bosch WT'
+      },
+      {
+        prefixes: ['BP'],
+        brand: 'Bosch',
+        manufacturer: 'bosch',
+        segments: BP_BOSCH_SEGMENTS,
+        configName: 'Bosch BP'
+      },
+      {
+        prefixes: ['EC'],
+        brand: 'Bosch',
+        manufacturer: 'bosch',
+        segments: EC_BOSCH_SEGMENTS,
+        configName: 'Bosch EC'
+      },
 
-    // Bosch
-    {
-      prefixes: ['CP', 'CF', 'CL', 'ES', 'EP', 'QV', 'LV', 'MC'],
-      brand: 'Bosch',
-      manufacturer: 'bosch',
-      segments: STANDARD_BOSCH_SEGMENTS,
-      configName: 'Bosch Standard'
-    },
-    {
-      prefixes: ['CA'],
-      brand: 'Bosch',
-      manufacturer: 'bosch',
-      segments: CA_BOSCH_SEGMENTS,
-      configName: 'Bosch CA'
-    },
-    {
-      prefixes: ['SM'],
-      brand: 'Bosch',
-      manufacturer: 'bosch',
-      segments: SM_BOSCH_SEGMENTS,
-      configName: 'Bosch SM'
-    },
-    {
-      prefixes: ['WT'],
-      brand: 'Bosch',
-      manufacturer: 'bosch',
-      segments: WT_BOSCH_SEGMENTS,
-      configName: 'Bosch WT'
-    },
-    {
-      prefixes: ['BP'],
-      brand: 'Bosch',
-      manufacturer: 'bosch',
-      segments: BP_BOSCH_SEGMENTS,
-      configName: 'Bosch BP'
-    },
-    {
-      prefixes: ['EC'],
-      brand: 'Bosch',
-      manufacturer: 'bosch',
-      segments: EC_BOSCH_SEGMENTS,
-      configName: 'Bosch EC'
-    },
+      // Florida Heat Pump
 
-    // Florida Heat Pump
-    
-    // Skip Florida Heat Pump for now
-    {
-      prefixes: ['AP', 'EM', 'EV', 'GO', 'AU', 'HE', 'SE'],
-      brand: 'Florida Heat Pump',
-      manufacturer: 'florida_heat_pump',
-      segments: STANDARD_FLORIDA_HEAT_PUMP_SEGMENTS,
-      configName: 'Florida Heat Pump Standard'
-    },
-    {
-      prefixes: ['GS', 'GT'],
-      brand: 'Florida Heat Pump',
-      manufacturer: 'florida_heat_pump',
-      segments: GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS,
-      configName: 'Florida Heat Pump GS/GT'
-    },
+      // Skip Florida Heat Pump for now
+      {
+        prefixes: ['AP', 'EM', 'EV', 'GO', 'AU', 'HE', 'SE'],
+        brand: 'Florida Heat Pump',
+        manufacturer: 'florida_heat_pump',
+        segments: STANDARD_FLORIDA_HEAT_PUMP_SEGMENTS,
+        configName: 'Florida Heat Pump Standard'
+      },
+      {
+        prefixes: ['GS', 'GT'],
+        brand: 'Florida Heat Pump',
+        manufacturer: 'florida_heat_pump',
+        segments: GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS,
+        configName: 'Florida Heat Pump GS/GT'
+      },
 
-    // Whalen - Older models (R410A)
-    {
-      prefixes: ['VI', 'VP', 'VH', 'VS', 'VT', 'VR'],
-      brand: 'Whalen',
-      manufacturer: 'whalen',
-      segments: OLDER_WHALEN_SEGMENTS,
-      configName: 'Whalen (Older)'
-    },
-    // Whalen - Newer models (R454B)
-    {
-      prefixes: ['VD', 'VN'],
-      brand: 'Whalen',
-      manufacturer: 'whalen',
-      segments: NEWER_WHALEN_SEGMENTS,
-      configName: 'Whalen (Newer R454B)'
-    },
-    {
-      prefixes: ['WVI', 'WVP'],
-      brand: 'Whalen',
-      manufacturer: 'whalen',
-      segments: WVI_WVP_WHALEN_SEGMENTS,
-      configName: 'Whalen WVI/WVP'
-    }
-  ];
+      // Whalen - Older models (R410A)
+      {
+        prefixes: ['VI', 'VP', 'VH', 'VS', 'VT', 'VR'],
+        brand: 'Whalen',
+        manufacturer: 'whalen',
+        segments: OLDER_WHALEN_SEGMENTS,
+        configName: 'Whalen (Older)'
+      },
+      // Whalen - Newer models (R454B)
+      {
+        prefixes: ['VD', 'VN'],
+        brand: 'Whalen',
+        manufacturer: 'whalen',
+        segments: NEWER_WHALEN_SEGMENTS,
+        configName: 'Whalen (Newer R454B)'
+      },
+      {
+        prefixes: ['WVI', 'WVP'],
+        brand: 'Whalen',
+        manufacturer: 'whalen',
+        segments: WVI_WVP_WHALEN_SEGMENTS,
+        configName: 'Whalen WVI/WVP'
+      }
+    ];
 
   // Insert all rules into the trie
   for (const def of decoderDefinitions) {
@@ -1611,7 +1754,7 @@ export async function POST(request: NextRequest) {
     // Try to save history for authenticated users (non-blocking)
     try {
       const { user, supabase } = await getOptionalUserFromRequest(request);
-      
+
       if (user && supabase) {
         // Determine status based on decode result
         let status: 'success' | 'partial' | 'failed' = 'failed';
@@ -1623,8 +1766,8 @@ export async function POST(request: NextRequest) {
 
         // Determine equipment type from first segment if available
         let equipmentType: string | null = null;
-        const modelTypeSegment = decodedResult.segments.find(s => 
-          s.group.toLowerCase().includes('model') || 
+        const modelTypeSegment = decodedResult.segments.find(s =>
+          s.group.toLowerCase().includes('model') ||
           s.group.toLowerCase().includes('series') ||
           s.group.toLowerCase().includes('type')
         );
@@ -1633,11 +1776,11 @@ export async function POST(request: NextRequest) {
         }
 
         // Generate details summary
-        const details = status === 'success' 
+        const details = status === 'success'
           ? `Complete decode with ${decodedResult.segments.length} segments`
           : status === 'partial'
-          ? `Partial decode: ${decodedResult.unmatchedSegments.length} unmatched segments`
-          : 'Unable to decode model number';
+            ? `Partial decode: ${decodedResult.unmatchedSegments.length} unmatched segments`
+            : 'Unable to decode model number';
 
         // Save to history
         await supabase.from('decode_history').insert({
@@ -1723,7 +1866,7 @@ async function queryDatabase(segmentType: string, manufacture: string, character
     const results = await response.json();
     console.log('DEBUG - Segment Type:', segmentType);
     console.log('DEBUG - Manufacture:', manufacture);
-    console.log('DEBUG - Characters:', characters); 
+    console.log('DEBUG - Characters:', characters);
     console.log('DEBUG - Results:', results);
 
     // Debug logging to see what Supabase returns
@@ -1800,7 +1943,7 @@ async function decodeModelWithRule(
 
     // Determine the manufacturer to query (may have alternative)
     const manufacturerToQuery = segment.alternativeManufacturer || rule.manufacturer;
-    
+
     // Query database for this segment
     const meaning = await queryDatabaseForSegment(
       segment.id,
@@ -1872,7 +2015,7 @@ async function queryDatabaseForSegment(
     const variant = ruleId.includes('exv') ? 'trane_exv' : 'trane_exh';
     result = await queryDatabase(segmentType, variant, characters);
     if (result) return result;
-    
+
     result = await queryDatabase(segmentType, 'trane', characters);
     if (result) return result;
   }
@@ -1894,20 +2037,20 @@ function calculateConfidence(
   segmentConfig: ModelSegment[]
 ): 'high' | 'medium' | 'low' {
   if (segmentConfig.length === 0) return 'low';
-  
+
   const totalSegments = segmentConfig.length;
   const matchedSegments = segments.length;
   const matchPercentage = matchedSegments / totalSegments;
 
   // Calculate expected length from the segment config
   const expectedLength = segmentConfig[segmentConfig.length - 1].endPos;
-  
+
   // Determine minimum acceptable length (allow some tolerance)
   const minLength = Math.max(10, Math.floor(expectedLength * 0.6));
-  
+
   // Check if model number length is reasonable
   const lengthIsReasonable = modelNumber.length >= minLength;
-  
+
   // High confidence: 90%+ segments matched and model number is proper length
   if (matchPercentage >= 0.9 && lengthIsReasonable && unmatchedSegments.length <= 2) {
     return 'high';
