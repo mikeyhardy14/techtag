@@ -49,6 +49,11 @@ interface DecodedResult {
   segments: DecodedSegment[];
   confidence: 'high' | 'medium' | 'low';
   unmatchedSegments: UnmatchedSegment[];
+  supportInfo: {
+    message: string;
+    email: string;
+    subject: string;
+  };
 }
 
 interface ModelSegment {
@@ -560,6 +565,592 @@ const SA_SEGMENTS: ModelSegment[] = [
   { startPos: 12, endPos: 13, id: 'future', group: 'Future', characters: '' },               // Digit 13
   { startPos: 13, endPos: 14, id: 'blower_motor', group: 'Blower Motor', characters: '' },     // Digit 14
   { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }              // Digit 15
+];
+
+// SR model number parsing configuration (ClimateMaster)
+const SR_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_name', group: 'Product Name', characters: '' },                      // Digit 1
+  { startPos: 1, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digit 2
+  { startPos: 2, endPos: 3, id: 'supply_return_config', group: 'Supply and Return Configurations', characters: '' },  // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                               // Digit 10
+  { startPos: 10, endPos: 11, id: 'water_heat_exchanger_options', group: 'Water/Heat Exchanger Options', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'drain_pan_heat_exchanger_options', group: 'Drain Pan / Heat Exchanger Options', characters: '' },  // Digit 12
+  { startPos: 12, endPos: 13, id: 'extended_options', group: 'Extended Options', characters: '' },            // Digit 13
+  { startPos: 13, endPos: 14, id: 'blower_motor', group: 'Blower Motor', characters: '' },                    // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// SB model number parsing configuration (ClimateMaster)
+const SB_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_name', group: 'Product Name', characters: '' },                      // Digit 1
+  { startPos: 1, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digit 2
+  { startPos: 2, endPos: 3, id: 'supply_return_config', group: 'Supply and Return Configurations', characters: '' },  // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                               // Digit 10
+  { startPos: 10, endPos: 11, id: 'water_options', group: 'Water Options', characters: '' },                  // Digit 11
+  { startPos: 11, endPos: 12, id: 'drain_pan_heat_exchanger_options', group: 'Drain Pan / Heat Exchanger Options', characters: '' },  // Digit 12
+  { startPos: 12, endPos: 13, id: 'extended_options', group: 'Extended Options', characters: '' },            // Digit 13
+  { startPos: 13, endPos: 14, id: 'blower_motor', group: 'Blower Motor', characters: '' },                    // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// SW model number parsing configuration (ClimateMaster)
+const SW_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_name', group: 'Product Name', characters: '' },                      // Digit 1
+  { startPos: 1, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digit 2
+  { startPos: 2, endPos: 3, id: 'application', group: 'Application', characters: '' },                        // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                               // Digit 10
+  { startPos: 10, endPos: 11, id: 'source_side_options', group: 'Source Side Options', characters: '' },      // Digit 11
+  { startPos: 11, endPos: 12, id: 'load_side_options', group: 'Load Side Options', characters: '' },          // Digit 12
+  { startPos: 12, endPos: 13, id: 'extended_options', group: 'Extended Options', characters: '' },            // Digit 13
+  { startPos: 13, endPos: 14, id: 'reserved_future', group: 'Reserved for Future', characters: '' },          // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// 20M model number parsing configuration (ClimateMaster)
+const CM_20M_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'group', group: 'Group', characters: '' },                                    // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'make_item', group: 'Make Item', characters: '' },                            // Digit 3
+  { startPos: 3, endPos: 4, id: 'riser_style', group: 'Riser Style', characters: '' },                        // Digit 4
+  { startPos: 4, endPos: 7, id: 'riser_length', group: 'Riser Length', characters: '' },                      // Digits 5–7
+  { startPos: 7, endPos: 8, id: 'copper_length', group: 'Copper Length', characters: '' },                    // Digit 8
+  { startPos: 8, endPos: 9, id: 'riser_top_diameter', group: 'Riser Top Diameter', characters: '' },          // Digit 9
+  { startPos: 9, endPos: 10, id: 'riser_bottom_diameter', group: 'Riser Bottom Diameter', characters: '' },   // Digit 10
+  { startPos: 10, endPos: 11, id: 'type', group: 'Type', characters: '' },                                    // Digit 11
+  { startPos: 11, endPos: 12, id: 'special_options', group: 'Special Options', characters: '' },              // Digit 12
+  { startPos: 12, endPos: 13, id: 'revision', group: 'Revision', characters: '' },                            // Digit 13
+  { startPos: 13, endPos: 14, id: 'valve_package', group: 'Valve Package', characters: '' }                   // Digit 14
+];
+
+// SM model number parsing configuration (ClimateMaster)
+const SM_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_name', group: 'Product Name', characters: '' },                      // Digit 1
+  { startPos: 1, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digit 2
+  { startPos: 2, endPos: 3, id: 'chassis_style', group: 'Chassis Style', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 4, id: 'shipping', group: 'Shipping', characters: '' },                              // Digit 4
+  { startPos: 4, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 5–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'regulator_options', group: 'Regulator Options', characters: '' },           // Digit 10
+  { startPos: 10, endPos: 11, id: 'water_options', group: 'Water Options', characters: '' },                  // Digit 11
+  { startPos: 11, endPos: 12, id: 'drain_pan_options', group: 'Drain Pan Options', characters: '' },          // Digit 12
+  { startPos: 12, endPos: 13, id: 'extended_options', group: 'Extended Options', characters: '' },            // Digit 13
+  { startPos: 13, endPos: 14, id: 'blower_motor', group: 'Blower Motor', characters: '' },                    // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// SD model number parsing configuration (ClimateMaster)
+const SD_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_name', group: 'Product Name', characters: '' },                      // Digit 1
+  { startPos: 1, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digit 2
+  { startPos: 2, endPos: 3, id: 'cabinet_return_color', group: 'Cabinet, Return, and Color', characters: '' }, // Digit 3
+  { startPos: 3, endPos: 4, id: 'subbase', group: 'Subbase', characters: '' },                                // Digit 4
+  { startPos: 4, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 5–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'chassis_options', group: 'Chassis Options', characters: '' },               // Digit 10
+  { startPos: 10, endPos: 11, id: 'water_options', group: 'Water Options', characters: '' },                  // Digit 11
+  { startPos: 11, endPos: 12, id: 'drain_pan_heat_exchanger_options', group: 'Drain Pan / Heat Exchanger Options', characters: '' },  // Digit 12
+  { startPos: 12, endPos: 13, id: 'copper_connections', group: 'Copper Connections', characters: '' },        // Digit 13
+  { startPos: 13, endPos: 14, id: 'blower_motor', group: 'Blower Motor', characters: '' },                    // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// RT model number parsing configuration (ClimateMaster)
+const TRT_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'series', group: 'Series', characters: '' },                                  // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'compressor_type', group: 'Compressor Type', characters: '' },                // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_filter', group: 'Cabinet and Filter', characters: '' },             // Digit 10
+  { startPos: 10, endPos: 11, id: 'blower_drive_package', group: 'Blower Drive Package', characters: '' },    // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'air_damper_options', group: 'Air Damper Options', characters: '' },        // Digit 13
+  { startPos: 13, endPos: 14, id: 'power_termination', group: 'Power Termination', characters: '' },          // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// TC model number parsing configuration (ClimateMaster)
+const TC_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                               // Digit 10
+  { startPos: 10, endPos: 11, id: 'future_use', group: 'Future Use', characters: '' },                        // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'return_airflow_configuration', group: 'Return AirFlow Configuration', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'supply_air_options', group: 'Supply Air Options', characters: '' },        // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// TSM model number parsing configuration (ClimateMaster)
+const TSM_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'series', group: 'Series', characters: '' },                                  // Digits 1–3
+  { startPos: 3, endPos: 5, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–5
+  { startPos: 5, endPos: 6, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 6
+  { startPos: 6, endPos: 7, id: 'chassis_options', group: 'Chassis Options', characters: '' },                // Digit 7
+  { startPos: 7, endPos: 8, id: 'controls', group: 'Controls', characters: '' },                              // Digit 8
+  { startPos: 8, endPos: 9, id: 'regulator_options', group: 'Regulator Options', characters: '' },            // Digit 9
+  { startPos: 9, endPos: 10, id: 'water_valve_pump_options', group: 'Water Valve and Pump Options', characters: '' },  // Digit 10
+  { startPos: 10, endPos: 11, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 11
+  { startPos: 11, endPos: 12, id: 'shipping', group: 'Shipping', characters: '' },                            // Digit 12
+  { startPos: 12, endPos: 13, id: 'blower_motor', group: 'Blower Motor', characters: '' },                    // Digit 13
+  { startPos: 13, endPos: 14, id: 'standard', group: 'Standard', characters: '' },                            // Digit 14
+  { startPos: 14, endPos: 15, id: 'revision', group: 'Revision', characters: '' }                             // Digit 15
+];
+
+// 817 model number parsing configuration (ClimateMaster)
+const CM_817_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'series', group: 'Series', characters: '' },                                  // Digits 1–3
+  { startPos: 3, endPos: 5, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–5
+  { startPos: 5, endPos: 6, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 6
+  { startPos: 6, endPos: 7, id: 'drain_pan_sound', group: 'Drain Pan and Sound', characters: '' },            // Digit 7
+  { startPos: 7, endPos: 8, id: 'controls', group: 'Controls', characters: '' },                              // Digit 8
+  { startPos: 8, endPos: 9, id: 'regulator_options', group: 'Regulator Options', characters: '' },            // Digit 9
+  { startPos: 9, endPos: 10, id: 'water_valve_pump_option', group: 'Water Valve & Pump Option', characters: '' },  // Digit 10
+  { startPos: 10, endPos: 11, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 11
+  { startPos: 11, endPos: 12, id: 'standard', group: 'Standard', characters: '' },                            // Digit 12
+  { startPos: 12, endPos: 13, id: 'revision', group: 'Revision', characters: '' }                             // Digit 13
+];
+
+// TY/TE/TZ model number parsing configuration (ClimateMaster)
+const TY_TE_TZ_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'series', group: 'Series', characters: '' },                                  // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                               // Digit 10
+  { startPos: 10, endPos: 11, id: 'water_circuit_options', group: 'Water Circuit Options', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'return_airflow_config', group: 'Return AirFlow Configuration', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'supply_airflow_motor_config', group: 'Supply AirFlow and Motor Configuration', characters: '' },  // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// CCE model number parsing configuration (ClimateMaster)
+const CCE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–3
+  { startPos: 3, endPos: 5, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–5
+  { startPos: 5, endPos: 6, id: 'revision', group: 'Revision', characters: '' },                              // Digit 6
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 7
+  { startPos: 7, endPos: 8, id: 'controls', group: 'Controls', characters: '' },                              // Digit 8
+  { startPos: 8, endPos: 9, id: 'power_termination', group: 'Power Termination', characters: '' },            // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation', group: 'Cabinet Insulation', characters: '' },         // Digit 10
+  { startPos: 10, endPos: 11, id: 'subbase', group: 'Subbase', characters: '' },                              // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'water_circuit_options', group: 'Water Circuit Options', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'piping_connections', group: 'Piping Connections', characters: '' },        // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// DE model number parsing configuration (ClimateMaster)
+const DE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'series', group: 'Series', characters: '' },                                  // Digit 1
+  { startPos: 1, endPos: 2, id: 'application', group: 'Application', characters: '' },                        // Digit 2
+  { startPos: 2, endPos: 5, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 3–5
+  { startPos: 5, endPos: 6, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 6
+  { startPos: 6, endPos: 7, id: 'agency', group: 'Agency', characters: '' },                                  // Digit 7
+  { startPos: 7, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digits 8–9
+  { startPos: 9, endPos: 11, id: 'airflow_filter_rack', group: 'Airflow Filter Rack', characters: '' },       // Digits 10–11
+  { startPos: 11, endPos: 12, id: 'cabinet', group: 'Cabinet', characters: '' },                              // Digit 12
+  { startPos: 12, endPos: 13, id: 'condenser', group: 'Condenser', characters: '' },                          // Digit 13
+  { startPos: 13, endPos: 14, id: 'special_options', group: 'Special Options', characters: '' },              // Digit 14
+  { startPos: 14, endPos: 15, id: 'revision', group: 'Revision', characters: '' }                             // Digit 15
+];
+
+// GC model number parsing configuration (ClimateMaster)
+const GC_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation', group: 'Cabinet Insulation', characters: '' },         // Digit 10
+  { startPos: 10, endPos: 11, id: 'future', group: 'Future', characters: '' },                                // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'return_airflow_config', group: 'Return Airflow Configuration', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'supply_air', group: 'Supply Air', characters: '' },                        // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// GO model number parsing configuration (ClimateMaster)
+const GO_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 4, id: 'configuration', group: 'Configuration', characters: '' },                    // Digits 3–4
+  { startPos: 4, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 5–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls_misc_options', group: 'Controls/Misc Options', characters: '' },    // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },   // Digit 10
+  { startPos: 10, endPos: 11, id: 'blower_drive_package', group: 'Blower Drive Package', characters: '' },    // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'return_airflow_config', group: 'Return Airflow Configuration', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'supply_air', group: 'Supply Air', characters: '' },                        // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// HSW model number parsing configuration (ClimateMaster)
+const HSW_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation', group: 'Cabinet Insulation', characters: '' },         // Digit 10
+  { startPos: 10, endPos: 11, id: 'hot_water_generator_options', group: 'Hot Water Generator Options', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'source_water_coil_options', group: 'Source Water Coil Options', characters: '' },  // Digit 12
+  { startPos: 12, endPos: 13, id: 'water_connection_location', group: 'Water Connection Location', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'load_water_coil_options', group: 'Load Water Coil Options', characters: '' },  // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// HE model number parsing configuration (ClimateMaster)
+const HE_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 5, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 3–5
+  { startPos: 5, endPos: 6, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 6
+  { startPos: 6, endPos: 7, id: 'agency', group: 'Agency', characters: '' },                                  // Digit 7
+  { startPos: 7, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digits 8–9
+  { startPos: 9, endPos: 11, id: 'airflow_filter_rack', group: 'Airflow Filter Rack', characters: '' },       // Digits 10–11
+  { startPos: 11, endPos: 12, id: 'cabinet', group: 'Cabinet', characters: '' },                              // Digit 12
+  { startPos: 12, endPos: 13, id: 'condenser', group: 'Condenser', characters: '' },                          // Digit 13
+  { startPos: 13, endPos: 14, id: 'special_options', group: 'Special Options', characters: '' },              // Digit 14
+  { startPos: 14, endPos: 15, id: 'revision', group: 'Revision', characters: '' }                             // Digit 15
+];
+
+// SG model number parsing configuration (ClimateMaster)
+const SG_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_name', group: 'Product Name', characters: '' },                      // Digit 1
+  { startPos: 1, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digit 2
+  { startPos: 2, endPos: 3, id: 'cabinet_height_tstat_whip', group: 'Cabinet Height and Thermostat Whip', characters: '' },  // Digit 3
+  { startPos: 3, endPos: 4, id: 'shipping', group: 'Shipping', characters: '' },                              // Digit 4
+  { startPos: 4, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 5–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls_fan_motor', group: 'Controls and Fan Motor', characters: '' },      // Digit 9
+  { startPos: 9, endPos: 10, id: 'back_front_top_supply_air', group: 'Back Front Top Supply Air Options', characters: '' },  // Digit 10
+  { startPos: 10, endPos: 11, id: 'side_supply_air', group: 'Side Supply Air Options', characters: '' },      // Digit 11
+  { startPos: 11, endPos: 12, id: 'riser_style_ball_valve', group: 'Riser Style and Ball Valve Option', characters: '' },  // Digit 12
+  { startPos: 12, endPos: 13, id: 'filters_drain_pans', group: 'Filters and Drain Pans', characters: '' },    // Digit 13
+  { startPos: 13, endPos: 14, id: 'additional_cabinet_options', group: 'Additional Cabinet Options', characters: '' },  // Digit 14
+  { startPos: 14, endPos: 15, id: 'special_options', group: 'Special Options', characters: '' }               // Digit 15
+];
+
+// TL model number parsing configuration (ClimateMaster)
+const TL_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation_filter', group: 'Cabinet Insulation/Filter Rails/Frames', characters: '' },  // Digit 10
+  { startPos: 10, endPos: 11, id: 'blower_drive_package', group: 'Blower Drive Package', characters: '' },    // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_valve_pump', group: 'Heat Exchanger Motorized Valve Pump Options', characters: '' },  // Digit 12
+  { startPos: 12, endPos: 14, id: 'airflow_options', group: 'Airflow Options', characters: '' },              // Digits 13–14
+  { startPos: 14, endPos: 15, id: 'special_options', group: 'Special Options', characters: '' }               // Digit 15
+];
+
+// TRC model number parsing configuration (ClimateMaster)
+const TRC_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–3
+  { startPos: 3, endPos: 5, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–5
+  { startPos: 5, endPos: 6, id: 'revision', group: 'Revision', characters: '' },                              // Digit 6
+  { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 7
+  { startPos: 7, endPos: 8, id: 'controls', group: 'Controls', characters: '' },                              // Digit 8
+  { startPos: 8, endPos: 9, id: 'power_termination_options', group: 'Power Termination and Options', characters: '' },  // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_construction', group: 'Cabinet Construction', characters: '' },     // Digit 10
+  { startPos: 10, endPos: 11, id: 'subbase', group: 'Subbase', characters: '' },                              // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'water_circuit_options', group: 'Water Circuit Options', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'piping_connections', group: 'Piping Connections', characters: '' },        // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// TRL model number parsing configuration (ClimateMaster)
+const TRL_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                               // Digit 10
+  { startPos: 10, endPos: 11, id: 'water_circuit_options', group: 'Water Circuit Options', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'water_flow_switch_air_coil', group: 'Water Flow Switch and Air Coil Options', characters: '' },  // Digit 12
+  { startPos: 12, endPos: 13, id: 'return_airflow_config', group: 'Return AirFlow Configuration', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'supply_air', group: 'Supply Air', characters: '' },                        // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// TR model number parsing configuration (ClimateMaster)
+const TR_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                               // Digit 10
+  { startPos: 10, endPos: 11, id: 'water_circuit_options', group: 'Water Circuit Options', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'return_airflow_config', group: 'Return AirFlow Configuration', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'supply_air_options', group: 'Supply Air Options', characters: '' },        // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// CCL model number parsing configuration (ClimateMaster)
+const CCL_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'series', group: 'Series', characters: '' },                                  // Digits 1–3
+  { startPos: 3, endPos: 5, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–5
+  { startPos: 5, endPos: 6, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 6
+  { startPos: 6, endPos: 7, id: 'agency', group: 'Agency', characters: '' },                                  // Digit 7
+  { startPos: 7, endPos: 8, id: 'controls', group: 'Controls', characters: '' },                              // Digit 8
+  { startPos: 8, endPos: 9, id: 'damper', group: 'Damper', characters: '' },                                  // Digit 9
+  { startPos: 9, endPos: 10, id: 'filter_type', group: 'Filter Type', characters: '' },                       // Digit 10
+  { startPos: 10, endPos: 11, id: 'cabinet', group: 'Cabinet', characters: '' },                              // Digit 11
+  { startPos: 11, endPos: 12, id: 'application', group: 'Application', characters: '' },                      // Digit 12
+  { startPos: 12, endPos: 13, id: 'condenser', group: 'Condenser', characters: '' },                          // Digit 13
+  { startPos: 13, endPos: 14, id: 'special_options', group: 'Special Options', characters: '' },              // Digit 14
+  { startPos: 14, endPos: 15, id: 'revision', group: 'Revision', characters: '' }                             // Digit 15
+];
+
+// GL model number parsing configuration (ClimateMaster)
+const GL_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation', group: 'Cabinet Insulation', characters: '' },         // Digit 10
+  { startPos: 10, endPos: 11, id: 'blower_drive_package', group: 'Blower Drive Package', characters: '' },    // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 14, id: 'airflow_options', group: 'Airflow Options', characters: '' },              // Digits 13–14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// TO model number parsing configuration (ClimateMaster)
+const TO_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 4, id: 'configuration', group: 'Configuration', characters: '' },                    // Digits 3–4
+  { startPos: 4, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 5–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls_misc_options', group: 'Controls/Misc Options', characters: '' },    // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },   // Digit 10
+  { startPos: 10, endPos: 11, id: 'blower_drive_package', group: 'Blower Drive Package', characters: '' },    // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'return_airflow_config', group: 'Return Airflow Configuration', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'supply_air', group: 'Supply Air', characters: '' },                        // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// GS model number parsing configuration (ClimateMaster)
+const GS_CLIMATEMASTER_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation', group: 'Cabinet Insulation', characters: '' },         // Digit 10
+  { startPos: 10, endPos: 11, id: 'water_circuit_options', group: 'Water Circuit Options', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'return_airflow_config', group: 'Return Airflow Configuration', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'supply_air', group: 'Supply Air', characters: '' },                        // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// HB model number parsing configuration (ClimateMaster)
+const HB_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation', group: 'Cabinet Insulation', characters: '' },         // Digit 10
+  { startPos: 10, endPos: 11, id: 'future', group: 'Future', characters: '' },                                // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'return_airflow_config', group: 'Return Airflow Configuration', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'supply_air', group: 'Supply Air', characters: '' }                         // Digit 14
+];
+
+// ST model number parsing configuration (ClimateMaster)
+const ST_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 1, id: 'product_name', group: 'Product Name', characters: '' },                      // Digit 1
+  { startPos: 1, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digit 2
+  { startPos: 2, endPos: 3, id: 'air_damper_options', group: 'Air Damper Options', characters: '' },          // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                               // Digit 10
+  { startPos: 10, endPos: 11, id: 'water_heat_exchanger_options', group: 'Water/Heat Exchanger Options', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'drain_pan_heat_exchanger_options', group: 'Drain Pan / Heat Exchanger Options', characters: '' },  // Digit 12
+  { startPos: 12, endPos: 13, id: 'extended_options', group: 'Extended Options', characters: '' },            // Digit 13
+  { startPos: 13, endPos: 14, id: 'blower_motor', group: 'Blower Motor', characters: '' },                    // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// SH model number parsing configuration (ClimateMaster)
+const SH_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'series', group: 'Series', characters: '' },                                  // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'replacement_chassis_model', group: 'Replacement Chassis Model', characters: '' },  // Digit 3
+  { startPos: 3, endPos: 5, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–5
+  { startPos: 5, endPos: 6, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 6
+  { startPos: 6, endPos: 7, id: 'controls_and_motors', group: 'Controls and Motors', characters: '' },        // Digit 7
+  { startPos: 7, endPos: 8, id: 'options', group: 'Options', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'regulator_options', group: 'Regulator Options', characters: '' },            // Digit 9
+  { startPos: 9, endPos: 10, id: 'controls', group: 'Controls', characters: '' },                             // Digit 10
+  { startPos: 10, endPos: 11, id: 'water_valve_pump_options', group: 'Water Valve and Pump Options', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' },  // Digit 12
+  { startPos: 12, endPos: 13, id: 'other_options', group: 'Other Options', characters: '' },                  // Digit 13
+  { startPos: 13, endPos: 14, id: 'future', group: 'Future', characters: '' },                                // Digit 14
+  { startPos: 14, endPos: 15, id: 'revision', group: 'Revision', characters: '' }                             // Digit 15
+];
+
+// TMW model number parsing configuration (ClimateMaster)
+const TMW_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet', group: 'Cabinet', characters: '' },                               // Digit 10
+  { startPos: 10, endPos: 11, id: 'hot_water_generator_options', group: 'Hot Water Generator Options', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'source_water_coil_options', group: 'Source Water Coil Options', characters: '' },  // Digit 12
+  { startPos: 12, endPos: 13, id: 'reserved_for_future', group: 'Reserved for Future', characters: '' },      // Digit 13
+  { startPos: 13, endPos: 14, id: 'load_water_coil_options', group: 'Load Water Coil Options', characters: '' },  // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// CD model number parsing configuration (ClimateMaster)
+const CD_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'series', group: 'Series', characters: '' },                                  // Digits 1–2
+  { startPos: 2, endPos: 4, id: 'capacity_recirculation_air', group: 'Capacity Recirculation Air', characters: '' },  // Digits 3–4
+  { startPos: 4, endPos: 5, id: 'open_digit', group: 'Open Digit', characters: '' },                          // Digit 5
+  { startPos: 5, endPos: 7, id: 'capacity_outside_air', group: 'Capacity Outside Air', characters: '' },      // Digits 6–7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'fan_drive_package', group: 'Fan Drive Package', characters: '' },            // Digit 9
+  { startPos: 9, endPos: 10, id: 'auxiliary_heat', group: 'Auxiliary Heat', characters: '' },                 // Digit 10
+  { startPos: 10, endPos: 11, id: 'controls', group: 'Controls', characters: '' },                            // Digit 11
+  { startPos: 11, endPos: 12, id: 'airflow', group: 'Airflow', characters: '' },                              // Digit 12
+  { startPos: 12, endPos: 13, id: 'filter', group: 'Filter', characters: '' },                                // Digit 13
+  { startPos: 13, endPos: 14, id: 'special_options', group: 'Special Options', characters: '' },              // Digit 14
+  { startPos: 14, endPos: 15, id: 'revision', group: 'Revision', characters: '' }                             // Digit 15
+];
+
+// EC model number parsing configuration (ClimateMaster)
+const EC_CM_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation_filter', group: 'Cabinet Insulation/Filter Rails/Frames', characters: '' },  // Digit 10
+  { startPos: 10, endPos: 11, id: 'blower_drive_package', group: 'Blower Drive Package', characters: '' },    // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 14, id: 'airflow_options', group: 'Airflow Options', characters: '' },              // Digits 13–14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// GR model number parsing configuration (ClimateMaster)
+const GR_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation', group: 'Cabinet Insulation', characters: '' },         // Digit 10
+  { startPos: 10, endPos: 11, id: 'water_circuit_options', group: 'Water Circuit Options', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 13, id: 'return_airflow_configuration', group: 'Return Airflow Configuration', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'supply_air', group: 'Supply Air', characters: '' },                        // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                             // Digit 15
+];
+
+// HD model number parsing configuration (ClimateMaster)
+const HD_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'refrigerant_options', group: 'Refrigerant Options', characters: '' },        // Digit 3
+  { startPos: 3, endPos: 5, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–5
+  { startPos: 5, endPos: 6, id: 'txv_type', group: 'TXV Type', characters: '' },                              // Digit 6
+  { startPos: 6, endPos: 7, id: 'controls', group: 'Controls', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'cabinet_size', group: 'Cabinet Size', characters: '' },                      // Digit 8
+  { startPos: 8, endPos: 9, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 9
+  { startPos: 9, endPos: 10, id: 'revision', group: 'Revision', characters: '' }                              // Digit 10
+];
+
+// HL model number parsing configuration (ClimateMaster)
+const HL_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                          // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                    // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                              // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                              // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation', group: 'Cabinet Insulation', characters: '' },         // Digit 10
+  { startPos: 10, endPos: 11, id: 'blower_drive_package', group: 'Blower Drive Package', characters: '' },    // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' }, // Digit 12
+  { startPos: 12, endPos: 14, id: 'airflow_options', group: 'Airflow Options', characters: '' }               // Digits 13–14
+];
+
+// GSW model number parsing configuration (ClimateMaster)
+const GSW_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                            // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                      // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                                // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                                // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                  // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                                // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation', group: 'Cabinet Insulation', characters: '' },           // Digit 10
+  { startPos: 10, endPos: 11, id: 'hot_water_generator_options', group: 'Hot Water Generator Options', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'source_water_coil_options', group: 'Source Water Coil Options', characters: '' },      // Digit 12
+  { startPos: 12, endPos: 13, id: 'water_connection_location', group: 'Water Connection Location', characters: '' },      // Digit 13
+  { startPos: 13, endPos: 14, id: 'load_water_coil_options', group: 'Load Water Coil Options', characters: '' },          // Digit 14
+  { startPos: 14, endPos: 15, id: 'standard', group: 'Standard', characters: '' }                               // Digit 15
+];
+
+// HC model number parsing configuration (ClimateMaster)
+const HC_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_type', group: 'Model Type', characters: '' },                            // Digits 1–2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                      // Digit 3
+  { startPos: 3, endPos: 6, id: 'capacity', group: 'Capacity', characters: '' },                                // Digits 4–6
+  { startPos: 6, endPos: 7, id: 'revision', group: 'Revision', characters: '' },                                // Digit 7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                  // Digit 8
+  { startPos: 8, endPos: 9, id: 'controls', group: 'Controls', characters: '' },                                // Digit 9
+  { startPos: 9, endPos: 10, id: 'cabinet_insulation', group: 'Cabinet Insulation', characters: '' },           // Digit 10
+  { startPos: 10, endPos: 11, id: 'future', group: 'Future', characters: '' },                                  // Digit 11
+  { startPos: 11, endPos: 12, id: 'heat_exchanger_options', group: 'Heat Exchanger Options', characters: '' },  // Digit 12
+  { startPos: 12, endPos: 13, id: 'return_airflow_configuration', group: 'Return Airflow Configuration', characters: '' },  // Digit 13
+  { startPos: 13, endPos: 14, id: 'supply_air', group: 'Supply Air', characters: '' }                           // Digit 14
 ];
 
 // WaterFurnace
@@ -1186,6 +1777,265 @@ function buildDecoderTrie(): TrieNode {
       configName: 'SA (ClimateMaster)'
     },
     {
+      prefixes: ['SR','SC','SE','SZ','SY',],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: SR_SEGMENTS,
+      configName: 'SR (ClimateMaster)'
+    },
+    {
+      prefixes: ['SB'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: SB_SEGMENTS,
+      configName: 'SB (ClimateMaster)'
+    },
+    {
+      prefixes: ['SW'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: SW_SEGMENTS,
+      configName: 'SW (ClimateMaster)'
+    },
+    {
+      prefixes: ['20M'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: CM_20M_SEGMENTS,
+      configName: '20M (ClimateMaster)'
+    },
+    {
+      prefixes: ['SM'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: SM_SEGMENTS,
+      configName: 'SM (ClimateMaster)'
+    },
+    {
+      prefixes: ['SD'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: SD_SEGMENTS,
+      configName: 'SD (ClimateMaster)'
+    },
+    {
+      prefixes: ['SG'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: SG_SEGMENTS,
+      configName: 'SG (ClimateMaster)'
+    },
+    {
+      prefixes: ['TL'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: TL_SEGMENTS,
+      configName: 'TL (ClimateMaster)'
+    },
+    {
+      prefixes: ['TRC'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: TRC_SEGMENTS,
+      configName: 'TRC (ClimateMaster)'
+    },
+    {
+      prefixes: ['TRL'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: TRL_SEGMENTS,
+      configName: 'TRL (ClimateMaster)'
+    },
+    {
+      prefixes: ['TRT'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: TRT_SEGMENTS,
+      configName: 'TRT (ClimateMaster)'
+    },
+    {
+      prefixes: ['TR'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: TR_SEGMENTS,
+      configName: 'TR (ClimateMaster)'
+    },
+    {
+      prefixes: ['CCL'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: CCL_SEGMENTS,
+      configName: 'CCL (ClimateMaster)'
+    },
+    {
+      prefixes: ['GL'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: GL_SEGMENTS,
+      configName: 'GL (ClimateMaster)'
+    },
+    {
+      prefixes: ['TO'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: TO_SEGMENTS,
+      configName: 'TO (ClimateMaster)'
+    },
+    {
+      prefixes: ['GS'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: GS_CLIMATEMASTER_SEGMENTS,
+      configName: 'GS (ClimateMaster)'
+    },
+    {
+      prefixes: ['HB'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: HB_SEGMENTS,
+      configName: 'HB (ClimateMaster)'
+    },
+    {
+      prefixes: ['ST'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: ST_SEGMENTS,
+      configName: 'ST (ClimateMaster)'
+    },
+    {
+      prefixes: ['SH'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: SH_SEGMENTS,
+      configName: 'SH (ClimateMaster)'
+    },
+    {
+      prefixes: ['TMW'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: TMW_SEGMENTS,
+      configName: 'TMW (ClimateMaster)'
+    },
+    {
+      prefixes: ['CD'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: CD_SEGMENTS,
+      configName: 'CD (ClimateMaster)'
+    },
+    {
+      prefixes: ['EC'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: EC_CM_SEGMENTS,
+      configName: 'EC (ClimateMaster)'
+    },
+    {
+      prefixes: ['GR'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: GR_SEGMENTS,
+      configName: 'GR (ClimateMaster)'
+    },
+    {
+      prefixes: ['GSW'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: GSW_SEGMENTS,
+      configName: 'GSW (ClimateMaster)'
+    },
+    {
+      prefixes: ['HC'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: HC_SEGMENTS,
+      configName: 'HC (ClimateMaster)'
+    },
+    {
+      prefixes: ['HE'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: HE_SEGMENTS,
+      configName: 'HE (ClimateMaster)'
+    },
+    {
+      prefixes: ['HD'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: HD_SEGMENTS,
+      configName: 'HD (ClimateMaster)'
+    },
+    {
+      prefixes: ['HL'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: HL_SEGMENTS,
+      configName: 'HL (ClimateMaster)'
+    },
+    {
+      prefixes: ['TC'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: TC_SEGMENTS,
+      configName: 'TC (ClimateMaster)'
+    },
+    {
+      prefixes: ['TSM'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: TSM_SEGMENTS,
+      configName: 'TSM (ClimateMaster)'
+    },
+    {
+      prefixes: ['817'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: CM_817_SEGMENTS,
+      configName: '817 (ClimateMaster)'
+    },
+    {
+      prefixes: ['TY', 'TE', 'TZ'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: TY_TE_TZ_SEGMENTS,
+      configName: 'TY/TE/TZ (ClimateMaster)'
+    },
+    {
+      prefixes: ['CCE'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: CCE_SEGMENTS,
+      configName: 'CCE (ClimateMaster)'
+    },
+    {
+      prefixes: ['DE'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: DE_SEGMENTS,
+      configName: 'DE (ClimateMaster)'
+    },
+    {
+      prefixes: ['GC'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: GC_SEGMENTS,
+      configName: 'GC (ClimateMaster)'
+    },
+    {
+      prefixes: ['GO'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: GO_SEGMENTS,
+      configName: 'GO (ClimateMaster)'
+    },
+    {
+      prefixes: ['HSW'],
+      brand: 'ClimateMaster',
+      manufacturer: 'climatemaster',
+      segments: HSW_SEGMENTS,
+      configName: 'HSW (ClimateMaster)'
+    },
+    {
       prefixes: ['HT'],
       brand: 'ClimateMaster',
       manufacturer: 'climatemaster',
@@ -1596,7 +2446,12 @@ export async function POST(request: NextRequest) {
           group: 'Unknown',
           id: 'unknown',
           attempted: 'No matching decoder rule found'
-        }]
+        }],
+        supportInfo: {
+          message: "Can't find your model? Contact our help desk to have this model added to our system.",
+          email: 'helpdesk@techtag.com',
+          subject: `Model Integration Request: ${cleanModelNumber}`
+        }
       });
     }
 
@@ -1852,7 +2707,14 @@ async function decodeModelWithRule(
     manufacturer: rule.manufacturer,
     segments,
     confidence,
-    unmatchedSegments
+    unmatchedSegments,
+    supportInfo: {
+      message: unmatchedSegments.length > 0
+        ? "Having trouble with this model? Contact our help desk to have it fully integrated into our system."
+        : "Need help or found an issue? Contact our help desk for assistance.",
+      email: 'helpdesk@techtag.com',
+      subject: `Model Support Request: ${modelNumber}`
+    }
   };
 }
 

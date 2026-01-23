@@ -162,7 +162,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="service-card service-card-cta">
+              {/* <div className="service-card service-card-cta">
                 <div className="service-icon-wrapper service-icon-accent">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" fill="currentColor"/>
@@ -173,6 +173,39 @@ export default function HomePage() {
                   Integrate TechTag directly into your existing systems. RESTful API with comprehensive documentation for seamless automation.
                 </p>
                 <span className="service-coming-soon">Coming Soon</span>
+              </div> */}
+
+              {/* Coming Soon Features */}
+              <div className="service-card service-card-roadmap">
+                <div className="service-badge service-badge-roadmap">On The Roadmap</div>
+                <div className="service-icon-wrapper service-icon-roadmap">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <h3 className="service-title">Coming Soon</h3>
+                <ul className="roadmap-list">
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" fill="currentColor"/></svg>
+                    Rooftops & Other Equipment
+                  </li>
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z" fill="currentColor"/></svg>
+                    Links to Decoded Units' Catalogs
+                  </li>
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="currentColor"/></svg>
+                    Manufacturer Cross-Reference Guide
+                  </li>
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor"/></svg>
+                    Help Finding Reps in Your Area
+                  </li>
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="currentColor"/></svg>
+                    CRM Integration
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -448,6 +481,53 @@ export default function HomePage() {
           padding: 6px 14px;
           background: var(--gray-200);
           border-radius: var(--radius-md);
+        }
+
+        /* Roadmap Card Styles */
+        .service-card-roadmap {
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+          border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .service-badge-roadmap {
+          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+          color: white;
+        }
+
+        .service-icon-roadmap {
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+          color: #6366f1;
+        }
+
+        .roadmap-list {
+          list-style: none;
+          padding: 0;
+          margin: 16px 0 0 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .roadmap-list li {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 0.95rem;
+          color: var(--text-secondary);
+          padding: 8px 12px;
+          background: rgba(255, 255, 255, 0.5);
+          border-radius: var(--radius-sm);
+          transition: all 0.2s ease;
+        }
+
+        .roadmap-list li:hover {
+          background: rgba(255, 255, 255, 0.8);
+          transform: translateX(4px);
+        }
+
+        .roadmap-list li svg {
+          color: #6366f1;
+          flex-shrink: 0;
         }
 
         /* Responsive Design */

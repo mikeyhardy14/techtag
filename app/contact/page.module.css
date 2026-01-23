@@ -399,9 +399,9 @@
   display: inline-flex;
   align-items: center;
   padding: 12px 24px;
-  background: var(--gray-100);
-  color: var(--text-primary);
-  border: none;
+  background: white;
+  color: var(--tech-blue);
+  border: 1px solid var(--tech-blue);
   border-radius: var(--radius-lg);
   font-size: 0.95rem;
   font-weight: 500;
@@ -410,7 +410,8 @@
 }
 
 .resetButton:hover {
-  background: var(--gray-200);
+  background: var(--tech-blue);
+  color: white;
 }
 
 /* FAQ Section */

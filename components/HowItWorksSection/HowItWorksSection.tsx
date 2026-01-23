@@ -70,7 +70,7 @@ export default function HowItWorksSection() {
         {/* Header */}
         <div className={styles.header}>
           <span className={styles.eyebrow}>How It Works</span>
-          <h2 className={styles.title}>Decode any model number in seconds</h2>
+          <h2 className={styles.title}>Decode WSHP model number in seconds</h2>
           <p className={styles.subtitle}>
             Three simple steps to unlock the complete specifications of your HVAC equipment
           </p>

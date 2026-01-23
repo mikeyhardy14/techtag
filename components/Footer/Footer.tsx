@@ -17,7 +17,7 @@ export default function Footer() {
               <span className={styles.brandName}>TechTag</span>
             </div>
             <p className={styles.brandDescription}>
-              The industry's leading HVAC nomenclature decoder. Trusted by professionals 
+              On our way to becoming the industry's leading HVAC nomenclature decoder. Trusted by professionals 
               worldwide for fast, accurate, and reliable model number analysis.
             </p>
             <div className={styles.socialLinks}>

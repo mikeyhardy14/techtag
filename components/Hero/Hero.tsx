@@ -40,7 +40,7 @@ export default function Hero() {
         </div>
         
         <h1 className={styles.title}>
-          Decode Any Model Number <span className={styles.titleAccent}>Instantly</span>
+          Decode Commercial Water-Source Heat Pump Model Numbers <span className={styles.titleAccent}>Instantly</span>
         </h1>
         
         <p className={styles.subtitle}>
