@@ -170,7 +170,6 @@ export default function HistoryTable() {
       <div className={styles.historyTable}>
         <div className={styles.loading}>
           <div className={styles.spinner}></div>
-          <p>Loading history...</p>
         </div>
       </div>
     );

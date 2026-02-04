@@ -33,7 +33,7 @@ export default function AuthGuard({ children, admin = false }: AuthGuardProps) {
   }, [status, session, admin, router, adminEmails]);
 
   if (status === 'loading') {
-    return <div className={styles.loading}>Loading...</div>;
+    return <div className={styles.loading}></div>;
   }
 
   if (status === 'authenticated' && session?.user?.email) {

@@ -566,7 +566,6 @@ export default function DecoderForm({ initialQuery = '' }: DecoderFormProps) {
               <div className={styles.loadingBar} />
               <div className={styles.loadingBar} />
             </div>
-            <p className={styles.loadingText}>Analyzing model nomenclature...</p>
           </div>
         )}
 
