@@ -21,18 +21,7 @@ export default function HomePage() {
 
   // Show loading state while checking authentication
   if (loading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '50vh',
-        fontSize: '1.1rem',
-        color: 'var(--text-secondary)'
-      }}>
-        Loading...
-      </div>
-    );
+    return null;
   }
 
   // If user is authenticated, don't render the homepage (redirect is in progress)

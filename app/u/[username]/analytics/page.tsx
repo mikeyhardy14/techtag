@@ -76,7 +76,6 @@ export default function AnalyticsPage() {
         <div className={styles.content}>
           <div className={styles.loadingState}>
             <div className={styles.spinner}></div>
-            <p>Loading analytics...</p>
           </div>
         </div>
       </DashboardSidebar>

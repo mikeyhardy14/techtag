@@ -26,7 +26,6 @@ export default function ProfilePage() {
         <div className={styles.content}>
           <div className={styles.loadingContainer}>
             <div className={styles.spinner}></div>
-            <p className={styles.loadingText}>Loading profile...</p>
           </div>
         </div>
       </DashboardSidebar>
