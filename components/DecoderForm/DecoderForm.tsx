@@ -134,8 +134,14 @@ export default function DecoderForm({ initialQuery = '' }: DecoderFormProps) {
   const [showAllSpecs, setShowAllSpecs] = useState(false);
   const [decodeTime, setDecodeTime] = useState<number | null>(null);
   const [hoveredSegment, setHoveredSegment] = useState<number | null>(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Detect touch device
+  useEffect(() => {
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
 
   // Detect manufacturer while typing
   useEffect(() => {
@@ -640,7 +646,7 @@ export default function DecoderForm({ initialQuery = '' }: DecoderFormProps) {
             <div className={styles.visualSection}>
               <div className={styles.visualHeader}>
                 <h3 className={styles.visualTitle}>Model Number Breakdown</h3>
-                <span className={styles.visualHint}>Hover to highlight</span>
+                <span className={styles.visualHint}>{isTouchDevice ? 'Tap to highlight' : 'Hover to highlight'}</span>
               </div>
               
               {/* Full model with character positions */}
@@ -655,8 +661,9 @@ export default function DecoderForm({ initialQuery = '' }: DecoderFormProps) {
                     <div
                       key={segIndex}
                       className={`${styles.segmentGroup} ${hoveredSegment === segIndex ? styles.segmentActive : ''}`}
-                      onMouseEnter={() => setHoveredSegment(segIndex)}
-                      onMouseLeave={() => setHoveredSegment(null)}
+                      onMouseEnter={() => !isTouchDevice && setHoveredSegment(segIndex)}
+                      onMouseLeave={() => !isTouchDevice && setHoveredSegment(null)}
+                      onClick={() => isTouchDevice && setHoveredSegment(hoveredSegment === segIndex ? null : segIndex)}
                       style={{ '--seg-color': getGroupColor(segment.group) } as React.CSSProperties}
                     >
                       {segment.characters.split('').map((char, charIndex) => (
@@ -673,8 +680,9 @@ export default function DecoderForm({ initialQuery = '' }: DecoderFormProps) {
                   <div 
                     key={index}
                     className={`${styles.legendItem} ${hoveredSegment === index ? styles.legendActive : ''}`}
-                    onMouseEnter={() => setHoveredSegment(index)}
-                    onMouseLeave={() => setHoveredSegment(null)}
+                    onMouseEnter={() => !isTouchDevice && setHoveredSegment(index)}
+                    onMouseLeave={() => !isTouchDevice && setHoveredSegment(null)}
+                    onClick={() => isTouchDevice && setHoveredSegment(hoveredSegment === index ? null : index)}
                     style={{ '--seg-color': getGroupColor(segment.group) } as React.CSSProperties}
                   >
                     <span className={styles.legendDot} />

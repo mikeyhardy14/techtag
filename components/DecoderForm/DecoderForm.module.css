@@ -600,6 +600,7 @@
 
 .heroModel {
   flex: 1;
+  min-width: 0;
 }
 
 .modelNumberDisplay {
@@ -867,6 +868,7 @@
   border-radius: 4px;
   transition: all 0.15s ease;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .segmentGroup:hover,
@@ -909,6 +911,7 @@
   border-radius: 6px;
   transition: all 0.15s ease;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .legendItem:hover,
@@ -1301,13 +1304,13 @@
   }
   
   .inputSection {
-    padding: 24px 20px;
+    padding: 24px 16px 20px;
   }
   
   .inputHeader {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 10px;
   }
   
   .inputWrapper {
@@ -1318,13 +1321,14 @@
   }
   
   .input {
-    padding: 14px 12px;
-    font-size: 1.125rem;
-    text-align: center;
+    padding: 14px 40px 14px 12px;
+    font-size: 1rem;
+    text-align: left;
+    letter-spacing: 0.03em;
   }
   
   .input::placeholder {
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
   }
   
   .clearBtn {
@@ -1332,42 +1336,101 @@
     top: 16px;
     right: 16px;
     margin: 0;
+    width: 32px;
+    height: 32px;
   }
   
   .decodeBtn {
     width: 100%;
     justify-content: center;
     padding: 16px;
+    font-size: 1rem;
   }
   
+  /* Format hint wrapping */
+  .formatHint {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 14px;
+    font-size: 0.8125rem;
+  }
+  
+  /* Error box mobile */
+  .errorBox {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+  
+  .errorText {
+    font-size: 0.875rem;
+  }
+  
+  /* Empty state */
   .emptyState {
-    padding: 24px 20px;
+    padding: 20px 16px;
   }
   
   .emptyStateHidden {
-    padding: 0 20px;
+    padding: 0 16px;
   }
   
   .exampleGrid {
     grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .exampleCard {
+    padding: 14px;
   }
   
   .exampleCard::after {
     display: none;
   }
   
+  .exampleModel {
+    font-size: 0.875rem;
+    max-width: none;
+  }
+  
   .exampleDesc {
     padding-right: 0;
   }
   
-  .resultHero {
-    padding: 20px;
+  /* Tips - fix overflow */
+  .tipItem {
     flex-direction: column;
-    gap: 16px;
+    gap: 4px;
+    padding: 10px 14px;
+  }
+  
+  .tipMistake {
+    white-space: normal;
+  }
+  
+  /* Hide desktop-only pro tip (keyboard shortcut) */
+  .proTip {
+    display: none;
+  }
+  
+  /* Result Hero */
+  .resultHero {
+    padding: 20px 16px;
+    flex-direction: column;
+    gap: 12px;
   }
   
   .modelNumberDisplay {
-    font-size: 1.5rem;
+    font-size: 1.125rem;
+    overflow-wrap: break-word;
+    word-break: break-all;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+  
+  .heroBrandLine {
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.8125rem;
   }
   
   .heroMeta {
@@ -1376,37 +1439,138 @@
     gap: 12px;
   }
   
-  .specsSection,
-  .visualSection,
-  .detailsSection {
-    padding: 20px;
+  /* Specs */
+  .specsSection {
+    padding: 16px;
   }
   
   .specsGrid {
     grid-template-columns: 1fr;
   }
   
+  /* Visual section */
+  .visualSection {
+    padding: 16px;
+    position: static;
+  }
+  
+  .visualHint {
+    display: none;
+  }
+  
   .modelBreakdown {
     padding: 12px;
+    overflow-x: visible;
+  }
+  
+  /* Hide position ruler on mobile - can't align with wrapped chars */
+  .positionRuler {
+    display: none;
+  }
+  
+  /* Allow character grid to wrap onto multiple lines */
+  .modelChars {
+    flex-wrap: wrap;
+    gap: 4px 0;
+  }
+  
+  .segmentGroup {
+    margin-right: 2px;
+    margin-bottom: 2px;
   }
   
   .modelChar {
-    width: 20px;
-    height: 32px;
-    font-size: 1rem;
+    width: 18px;
+    height: 30px;
+    font-size: 0.9375rem;
+  }
+
+  /* Legend items - stack into cards on mobile */
+  .segmentLegend {
+    gap: 8px;
   }
   
-  .positionMark {
-    width: 20px;
-    font-size: 0.5rem;
+  .legendItem {
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    padding: 10px 12px;
   }
   
+  .legendCode {
+    min-width: unset;
+    font-size: 0.875rem;
+  }
+  
+  .legendPos {
+    min-width: unset;
+    font-size: 0.625rem;
+    order: 5;
+  }
+  
+  .legendMeaning {
+    flex-basis: 100%;
+    order: 4;
+    font-size: 0.8125rem;
+    padding-top: 4px;
+    border-top: 1px solid #F1F5F9;
+    margin-top: 2px;
+  }
+  
+  .legendGroup {
+    font-size: 0.625rem;
+    padding: 2px 6px;
+    margin-left: auto;
+  }
+  
+  /* Technical details */
+  .detailsSection {
+    padding: 16px;
+  }
+  
+  .detailContent {
+    padding: 10px 12px;
+  }
+  
+  .detailItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+  
+  .detailItemMain {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .detailValue {
+    font-size: 0.8125rem;
+  }
+  
+  .detailPos {
+    align-self: flex-end;
+  }
+  
+  /* Partial decode section */
   .partialSection {
-    margin: 16px 20px;
+    margin: 12px 16px;
   }
   
+  .partialHeader {
+    padding: 12px 14px;
+  }
+  
+  .partialBody {
+    padding: 14px;
+  }
+  
+  .partialMessage {
+    font-size: 0.75rem;
+  }
+  
+  /* Action bar */
   .actionBar {
-    padding: 16px 20px;
+    padding: 16px;
     flex-direction: column;
     gap: 12px;
   }
@@ -1421,9 +1585,312 @@
     justify-content: center;
   }
   
+  /* Hide keyboard shortcuts on mobile */
   .powerFeatures {
-    flex-wrap: wrap;
-    gap: 16px;
+    display: none;
+  }
+}
+
+/* ============================================
+   SMALL MOBILE (<=480px)
+   ============================================ */
+@media (max-width: 480px) {
+  .container {
+    padding: 12px 8px 24px;
+  }
+  
+  .decoderCard {
+    border-radius: 12px;
+  }
+  
+  .inputSection {
+    padding: 16px 12px 16px;
+  }
+
+  .inputBadge {
+    font-size: 0.6875rem;
+  }
+
+  .inputBadge svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .detectedBrand {
+    padding: 4px 10px;
+  }
+  
+  .detectedLabel {
+    font-size: 0.6875rem;
+  }
+  
+  .detectedName {
+    font-size: 0.8125rem;
+  }
+  
+  .inputWrapper {
+    padding: 10px;
+    gap: 10px;
+    border-radius: 10px;
+  }
+  
+  .input {
+    padding: 12px 36px 12px 10px;
+    font-size: 0.9375rem;
+  }
+
+  .input::placeholder {
+    font-size: 0.75rem;
+  }
+  
+  .clearBtn {
+    top: 14px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .clearBtn svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .decodeBtn {
+    padding: 14px;
+    font-size: 0.9375rem;
+    border-radius: 8px;
+  }
+  
+  .formatHint {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+  
+  .errorBox {
+    padding: 12px;
+    border-radius: 8px;
+  }
+  
+  .errorText {
+    font-size: 0.8125rem;
+  }
+  
+  .errorTip {
+    font-size: 0.75rem;
+  }
+  
+  .emptyState {
+    padding: 16px 12px;
+  }
+  
+  .emptyStateHidden {
+    padding: 0 12px;
+  }
+  
+  .sectionTitle {
+    font-size: 0.8125rem;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .exampleCard {
+    padding: 12px;
+    border-radius: 8px;
+  }
+  
+  .exampleModel {
+    font-size: 0.8125rem;
+  }
+  
+  .exampleBrand {
+    font-size: 0.6875rem;
+  }
+  
+  .exampleDesc {
+    font-size: 0.75rem;
+  }
+  
+  .tipItem {
+    padding: 8px 12px;
+    border-radius: 6px;
+  }
+  
+  .tipMistake {
+    font-size: 0.75rem;
+  }
+  
+  .tipText {
+    font-size: 0.75rem;
+  }
+  
+  /* Result hero small screen */
+  .resultHero {
+    padding: 16px 12px;
+    gap: 10px;
+  }
+  
+  .modelNumberDisplay {
+    font-size: 0.9375rem;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+  }
+  
+  .heroBrandLine {
+    font-size: 0.75rem;
+  }
+  
+  .metaItem {
+    font-size: 0.625rem;
+  }
+  
+  .metaConfidence {
+    font-size: 0.625rem;
+  }
+  
+  /* Visual section small screen */
+  .visualSection {
+    padding: 12px;
+  }
+  
+  .visualTitle {
+    font-size: 0.75rem;
+  }
+  
+  .modelBreakdown {
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .modelChar {
+    width: 15px;
+    height: 24px;
+    font-size: 0.75rem;
+  }
+  
+  .segmentGroup {
+    margin-right: 1px;
+    margin-bottom: 1px;
+  }
+  
+  .legendItem {
+    padding: 8px 10px;
+    border-radius: 6px;
+  }
+  
+  .legendCode {
+    font-size: 0.8125rem;
+  }
+  
+  .legendMeaning {
+    font-size: 0.75rem;
+  }
+  
+  .legendGroup {
+    font-size: 0.5625rem;
+    padding: 2px 5px;
+  }
+  
+  /* Technical details small screen */
+  .detailsSection {
+    padding: 12px;
+  }
+  
+  .detailsTitle {
+    font-size: 0.75rem;
+    margin-bottom: 12px;
+  }
+  
+  .detailHeader {
+    padding: 10px 12px;
+  }
+  
+  .detailGroupName {
+    font-size: 0.8125rem;
+  }
+  
+  .detailIcon {
+    font-size: 0.8125rem;
+  }
+  
+  .detailContent {
+    padding: 8px 10px;
+  }
+  
+  .detailContext {
+    font-size: 0.6875rem;
+    padding: 8px 10px;
+  }
+  
+  .detailItem {
+    padding: 8px 10px;
+    border-radius: 6px;
+  }
+  
+  .detailValue {
+    font-size: 0.75rem;
+  }
+  
+  .detailCode {
+    font-size: 0.6875rem;
+  }
+  
+  /* Partial section small screen */
+  .partialSection {
+    margin: 10px 12px;
+    border-radius: 8px;
+  }
+  
+  .partialTitle {
+    font-size: 0.8125rem;
+  }
+  
+  .partialSubtitle {
+    font-size: 0.6875rem;
+  }
+  
+  .partialMessage {
+    font-size: 0.6875rem;
+    line-height: 1.5;
+  }
+  
+  .unmatchedChip {
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
+  .unmatchedChip code {
+    font-size: 0.75rem;
+  }
+  
+  .partialHint {
+    font-size: 0.6875rem;
+  }
+  
+  /* Action bar small screen */
+  .actionBar {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .newDecodeBtn {
+    padding: 12px 16px;
+    font-size: 0.8125rem;
+    border-radius: 8px;
+  }
+  
+  .actionBtn {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+  }
+  
+  /* Loading state small screen */
+  .loadingState {
+    padding: 36px 16px;
+  }
+  
+  .loadingText {
+    font-size: 0.8125rem;
   }
 }
 
