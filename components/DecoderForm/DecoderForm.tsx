@@ -25,6 +25,7 @@ interface DecodedResult {
   manufacturer: string;
   segments: DecodedSegment[];
   confidence: 'high' | 'medium' | 'low';
+  confidenceReason?: string;
   unmatchedSegments: UnmatchedSegment[];
 }
 
@@ -599,11 +600,17 @@ export default function DecoderForm({ initialQuery = '' }: DecoderFormProps) {
                     {decodeTime}ms
                   </span>
                 )}
-                <span className={`${styles.metaConfidence} ${styles[`conf${result.confidence}`]}`}>
+                <span className={`${styles.metaConfidence} ${styles[`conf${result.confidence}`]}`} title={result.confidenceReason}>
                   {result.confidence === 'high' ? '✓' : result.confidence === 'medium' ? '~' : '?'} {result.confidence}
                 </span>
               </div>
             </div>
+            {(result.confidence === 'medium' || result.confidence === 'low') && result.confidenceReason && (
+              <div className={styles.confidenceReason}>
+                <span className={styles.confidenceReasonLabel}>Why {result.confidence}:</span>
+                <span className={styles.confidenceReasonText}>{result.confidenceReason}</span>
+              </div>
+            )}
 
             {/* Key Specs - Values Prominent */}
             {/* <div className={styles.specsSection}>

@@ -48,6 +48,7 @@ interface DecodedResult {
   manufacturer: string;
   segments: DecodedSegment[];
   confidence: 'high' | 'medium' | 'low';
+  confidenceReason?: string;
   unmatchedSegments: UnmatchedSegment[];
   supportInfo: {
     message: string;
@@ -1621,7 +1622,7 @@ const STANDARD_FLORIDA_HEAT_PUMP_SEGMENTS: ModelSegment[] = [
   { startPos: 2, endPos: 5, id: 'size', group: 'Size', characters: '' },                                                    // Digits 2–5
   { startPos: 5, endPos: 6, id: 'dash', group: 'Dash', characters: '' },                                                    // Digit 5
   { startPos: 6, endPos: 7, id: 'voltage', group: 'Voltage', characters: '' },                                              // Digit 6
-  { startPos: 7, endPos: 9, id: 'cabinet_construction', group: 'Cabinet Construction', characters: '' },                    // Digit 7-9
+  { startPos: 7, endPos: 9, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },                    // Digit 7-9
   { startPos: 9, endPos: 10, id: 'water_coil_options', group: 'Water Coil Options', characters: '' },                       // Digit 9
   { startPos: 10, endPos: 11, id: 'dash', group: 'Dash', characters: '' },                                                  // Digit 10
   { startPos: 11, endPos: 12, id: 'water_connections', group: 'Water Connections', characters: '' },                        // Digit 11
@@ -1928,7 +1929,11 @@ function buildDecoderTrie(): TrieNode {
       brand: 'ClimateMaster',
       manufacturer: 'climatemaster',
       segments: EC_CM_SEGMENTS,
-      configName: 'EC (ClimateMaster)'
+      configName: 'EC (ClimateMaster)',
+      conditions: {
+        // Does not include a dash
+        pattern: /^[^-]*$/
+      }
     },
     {
       prefixes: ['GR'],
@@ -2290,28 +2295,31 @@ function buildDecoderTrie(): TrieNode {
       segments: BP_BOSCH_SEGMENTS,
       configName: 'Bosch BP'
     },
-    {
-      prefixes: ['EC'],
-      brand: 'Bosch',
-      manufacturer: 'bosch',
-      segments: EC_BOSCH_SEGMENTS,
-      configName: 'Bosch EC'
-    },
+    // {
+    //   prefixes: ['EC'],
+    //   brand: 'Bosch',
+    //   manufacturer: 'bosch',
+    //   segments: EC_BOSCH_SEGMENTS,
+    //   configName: 'Bosch EC'
+    // },
 
     // Florida Heat Pump
     
-    // Skip Florida Heat Pump for now
     {
-      prefixes: ['AP', 'EM', 'EV', 'GO', 'AU', 'HE', 'SE'],
+      prefixes: ['AP', 'EC', 'EM', 'EV', 'AU','HE', 'SE'],
       brand: 'Florida Heat Pump',
-      manufacturer: 'florida_heat_pump',
+      manufacturer: 'FloridaHeatPump',
       segments: STANDARD_FLORIDA_HEAT_PUMP_SEGMENTS,
-      configName: 'Florida Heat Pump Standard'
+      configName: 'Florida Heat Pump',
+      conditions: {
+        // includes a dash (e.g. EC024-1HZC)
+        pattern: /-/
+      }
     },
     {
       prefixes: ['GS', 'GT'],
       brand: 'Florida Heat Pump',
-      manufacturer: 'florida_heat_pump',
+      manufacturer: 'FloridaHeatPump',
       segments: GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS,
       configName: 'Florida Heat Pump GS/GT'
     },
@@ -2440,6 +2448,7 @@ export async function POST(request: NextRequest) {
         manufacturer: 'unknown',
         segments: [],
         confidence: 'low' as const,
+        confidenceReason: 'No matching decoder rule found for this model format.',
         unmatchedSegments: [{
           position: '1-' + cleanModelNumber.length,
           characters: cleanModelNumber,
@@ -2699,7 +2708,7 @@ async function decodeModelWithRule(
   }
 
   // Calculate confidence based on successful database lookups
-  const confidence = calculateConfidence(segments, unmatchedSegments, modelNumber, segmentConfig);
+  const { confidence, reason: confidenceReason } = calculateConfidence(segments, unmatchedSegments, modelNumber, segmentConfig);
 
   return {
     modelNumber,
@@ -2707,6 +2716,7 @@ async function decodeModelWithRule(
     manufacturer: rule.manufacturer,
     segments,
     confidence,
+    confidenceReason,
     unmatchedSegments,
     supportInfo: {
       message: unmatchedSegments.length > 0
@@ -2748,39 +2758,67 @@ async function queryDatabaseForSegment(
   return null;
 }
 
-// Calculate confidence based on successful database lookups
+// Calculate confidence based on successful database lookups; returns level and human-readable reason
 function calculateConfidence(
   segments: DecodedSegment[],
   unmatchedSegments: UnmatchedSegment[],
   modelNumber: string,
   segmentConfig: ModelSegment[]
-): 'high' | 'medium' | 'low' {
-  if (segmentConfig.length === 0) return 'low';
-  
+): { confidence: 'high' | 'medium' | 'low'; reason: string } {
+  if (segmentConfig.length === 0) {
+    return { confidence: 'low', reason: 'No segment configuration for this model format.' };
+  }
+
   const totalSegments = segmentConfig.length;
   const matchedSegments = segments.length;
   const matchPercentage = matchedSegments / totalSegments;
 
   // Calculate expected length from the segment config
   const expectedLength = segmentConfig[segmentConfig.length - 1].endPos;
-  
+
   // Determine minimum acceptable length (allow some tolerance)
   const minLength = Math.max(10, Math.floor(expectedLength * 0.6));
-  
+
   // Check if model number length is reasonable
   const lengthIsReasonable = modelNumber.length >= minLength;
-  
+
   // High confidence: 90%+ segments matched and model number is proper length
   if (matchPercentage >= 0.9 && lengthIsReasonable && unmatchedSegments.length <= 2) {
-    return 'high';
+    const reason = unmatchedSegments.length === 0
+      ? 'All segments decoded.'
+      : `${unmatchedSegments.length} segment(s) could not be looked up.`;
+    return { confidence: 'high', reason };
   }
 
   // Medium confidence: 60%+ segments matched
   if (matchPercentage >= 0.6 && matchedSegments >= 4) {
-    return 'medium';
+    const reasons: string[] = [];
+    if (unmatchedSegments.length > 0) {
+      reasons.push(`${unmatchedSegments.length} segment(s) could not be decoded (missing or unrecognized digits).`);
+    }
+    if (modelNumber.length < expectedLength) {
+      reasons.push(`Model number is shorter than expected (expected ~${expectedLength} chars, got ${modelNumber.length}).`);
+    }
+    return {
+      confidence: 'medium',
+      reason: reasons.length ? reasons.join(' ') : 'Some segments could not be fully resolved.'
+    };
   }
 
   // Low confidence: everything else
-  return 'low';
+  const reasons: string[] = [];
+  if (matchedSegments < 4 || matchPercentage < 0.6) {
+    reasons.push(`Only ${matchedSegments} of ${totalSegments} segments matched.`);
+  }
+  if (unmatchedSegments.length > 0) {
+    reasons.push(`${unmatchedSegments.length} segment(s) could not be decoded.`);
+  }
+  if (!lengthIsReasonable) {
+    reasons.push(`Model number length (${modelNumber.length}) is below expected (~${expectedLength}).`);
+  }
+  return {
+    confidence: 'low',
+    reason: reasons.length ? reasons.join(' ') : 'Decode could not be fully resolved.'
+  };
 }
 

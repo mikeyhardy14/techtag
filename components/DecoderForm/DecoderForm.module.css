@@ -677,6 +677,30 @@
   color: #F87171;
 }
 
+/* Confidence reason (medium/low) */
+.confidenceReason {
+  padding: 12px 32px 16px;
+  background: #FFFBEB;
+  border-bottom: 1px solid #FDE68A;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.confidenceReasonLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #B45309;
+}
+
+.confidenceReasonText {
+  font-size: 0.8125rem;
+  color: #92400E;
+  line-height: 1.4;
+}
+
 /* ============================================
    KEY SPECS - Values Prominent
    ============================================ */
@@ -1439,6 +1463,14 @@
     gap: 12px;
   }
   
+  .confidenceReason {
+    padding: 10px 16px 14px;
+  }
+  
+  .confidenceReasonText {
+    font-size: 0.75rem;
+  }
+  
   /* Specs */
   .specsSection {
     padding: 16px;
@@ -1745,6 +1777,18 @@
   
   .metaConfidence {
     font-size: 0.625rem;
+  }
+  
+  .confidenceReason {
+    padding: 8px 12px 12px;
+  }
+  
+  .confidenceReasonLabel {
+    font-size: 0.625rem;
+  }
+  
+  .confidenceReasonText {
+    font-size: 0.6875rem;
   }
   
   /* Visual section small screen */
