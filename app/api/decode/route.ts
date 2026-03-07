@@ -212,6 +212,66 @@ const GEH_GEV_SEGMENTS: ModelSegment[] = [
   { startPos: 34, endPos: 35, id: 'drain_pan', group: 'Drain Pan', characters: '' }
 ];
 
+// GEVG/GEVK/GEHK model number parsing configuration (40 digits) - Trane
+const GEVG_GEVK_GEHK_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'model_series', group: 'Model Series', characters: '' },                        // Digits 1-3
+  { startPos: 3, endPos: 4, id: 'development_sequence', group: 'Development Sequence', characters: '' },        // Digit 4
+  { startPos: 4, endPos: 7, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                // Digits 5-7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                  // Digit 8
+  { startPos: 8, endPos: 9, id: 'heat_exchanger', group: 'Heat Exchanger', characters: '' },                    // Digit 9
+  { startPos: 9, endPos: 10, id: 'design_sequence', group: 'Design Sequence', characters: '' },                 // Digit 10
+  { startPos: 10, endPos: 11, id: 'refrigeration_sequence', group: 'Refrigeration Sequence', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'blower_configuration', group: 'Blower Configuration', characters: '' },      // Digit 12
+  { startPos: 12, endPos: 13, id: 'freeze_protection', group: 'Freeze Protection', characters: '' },            // Digit 13
+  { startPos: 13, endPos: 14, id: 'open_digit', group: 'Open Digit', characters: '' },                          // Digit 14
+  { startPos: 14, endPos: 15, id: 'supply_air_arrangement', group: 'Supply Air Arrangement', characters: '' },  // Digit 15
+  { startPos: 15, endPos: 16, id: 'return_air_arrangement', group: 'Return Air Arrangement', characters: '' },  // Digit 16
+  { startPos: 16, endPos: 17, id: 'controls', group: 'Controls', characters: '' },                              // Digit 17
+  { startPos: 17, endPos: 18, id: 'tstat_location', group: 'Tstat Location', characters: '' },                  // Digit 18
+  { startPos: 18, endPos: 19, id: 'fault_sensors', group: 'Fault Sensors', characters: '' },                    // Digit 19
+  { startPos: 19, endPos: 20, id: 'temperature_sensor', group: 'Temperature Sensor', characters: '' },          // Digit 20
+  { startPos: 20, endPos: 21, id: 'insulation', group: 'Insulation', characters: '' },                          // Digit 21
+  { startPos: 21, endPos: 22, id: 'electric_heat', group: 'Electric Heat', characters: '' },                    // Digit 22
+  { startPos: 22, endPos: 23, id: 'unit_mounted_disconnect', group: 'Unit Mounted Disconnect', characters: '' }, // Digit 23
+  { startPos: 23, endPos: 24, id: 'filter_type', group: 'Filter Type', characters: '' },                        // Digit 24
+  { startPos: 24, endPos: 25, id: 'acoustic_arrangement', group: 'Acoustic Arrangement', characters: '' },      // Digit 25
+  { startPos: 25, endPos: 36, id: 'not_applicable', group: 'Does Not Apply', characters: '' },                  // Digits 26-36
+  { startPos: 36, endPos: 37, id: 'ducted_filter_rack', group: 'Ducted Filter Rack', characters: '' },          // Digit 37
+  { startPos: 37, endPos: 38, id: 'isolation_valve', group: 'Isolation Valve', characters: '' },                // Digit 38
+  { startPos: 38, endPos: 39, id: 'power_connection', group: 'Power Connection', characters: '' },              // Digit 39
+  { startPos: 39, endPos: 40, id: 'drain_pan', group: 'Drain Pan', characters: '' }                             // Digit 40
+];
+
+// EXV model number parsing configuration (40 digits) - Trane
+const EXV_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 3, id: 'model_series', group: 'Model Series', characters: '' },                        // Digits 1-3
+  { startPos: 3, endPos: 4, id: 'development_sequence', group: 'Development Sequence', characters: '' },        // Digit 4
+  { startPos: 4, endPos: 7, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                // Digits 5-7
+  { startPos: 7, endPos: 8, id: 'voltage', group: 'Voltage', characters: '' },                                  // Digit 8
+  { startPos: 8, endPos: 9, id: 'heat_exchanger', group: 'Heat Exchanger', characters: '' },                    // Digit 9
+  { startPos: 9, endPos: 10, id: 'design_sequence', group: 'Design Sequence', characters: '' },                 // Digit 10
+  { startPos: 10, endPos: 11, id: 'refrigeration_sequence', group: 'Refrigeration Sequence', characters: '' },  // Digit 11
+  { startPos: 11, endPos: 12, id: 'blower_configuration', group: 'Blower Configuration', characters: '' },      // Digit 12
+  { startPos: 12, endPos: 13, id: 'freeze_protection', group: 'Freeze Protection', characters: '' },            // Digit 13
+  { startPos: 13, endPos: 14, id: 'open_digit_1', group: 'Open Digit', characters: '' },                        // Digit 14
+  { startPos: 14, endPos: 15, id: 'supply_air_arrangement', group: 'Supply Air Arrangement', characters: '' },  // Digit 15
+  { startPos: 15, endPos: 16, id: 'return_air_arrangement', group: 'Return Air Arrangement', characters: '' },  // Digit 16
+  { startPos: 16, endPos: 17, id: 'controls', group: 'Controls', characters: '' },                              // Digit 17
+  { startPos: 17, endPos: 18, id: 'tstat_sensor_location', group: 'Tstat/Sensor Location', characters: '' },    // Digit 18
+  { startPos: 18, endPos: 19, id: 'fault_sensors', group: 'Fault Sensors', characters: '' },                    // Digit 19
+  { startPos: 19, endPos: 20, id: 'temperature_sensor', group: 'Temperature Sensor', characters: '' },          // Digit 20
+  { startPos: 20, endPos: 21, id: 'insulation', group: 'Insulation', characters: '' },                          // Digit 21
+  { startPos: 21, endPos: 22, id: 'open_digit_2', group: 'Open Digit', characters: '' },                        // Digit 22
+  { startPos: 22, endPos: 23, id: 'unit_mounted_disconnect', group: 'Unit Mounted Disconnect', characters: '' }, // Digit 23
+  { startPos: 23, endPos: 24, id: 'filter_type', group: 'Filter Type', characters: '' },                        // Digit 24
+  { startPos: 24, endPos: 25, id: 'acoustic_arrangement', group: 'Acoustic Arrangement', characters: '' },      // Digit 25
+  { startPos: 25, endPos: 36, id: 'not_applicable', group: 'Does Not Apply', characters: '' },                  // Digits 26-36
+  { startPos: 36, endPos: 37, id: 'ducted_filter_rack', group: 'Ducted Filter Rack', characters: '' },          // Digit 37
+  { startPos: 37, endPos: 38, id: 'isolation_valve', group: 'Isolation Valve', characters: '' },                // Digit 38
+  { startPos: 38, endPos: 39, id: 'power_connection', group: 'Power Connection', characters: '' },              // Digit 39
+  { startPos: 39, endPos: 40, id: 'drain_pan', group: 'Drain Pan', characters: '' }                             // Digit 40
+];
+
 const EXW_SEGMENTS: ModelSegment[] = [
   { startPos: 0, endPos: 3, id: 'model_series', group: 'Model Series', characters: '' },
   { startPos: 3, endPos: 4, id: 'development_sequence', group: 'Development Sequence', characters: '' },
@@ -1661,6 +1721,53 @@ const GS_GT_FLORIDA_HEAT_PUMP_SEGMENTS: ModelSegment[] = [
   { startPos: 15, endPos: 16, id: 'vintage', group: 'Vintage', characters: '' }                                             // Digit 15
 ];
 
+// CARRIER
+// Carrier 50WC/50ED model number parsing configuration
+const CARRIER_50WC_50ED_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                        // Digits 1-2
+  { startPos: 2, endPos: 4, id: 'tier', group: 'Tier', characters: '' },                                        // Digits 3-4
+  { startPos: 4, endPos: 5, id: 'cabinet_configuration', group: 'Cabinet Configuration', characters: '' },      // Digit 5
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                // Digits 6-8
+  { startPos: 8, endPos: 9, id: 'airflow_configuration', group: 'Airflow Configuration', characters: '' },      // Digit 9
+  { startPos: 9, endPos: 10, id: 'controls_transformer', group: 'Controls Options Transformer', characters: '' }, // Digit 10
+  { startPos: 10, endPos: 11, id: 'refrigerant_circuit', group: 'Refrigerant Circuit Options', characters: '' }, // Digit 11
+  { startPos: 11, endPos: 12, id: 'electrical_options', group: 'Electrical Options', characters: '' },          // Digit 12
+  { startPos: 12, endPos: 13, id: 'sound_iaq_options', group: 'Sound IAQ Options', characters: '' },            // Digit 13
+  { startPos: 13, endPos: 14, id: 'hydronic_options', group: 'Hydronic Options', characters: '' },              // Digit 14
+  { startPos: 14, endPos: 15, id: 'miscellaneous_options', group: 'Miscellaneous Options', characters: '' },    // Digit 15
+  { startPos: 15, endPos: 16, id: 'revision', group: 'Revision', characters: '' }                               // Digit 16
+];
+
+// Carrier 50PSW model number parsing configuration
+const CARRIER_50PSW_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                        // Digits 1-2
+  { startPos: 2, endPos: 5, id: 'tier', group: 'Tier', characters: '' },                                        // Digits 3-5
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                // Digits 6-8
+  { startPos: 8, endPos: 9, id: 'load_coil_material', group: 'Load Coil Material', characters: '' },            // Digit 9
+  { startPos: 9, endPos: 10, id: 'control', group: 'Control', characters: '' },                                 // Digit 10
+  { startPos: 10, endPos: 11, id: 'source_coil', group: 'Source Coil', characters: '' },                        // Digit 11
+  { startPos: 11, endPos: 12, id: 'electrical_options', group: 'Electrical Options', characters: '' },          // Digit 12
+  { startPos: 12, endPos: 13, id: 'revision', group: 'Revision', characters: '' },                              // Digit 13
+  { startPos: 13, endPos: 14, id: 'refrigeration_options', group: 'Refrigeration Options', characters: '' },    // Digit 14
+  { startPos: 14, endPos: 15, id: 'options', group: 'Options', characters: '' },                                // Digit 15
+  { startPos: 15, endPos: 16, id: 'a2l_leak_detection', group: 'A2L Leak Detection', characters: '' }           // Digit 16
+];
+
+// Carrier 50RH/50RV/50RD model number parsing configuration
+const CARRIER_50RH_50RV_50RD_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                        // Digits 1-2
+  { startPos: 2, endPos: 5, id: 'tier', group: 'Tier', characters: '' },                                        // Digits 3-5
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                // Digits 6-8
+  { startPos: 8, endPos: 9, id: 'airflow_configuration', group: 'Airflow Configuration', characters: '' },      // Digit 9
+  { startPos: 9, endPos: 10, id: 'control', group: 'Control', characters: '' },                                 // Digit 10
+  { startPos: 10, endPos: 11, id: 'heat_exchanger', group: 'Heat Exchanger', characters: '' },                  // Digit 11
+  { startPos: 11, endPos: 12, id: 'electrical_options', group: 'Electrical Options', characters: '' },          // Digit 12
+  { startPos: 12, endPos: 13, id: 'revision', group: 'Revision', characters: '' },                              // Digit 13
+  { startPos: 13, endPos: 14, id: 'packing', group: 'Packing', characters: '' },                                // Digit 14
+  { startPos: 14, endPos: 15, id: 'operating_range', group: 'Operating Range', characters: '' },                // Digit 15
+  { startPos: 15, endPos: 16, id: 'water_source_heat_pump', group: 'Water Source Heat Pump', characters: '' }   // Digit 16
+];
+
 // WHALEN
 // WHALEN 2021 model number parsing configuration // needs to be renamed
 const OLDER_WHALEN_SEGMENTS: ModelSegment[] = [
@@ -1751,6 +1858,68 @@ const WVI_WVP_WHALEN_SEGMENTS: ModelSegment[] = [
   { startPos: 27, endPos: 28, id: 'chassis_plug', group: 'Chassis Plug', characters: ''}, // Digit 27
   { startPos : 28, endPos: 29, id: 'air_and_fluid_sensor', group: 'Air and Fluid Sensor', characters: ''}, // Digit 28
   { startPos: 29, endPos: 30, id: 'coil_height', group: 'Coil Height', characters: '' }                           // Digit 29
+];
+
+// Carrier 50PC model number parsing configuration
+const CARRIER_50PC_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                      // Digits 1-2
+  { startPos: 2, endPos: 5, id: 'tier', group: 'Tier', characters: '' },                                      // Digits 3-5
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },              // Digits 6-8
+  { startPos: 8, endPos: 9, id: 'airflow_configuration', group: 'Airflow Configuration', characters: '' },    // Digit 9
+  { startPos: 9, endPos: 10, id: 'control_transformer_options', group: 'Control Transformer Options', characters: '' },  // Digit 10
+  { startPos: 10, endPos: 11, id: 'refrigerant_circuit_options', group: 'Refrigerant Circuit Options', characters: '' }, // Digit 11
+  { startPos: 11, endPos: 12, id: 'electrical_options', group: 'Electrical Options', characters: '' },        // Digit 12
+  { startPos: 12, endPos: 13, id: 'revision', group: 'Revision', characters: '' },                            // Digit 13
+  { startPos: 13, endPos: 14, id: 'valve_options', group: 'Valve Options', characters: '' },                  // Digit 14
+  { startPos: 14, endPos: 15, id: 'operating_range', group: 'Operating Range', characters: '' },              // Digit 15
+  { startPos: 15, endPos: 16, id: 'factory_installed_options', group: 'Factory Installed Options', characters: '' }  // Digit 16
+];
+
+// Carrier 50QP model number parsing configuration
+const CARRIER_50QP_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                    // Digit 1-2
+  { startPos: 2, endPos: 3, id: 'configuration', group: 'Configuration', characters: '' },                  // Digit 3
+  { startPos: 3, endPos: 5, id: 'tier', group: 'Tier', characters: '' },                                    // Digit 4-5
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },            // Digit 6-8
+  { startPos: 8, endPos: 9, id: 'airflow', group: 'Airflow', characters: '' },                              // Digit 9
+  { startPos: 9, endPos: 10, id: 'controls_vfd_wiring', group: 'Controls Option VFD Wiring', characters: '' }, // Digit 10
+  { startPos: 10, endPos: 11, id: 'refrigerant_circuit', group: 'Refrigerant Circuit Options', characters: '' }, // Digit 11
+  { startPos: 11, endPos: 12, id: 'electrical_options', group: 'Electrical Options', characters: '' },      // Digit 12
+  { startPos: 12, endPos: 13, id: 'revision', group: 'Revision', characters: '' },                          // Digit 13
+  { startPos: 13, endPos: 14, id: 'additional_options', group: 'Additional Options', characters: '' },      // Digit 14
+  { startPos: 14, endPos: 15, id: 'sound_iaq_tac', group: 'Sound IAQ Tac', characters: '' },                // Digit 15
+  { startPos: 15, endPos: 16, id: 'blower_motor', group: 'Blower Motor Options', characters: '' }           // Digit 16
+];
+
+// Carrier 50PT model number parsing configuration
+const CARRIER_50PT_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                      // Digit 1-2
+  { startPos: 2, endPos: 5, id: 'tier', group: 'Tier', characters: '' },                                      // Digit 3-5
+  { startPos: 5, endPos: 8, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },              // Digit 6-8
+  { startPos: 8, endPos: 9, id: 'airflow_configuration', group: 'Airflow Configuration', characters: '' },    // Digit 9
+  { startPos: 9, endPos: 10, id: 'control', group: 'Control', characters: '' },                               // Digit 10
+  { startPos: 10, endPos: 11, id: 'refrigerant_circuit_options', group: 'Refrigerant Circuit Options', characters: '' }, // Digit 11
+  { startPos: 11, endPos: 12, id: 'electrical_options', group: 'Electrical Options', characters: '' },        // Digit 12
+  { startPos: 12, endPos: 13, id: 'revision', group: 'Revision', characters: '' },                            // Digit 13
+  { startPos: 13, endPos: 14, id: 'valve_options', group: 'Valve Options', characters: '' },                  // Digit 14
+  { startPos: 14, endPos: 15, id: 'operating_range', group: 'Operating Range', characters: '' },              // Digit 15
+  { startPos: 15, endPos: 16, id: 'factory_installed_options', group: 'Factory Installed Options', characters: '' }  // Digit 16
+];
+
+// Carrier 50PEC model number parsing configuration
+const CARRIER_50PEC_SEGMENTS: ModelSegment[] = [
+  { startPos: 0, endPos: 2, id: 'model_series', group: 'Model Series', characters: '' },                        // Digits 1-2
+  { startPos: 2, endPos: 5, id: 'tier', group: 'Tier', characters: '' },                                        // Digits 3-5
+  { startPos: 5, endPos: 7, id: 'nominal_capacity', group: 'Nominal Capacity', characters: '' },                // Digits 6-7
+  { startPos: 7, endPos: 8, id: 'water_circuit_options', group: 'Water Circuit Options', characters: '' },      // Digit 8
+  { startPos: 8, endPos: 9, id: 'cabinet_subbase_options', group: 'Cabinet and Subbase Options', characters: '' }, // Digit 9
+  { startPos: 9, endPos: 10, id: 'control_transformer', group: 'Control Transformer Options', characters: '' }, // Digit 10
+  { startPos: 10, endPos: 11, id: 'refrigerant_circuit', group: 'Refrigerant Circuit Options', characters: '' }, // Digit 11
+  { startPos: 11, endPos: 12, id: 'electrical_options', group: 'Electrical Options', characters: '' },          // Digit 12
+  { startPos: 12, endPos: 13, id: 'revision', group: 'Revision', characters: '' },                              // Digit 13
+  { startPos: 13, endPos: 14, id: 'packaging', group: 'Packaging', characters: '' },                            // Digit 14
+  { startPos: 14, endPos: 15, id: 'operating_range', group: 'Operating Range', characters: '' },                // Digit 15
+  { startPos: 15, endPos: 16, id: 'factory_installed_options', group: 'Factory Installed Options', characters: '' } // Digit 16
 ];
 
 // ============================================================================
@@ -2049,26 +2218,31 @@ function buildDecoderTrie(): TrieNode {
     },
 
     // Trane
+    // GEVG/GEVK/GEHK 40-digit models (must be before shorter prefix matches)
     {
-      prefixes: ['GEH', 'GEV'],
+      prefixes: ['GEVG', 'GEVK', 'GEHK'],
+      brand: 'Trane',
+      manufacturer: 'trane',
+      segments: GEVG_GEVK_GEHK_SEGMENTS,
+      configName: 'GEVG/GEVK/GEHK 40-digit (Trane)',
+      conditions: {
+        minLength: 40,
+        maxLength: 40
+      }
+    },
+    {
+      prefixes: ['GEH', 'GEV', 'GEVE', 'EXH', 'EXV'],
       brand: 'Trane',
       manufacturer: 'trane',
       segments: GEH_GEV_SEGMENTS,
-      configName: 'GEH/GEV (Trane)'
-    },
-    {
-      prefixes: ['EXV', 'EXH'],
-      brand: 'Trane',
-      manufacturer: 'trane',
-      segments: EXW_SEGMENTS,
-      configName: 'EXV/EXH (Trane)'
+      configName: 'GEH/GEV/EXH/EXV (Trane)'
     },
     {
       prefixes: ['GET'],
       brand: 'Trane',
       manufacturer: 'trane',
       segments: GET_SEGMENTS,
-      configName: 'GET (Crane)'
+      configName: 'GET (Trane)'
     },
     {
       prefixes: ['GWS'],
@@ -2090,6 +2264,13 @@ function buildDecoderTrie(): TrieNode {
       manufacturer: 'trane',
       segments: VSH_VSV_SEGMENTS,
       configName: 'VSH/VSV (Trane)'
+    },
+    {
+      prefixes: ['EXW'],
+      brand: 'Trane',
+      manufacturer: 'trane',
+      segments: EXW_SEGMENTS,
+      configName: 'EXW (Trane)'
     },
 
     // Daikin
@@ -2324,6 +2505,29 @@ function buildDecoderTrie(): TrieNode {
       configName: 'Florida Heat Pump GS/GT'
     },
 
+    // Carrier
+    {
+      prefixes: ['50WC', '50ED'],
+      brand: 'Carrier',
+      manufacturer: 'carrier',
+      segments: CARRIER_50WC_50ED_SEGMENTS,
+      configName: 'Carrier 50WC/50ED'
+    },
+    {
+      prefixes: ['50PSW'],
+      brand: 'Carrier',
+      manufacturer: 'carrier',
+      segments: CARRIER_50PSW_SEGMENTS,
+      configName: 'Carrier 50PSW'
+    },
+    {
+      prefixes: ['50RH', '50RV', '50RD'],
+      brand: 'Carrier',
+      manufacturer: 'carrier',
+      segments: CARRIER_50RH_50RV_50RD_SEGMENTS,
+      configName: 'Carrier 50RH/50RV/50RD'
+    },
+
     // Whalen - Older models (R410A)
     {
       prefixes: ['VI', 'VP', 'VH', 'VS', 'VT', 'VR'],
@@ -2346,6 +2550,36 @@ function buildDecoderTrie(): TrieNode {
       manufacturer: 'whalen',
       segments: WVI_WVP_WHALEN_SEGMENTS,
       configName: 'Whalen WVI/WVP'
+    },
+
+    // Carrier
+    {
+      prefixes: ['50PC'],
+      brand: 'Carrier',
+      manufacturer: 'carrier',
+      segments: CARRIER_50PC_SEGMENTS,
+      configName: 'Carrier 50PC'
+    },
+    {
+      prefixes: ['50QP'],
+      brand: 'Carrier',
+      manufacturer: 'carrier',
+      segments: CARRIER_50QP_SEGMENTS,
+      configName: 'Carrier 50QP'
+    },
+    {
+      prefixes: ['50PT'],
+      brand: 'Carrier',
+      manufacturer: 'carrier',
+      segments: CARRIER_50PT_SEGMENTS,
+      configName: 'Carrier 50PT'
+    },
+    {
+      prefixes: ['50PEC'],
+      brand: 'Carrier',
+      manufacturer: 'carrier',
+      segments: CARRIER_50PEC_SEGMENTS,
+      configName: 'Carrier 50PEC'
     }
   ];
 

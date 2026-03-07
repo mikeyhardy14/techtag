@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la \"C:\\\\Users\\\\Mike\\\\code\\\\techtag\\\\components\\\\DecoderForm\"\" && ls -la \"C:UsersMikecodetechtagcomponentsNomenclatureDecoder\"\")",
+      "Bash(dir:*)",
+      "Bash(dir \"C:\\\\Users\\\\Mike\\\\code\\\\techtag\\\\components\\\\NomenclatureDecoder\")"
+    ]
+  }
+}
