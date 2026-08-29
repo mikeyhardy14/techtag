@@ -63,9 +63,9 @@ export default function Footer() {
           <div className={styles.linkSection}>
             <h4 className={styles.linkTitle}>Company</h4>
             <ul className={styles.linkList}>
-              <li><Link href="/#about">About</Link></li>
-              <li><Link href="/privacy">Privacy Policy</Link></li>
-              <li><Link href="/terms">Terms of Service</Link></li>
+              <li><span className={styles.comingSoon}>About <span className={styles.badge}>Soon</span></span></li>
+              <li><span className={styles.comingSoon}>Privacy Policy <span className={styles.badge}>Soon</span></span></li>
+              <li><span className={styles.comingSoon}>Terms of Service <span className={styles.badge}>Soon</span></span></li>
             </ul>
           </div>
         </div>
