@@ -21,18 +21,85 @@ export default function HomePage() {
 
   // Show loading state while checking authentication
   if (loading) {
-    return null;
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="rgba(59, 130, 246, 0.2)" strokeWidth="3" />
+            <path d="M12 2a10 10 0 0 1 10 10" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round">
+              <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite" />
+            </path>
+          </svg>
+        </div>
+        <style jsx>{`
+          .loading-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1E293B;
+          }
+          .loading-spinner {
+            animation: pulse 2s ease-in-out infinite;
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+          }
+        `}</style>
+      </div>
+    );
   }
 
   // If user is authenticated, don't render the homepage (redirect is in progress)
   if (user) {
-    return null;
+    return (
+      <div className="loading-container">
+        <div className="loading-content">
+          <div className="loading-spinner">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="rgba(59, 130, 246, 0.2)" strokeWidth="3" />
+              <path d="M12 2a10 10 0 0 1 10 10" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round">
+                <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite" />
+              </path>
+            </svg>
+          </div>
+          <p className="loading-text">Redirecting to your dashboard...</p>
+        </div>
+        <style jsx>{`
+          .loading-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1E293B;
+          }
+          .loading-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+          }
+          .loading-spinner {
+            animation: pulse 2s ease-in-out infinite;
+          }
+          .loading-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.875rem;
+            font-weight: 500;
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+          }
+        `}</style>
+      </div>
+    );
   }
 
   return (
     <>
-      
-      <main className="main-content">
+      <div className="main-content">
         <Hero />
 
         {/* About Us Section */}
@@ -60,6 +127,75 @@ export default function HomePage() {
           </div>
         </section> */}
 
+        {/* Enterprise Stats Section */}
+        <section className="stats-section">
+          <div className="container">
+            <div className="stats-grid">
+              <div className="stat-card">
+                <div className="stat-number">10,000+</div>
+                <div className="stat-label">HVAC Models Decoded</div>
+                <div className="stat-description">Comprehensive database covering major manufacturers</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-number">50+</div>
+                <div className="stat-label">Manufacturer Coverage</div>
+                <div className="stat-description">Carrier, Trane, Lennox, Goodman, and more</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-number">99.9%</div>
+                <div className="stat-label">Decode Accuracy</div>
+                <div className="stat-description">AI-powered pattern matching and validation</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-number">&lt;1s</div>
+                <div className="stat-label">Average Decode Time</div>
+                <div className="stat-description">Instant results for maximum productivity</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Trusted By Section */}
+        <section className="trusted-section">
+          <div className="container">
+            <p className="trusted-label">Trusted by HVAC professionals across industries</p>
+            <div className="trusted-logos">
+              <div className="trusted-logo-item">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span>Commercial Contractors</span>
+              </div>
+              <div className="trusted-logo-item">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 21V13.6a.6.6 0 01.6-.6h4.8a.6.6 0 01.6.6V21M12 3l9 7-9 6-9-6 9-7z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M21 10v10a1 1 0 01-1 1H4a1 1 0 01-1-1V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span>Property Managers</span>
+              </div>
+              <div className="trusted-logo-item">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span>HVAC Technicians</span>
+              </div>
+              <div className="trusted-logo-item">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2V3zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7V3z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span>Engineering Firms</span>
+              </div>
+              <div className="trusted-logo-item">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span>Building Inspectors</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* How It Works Section */}
         <HowItWorksSection />
 
@@ -67,10 +203,11 @@ export default function HomePage() {
         <section className="services-section">
           <div className="container">
             <div className="section-header">
-              <span className="section-eyebrow">Platform Capabilities</span>
+              <span className="section-eyebrow">Enterprise Platform</span>
               <h2 className="section-title">Built for HVAC Professionals</h2>
               <p className="section-description">
-                Streamline your workflow with intelligent nomenclature decoding and comprehensive equipment insights
+                Enterprise-grade nomenclature intelligence that scales with your business. 
+                Streamline workflows, improve accuracy, and make data-driven decisions.
               </p>
             </div>
             
@@ -200,7 +337,55 @@ export default function HomePage() {
           </div>
         </section>
 
-      </main>
+        {/* Enterprise CTA Section */}
+        <section className="enterprise-cta-section">
+          <div className="container">
+            <div className="enterprise-cta-content">
+              <div className="enterprise-cta-text">
+                <span className="cta-eyebrow">Get Started Today</span>
+                <h2 className="cta-title">Ready to Transform Your HVAC Workflow?</h2>
+                <p className="cta-description">
+                  Join thousands of HVAC professionals who trust TechTag for accurate, instant model number decoding. 
+                  Start for free, no credit card required.
+                </p>
+              </div>
+              <div className="enterprise-cta-actions">
+                <a href="/decode" className="cta-primary">
+                  <span>Try the Decoder</span>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </a>
+                <a href="/signup" className="cta-secondary">Create Free Account</a>
+              </div>
+            </div>
+            <div className="enterprise-features-row">
+              <div className="enterprise-feature">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+                <span>No credit card required</span>
+              </div>
+              <div className="enterprise-feature">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+                <span>Free forever for basic use</span>
+              </div>
+              <div className="enterprise-feature">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+                <span>Enterprise plans available</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
 
       <Footer />
 
@@ -213,6 +398,121 @@ export default function HomePage() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 24px;
+        }
+
+        /* Stats Section */
+        .stats-section {
+          padding: 80px 0;
+          background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
+          position: relative;
+        }
+
+        .stats-section::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+        }
+
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 32px;
+        }
+
+        .stat-card {
+          text-align: center;
+          padding: 32px 24px;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 16px;
+          transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+          background: rgba(255, 255, 255, 0.04);
+          border-color: rgba(59, 130, 246, 0.2);
+          transform: translateY(-4px);
+        }
+
+        .stat-number {
+          font-size: 3rem;
+          font-weight: 800;
+          background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-bottom: 8px;
+          line-height: 1;
+        }
+
+        .stat-label {
+          font-size: 1rem;
+          font-weight: 600;
+          color: white;
+          margin-bottom: 8px;
+        }
+
+        .stat-description {
+          font-size: 0.875rem;
+          color: rgba(255, 255, 255, 0.5);
+          line-height: 1.5;
+        }
+
+        /* Trusted Section */
+        .trusted-section {
+          padding: 60px 0;
+          background: #1E293B;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .trusted-label {
+          text-align: center;
+          font-size: 0.8125rem;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: rgba(255, 255, 255, 0.4);
+          margin: 0 0 32px 0;
+        }
+
+        .trusted-logos {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 48px;
+          flex-wrap: wrap;
+        }
+
+        .trusted-logo-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          color: rgba(255, 255, 255, 0.4);
+          transition: all 0.2s ease;
+        }
+
+        .trusted-logo-item:hover {
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .trusted-logo-item svg {
+          opacity: 0.6;
+        }
+
+        .trusted-logo-item:hover svg {
+          opacity: 0.9;
+        }
+
+        .trusted-logo-item span {
+          font-size: 0.75rem;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
         }
 
         /* Section Styles */
@@ -519,6 +819,152 @@ export default function HomePage() {
           flex-shrink: 0;
         }
 
+        /* Enterprise CTA Section */
+        .enterprise-cta-section {
+          padding: 100px 0;
+          background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .enterprise-cta-section::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+        }
+
+        .enterprise-cta-section::after {
+          content: '';
+          position: absolute;
+          top: -200px;
+          right: -200px;
+          width: 500px;
+          height: 500px;
+          background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+          pointer-events: none;
+        }
+
+        .enterprise-cta-content {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 48px;
+          margin-bottom: 48px;
+        }
+
+        .enterprise-cta-text {
+          max-width: 600px;
+        }
+
+        .cta-eyebrow {
+          display: inline-block;
+          font-size: 0.8125rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: #3B82F6;
+          margin-bottom: 16px;
+        }
+
+        .cta-title {
+          font-size: clamp(2rem, 4vw, 2.5rem);
+          font-weight: 700;
+          color: white;
+          margin: 0 0 16px 0;
+          line-height: 1.2;
+          letter-spacing: -0.02em;
+        }
+
+        .cta-description {
+          font-size: 1.125rem;
+          color: rgba(255, 255, 255, 0.6);
+          line-height: 1.7;
+          margin: 0;
+        }
+
+        .enterprise-cta-actions {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          flex-shrink: 0;
+        }
+
+        .cta-primary {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          padding: 18px 32px;
+          background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+          border-radius: 12px;
+          color: white;
+          text-decoration: none;
+          font-size: 1rem;
+          font-weight: 600;
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .cta-primary:hover {
+          background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 24px rgba(59, 130, 246, 0.4);
+        }
+
+        .cta-primary svg {
+          transition: transform 0.2s ease;
+        }
+
+        .cta-primary:hover svg {
+          transform: translateX(4px);
+        }
+
+        .cta-secondary {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 16px 32px;
+          background: transparent;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 12px;
+          color: rgba(255, 255, 255, 0.8);
+          text-decoration: none;
+          font-size: 0.9375rem;
+          font-weight: 500;
+          transition: all 0.2s ease;
+        }
+
+        .cta-secondary:hover {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: rgba(255, 255, 255, 0.3);
+          color: white;
+        }
+
+        .enterprise-features-row {
+          display: flex;
+          justify-content: center;
+          gap: 48px;
+          padding-top: 32px;
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .enterprise-feature {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 0.875rem;
+          color: rgba(255, 255, 255, 0.5);
+          font-weight: 500;
+        }
+
+        .enterprise-feature svg {
+          color: #10B981;
+        }
+
         /* Responsive Design */
         @media (max-width: 1200px) {
           .services-grid {
@@ -572,6 +1018,85 @@ export default function HomePage() {
             width: 56px;
             height: 56px;
           }
+
+          .enterprise-cta-section {
+            padding: 64px 0;
+          }
+
+          .enterprise-cta-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 32px;
+          }
+
+          .enterprise-cta-text {
+            max-width: 100%;
+          }
+
+          .cta-title {
+            font-size: 1.75rem;
+          }
+
+          .cta-description {
+            font-size: 1rem;
+          }
+
+          .enterprise-cta-actions {
+            width: 100%;
+            max-width: 320px;
+          }
+
+          .cta-primary,
+          .cta-secondary {
+            width: 100%;
+          }
+
+          .enterprise-features-row {
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .trusted-logos {
+            gap: 32px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .stats-section {
+            padding: 60px 0;
+          }
+
+          .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+
+          .stat-card {
+            padding: 24px 20px;
+          }
+
+          .stat-number {
+            font-size: 2.5rem;
+          }
+
+          .trusted-section {
+            padding: 48px 0;
+          }
+
+          .trusted-logos {
+            gap: 24px;
+          }
+
+          .trusted-logo-item {
+            min-width: 100px;
+          }
         }
 
         @media (max-width: 480px) {
@@ -589,6 +1114,19 @@ export default function HomePage() {
 
           .service-features li {
             font-size: 0.85rem;
+          }
+
+          .stats-grid {
+            gap: 16px;
+          }
+
+          .stat-number {
+            font-size: 2rem;
+          }
+
+          .trusted-logos {
+            flex-direction: column;
+            gap: 20px;
           }
         }
       `}</style>
