@@ -12,10 +12,10 @@ export default function HomePage() {
   const { user, loading } = useAuth();
 
   useEffect(() => {
-    // If user is authenticated, redirect to the decoder
+    // If user is authenticated, redirect to the dashboard
     if (!loading && user) {
       const username = user.email?.split('@')[0] || 'user';
-      router.push(`/u/${username}/decode`);
+      router.push(`/u/${username}/dashboard`);
     }
   }, [user, loading, router]);
 
